@@ -36,7 +36,7 @@ export default function SingleProduct() {
                     <nav aria-label="Breadcrumb">
                         <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                             {product.breadcrumbs
-                                .filter(breadcrumb => breadcrumb.name !== 'Home') // skip 'Home'
+                                .filter(breadcrumb => breadcrumb.name !== 'Home') 
                                 .map((breadcrumb) => (
                                     <li key={breadcrumb.id}>
                                         <div className="flex items-center">
