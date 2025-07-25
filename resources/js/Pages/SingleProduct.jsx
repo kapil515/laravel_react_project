@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
+import Navbar from '@/Components/Navbar';
 
 
 function classNames(...classes) {
@@ -29,6 +30,7 @@ export default function SingleProduct() {
     return (
         <>
         <Head title="SingleProduct" />
+        <Navbar/>
         <div className="bg-white">
             <div className="pt-6">
                 <nav aria-label="Breadcrumb">
