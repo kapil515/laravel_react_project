@@ -48,13 +48,21 @@ export default function Navbar({ auth }) {
                                         Dashboard
                                     </Link>
                                 ) : (
-                                    <Dropdown.Link
-                                        href={route('logout')}
-                                        method="post"
-                                        as="button"
-                                    >
-                                        Log Out
-                                    </Dropdown.Link>
+                                    <>
+                                        <Link
+                                            href={route('profile.edit')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Profile
+                                        </Link>
+                                        <Dropdown.Link
+                                            href={route('logout')}
+                                            method="post"
+                                            as="button"
+                                        >
+                                            Log Out
+                                        </Dropdown.Link>
+                                    </>
                                 )
                             ) : (
                                 <>
@@ -72,10 +80,6 @@ export default function Navbar({ auth }) {
                                     </Link>
                                 </>
                             )}
-
-
-
-
                         </div>
 
                     </div>

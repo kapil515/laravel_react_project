@@ -1,5 +1,5 @@
 import { StarIcon } from '@heroicons/react/20/solid';
-import { usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -27,6 +27,8 @@ export default function SingleProduct() {
     const images = Array.isArray(product.images) ? product.images : (typeof product.images === 'string' ? JSON.parse(product.images.replace(/\\\//g, '/')) : []);
 
     return (
+        <>
+        <Head title="SingleProduct" />
         <div className="bg-white">
             <div className="pt-6">
                 <nav aria-label="Breadcrumb">
@@ -134,5 +136,6 @@ export default function SingleProduct() {
 
             </div>
         </div>
+        </>
     );
 }
