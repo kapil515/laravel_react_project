@@ -5,7 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import Navbar from '@/Components/Navbar';
+import UserLayout from '@/Layouts/UserLayout';
 
 
 function classNames(...classes) {
@@ -30,13 +30,13 @@ export default function SingleProduct() {
     return (
         <>
             <Head title="SingleProduct" />
-            <Navbar />
+            <UserLayout>
             <div className="bg-white">
                 <div className="pt-6">
                     <nav aria-label="Breadcrumb">
                         <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                             {product.breadcrumbs
-                                .filter(breadcrumb => breadcrumb.name !== 'Home') 
+                                .filter(breadcrumb => breadcrumb.name !== 'Home') // skip 'Home'
                                 .map((breadcrumb) => (
                                     <li key={breadcrumb.id}>
                                         <div className="flex items-center">
@@ -140,6 +140,7 @@ export default function SingleProduct() {
 
                 </div>
             </div>
+            </UserLayout>
         </>
     );
 }
