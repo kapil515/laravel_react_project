@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import Dropdown from '@/Components/Dropdown';
 
 
 export default function Navbar({ auth }) {
     const [expanded, setExpanded] = useState(false);
+    const { url } = usePage();
+
+    const isAdmin = auth?.user?.role === 'admin';
+    const isNotDashboard = url !== '/dashboard';
 
     return (
         <div className="overflow-x-hidden bg-gray-50">
@@ -80,6 +84,17 @@ export default function Navbar({ auth }) {
                                     </Link>
                                 </>
                             )}
+                            {isAdmin && isNotDashboard && (
+                                <Dropdown.Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70"
+                                >
+                                    Log Out
+                                </Dropdown.Link>
+                            )}
+
                         </div>
 
                     </div>
@@ -90,9 +105,59 @@ export default function Navbar({ auth }) {
                                 <Link href="/" className="text-base font-medium text-gray-900 hover:text-opacity-50">Home</Link>
                                 <Link href="/best-sellers" className="text-base font-medium text-gray-900 hover:text-opacity-50">Best Sellers</Link>
                                 <Link href="/productpage" className="text-base font-medium text-gray-900 hover:text-opacity-50">Products</Link>
-                                <Link href="#" className="flex items-center p-3 -m-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-xl">Customer Login</Link>
-                                <Link href="#" className="inline-flex items-center justify-center px-6 py-3 text-base font-bold text-white bg-gray-900 rounded-xl hover:bg-gray-600">Sign up</Link>
+                                {auth && auth.user ? (
+                                    auth.user.role === 'admin' ? (
+                                        <Link
+                                            href={route('dashboard')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Dashboard
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            <Link
+                                                href={route('profile.edit')}
+                                                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                            >
+                                                Profile
+                                            </Link>
+                                            <Dropdown.Link
+                                                href={route('logout')}
+                                                method="post"
+                                                as="button"
+                                            >
+                                                Log Out
+                                            </Dropdown.Link>
+                                        </>
+                                    )
+                                ) : (
+                                    <>
+                                        <Link
+                                            href={route('login')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Log in
+                                        </Link>
+                                        <Link
+                                            href={route('register')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Register
+                                        </Link>
+                                    </>
+                                )}
                             </div>
+                            {isAdmin && isNotDashboard && (
+                                <Dropdown.Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70"
+                                >
+                                    Log Out
+                                </Dropdown.Link>
+                            )}
+
                         </nav>
                     )}
                 </div>
