@@ -1,7 +1,12 @@
-export default function Users() {
+import UserList from '@/Components/Users/Index';
+// import UserList from '@/Components/Users/Edit';
+
+export default function Users({ users }) {
     return (
-        <div className="p-6">
-            <h1 className="text-xl font-bold mb-4">All Users</h1>
+        <div>
+            <UserList users={users} />
         </div>
+
+
     );
 }
