@@ -3,13 +3,19 @@ import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Users from './Dashboard/Users';
 import Product from './Dashboard/Products';
+import { usePage } from '@inertiajs/react';
+import EditUser from '@/Components/Users/Edit';
+import CreateUser from '@/Components/Users/CreateUser'; 
 
 export default function Dashboard({ section,products }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { users } = usePage().props;
 
     const renderContent = () => {
         switch (section) {
-            case 'users': return <Users/>;
+            case 'users': return <Users users={users} />;
+            case 'create': return <CreateUser />;
+            case 'edit-user': return <EditUser user={usePage().props.user} />
             case 'transactions': return <div className="p-6">Transactions</div>;
             case 'sales': return <div className="p-6">Sales Content</div>;
             case 'products': return <Product products={products} />;
@@ -22,7 +28,6 @@ export default function Dashboard({ section,products }) {
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
-
             {/* Mobile Hamburger Button */}
             <div className="lg:hidden bg-white px-4 py-3 shadow-md flex justify-between items-center">
                 <div className="text-xl font-bold text-green-700">MENU</div>
