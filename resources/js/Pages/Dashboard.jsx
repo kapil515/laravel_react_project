@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Users from './Dashboard/Users';
 import Product from './Dashboard/Products';
 
-export default function Dashboard({ section }) {
+export default function Dashboard({ section,products }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const renderContent = () => {
@@ -12,7 +12,7 @@ export default function Dashboard({ section }) {
             case 'users': return <Users/>;
             case 'transactions': return <div className="p-6">Transactions</div>;
             case 'sales': return <div className="p-6">Sales Content</div>;
-            case 'products': return <Product/>;
+            case 'products': return <Product products={products} />;
             case 'members': return <div className="p-6">Prime Members Content</div>;
             case 'settings': return <div className="p-6">Settings Content</div>;
             default: return <div className="p-6">You're logged in!</div>;

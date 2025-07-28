@@ -10,6 +10,7 @@ use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/users', [DashboardController::class, 'users'])->name('dashboard.users');
@@ -18,6 +19,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard/products', [DashboardController::class, 'products'])->name('dashboard.products');
     Route::get('/dashboard/members', [DashboardController::class, 'members'])->name('dashboard.members');
     Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
+    Route::resource('products', ProductController::class);
+
 });
 
 
@@ -30,12 +33,19 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/best-sellers', function () {
     return Inertia::render('BestSellers'); 
 });
+
+
+// Show edit form
+Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+
+// Update product (PUT method via Inertia)
+Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+
 
 Route::get('/productpage', [ProductController::class, 'index']);
 

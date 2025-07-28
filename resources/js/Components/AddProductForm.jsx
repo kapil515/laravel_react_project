@@ -1,8 +1,8 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, router  } from '@inertiajs/react';
 import { useRef } from 'react';
 
 
-export default function AddProductForm() {
+export default function AddProductForm({ onClose }) {
     const fileInputRef = useRef(null);
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -20,6 +20,7 @@ export default function AddProductForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('price', data.price);
@@ -28,9 +29,20 @@ export default function AddProductForm() {
         formData.append('details', data.details);
         formData.append('reviews_average', data.reviews_average);
         formData.append('reviews_total_count', data.reviews_total_count);
+
         data.images.forEach((file, index) => {
             formData.append(`images[${index}]`, file);
         });
+
+        router.post(route('products.store'), formData, {
+            forceFormData: true,
+            onSuccess: () => {
+                if (typeof onClose === 'function') {
+                    onClose(); 
+                }
+            }
+        });
+
 
         post(route('products.store'), {
             data: formData,
@@ -41,7 +53,7 @@ export default function AddProductForm() {
                 if (fileInputRef.current) {
                     fileInputRef.current.value = null;
                 }
-                reset(); 
+                reset();
             },
         });
     };
@@ -69,6 +81,7 @@ export default function AddProductForm() {
                         <label className="mb-2 inline-block text-sm text-gray-800 sm:text-base">Price</label>
                         <input
                             name="price"
+                            type='number'
                             value={data.price}
                             onChange={(e) => setData('price', e.target.value)}
                             className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"
