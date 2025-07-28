@@ -5,7 +5,7 @@ import Dropdown from '@/Components/Dropdown';
 
 export default function Navbar({ auth }) {
     const [expanded, setExpanded] = useState(false);
-    const { url } = usePage();
+    const { url , cartCount = 0 } = usePage();
 
     const isAdmin = auth?.user?.role === 'admin';
     const isNotDashboard = url !== '/dashboard';
@@ -21,7 +21,7 @@ export default function Navbar({ auth }) {
                             </Link>
                         </div>
 
-                        <div className="flex lg:hidden">
+                        <div className="flex items-center gap-4 lg:hidden">
                             <button
                                 type="button"
                                 className="text-gray-900"
@@ -34,6 +34,17 @@ export default function Navbar({ auth }) {
                                     <svg className="w-7 h-7" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
                                 )}
                             </button>
+                             <Link href={route('cart.index')} className="relative text-gray-900">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2"
+            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.2 6h11.4L17 13M7 13L5.4 5M17 13l1.6-8" />
+        </svg>
+        {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 text-xs bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center">
+                {cartCount}
+            </span>
+        )}
+    </Link>
                         </div>
 
                         <div className="hidden lg:flex lg:ml-16 lg:items-center lg:justify-center lg:space-x-10 xl:space-x-16">
@@ -94,6 +105,18 @@ export default function Navbar({ auth }) {
                                     Log Out
                                 </Dropdown.Link>
                             )}
+                            <Link href={route('cart.index')} className="relative text-gray-900 hover:text-opacity-70">
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2"
+        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.2 6h11.4L17 13M7 13L5.4 5M17 13l1.6-8" />
+    </svg>
+    {cartCount > 0 && (
+        <span className="absolute -top-2 -right-2 text-xs bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center">
+            {cartCount}
+        </span>
+    )}
+</Link>
+
 
                         </div>
 
@@ -159,6 +182,7 @@ export default function Navbar({ auth }) {
                             )}
 
                         </nav>
+                        
                     )}
                 </div>
             </header>
