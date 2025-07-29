@@ -7,7 +7,7 @@ import { usePage } from '@inertiajs/react';
 import EditUser from '@/Components/Users/Edit';
 import CreateUser from '@/Components/Users/CreateUser'; 
 
-export default function Dashboard({ section }) {
+export default function Dashboard({ section,products }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { users } = usePage().props;
 
@@ -18,7 +18,7 @@ export default function Dashboard({ section }) {
             case 'edit-user': return <EditUser user={usePage().props.user} />
             case 'transactions': return <div className="p-6">Transactions</div>;
             case 'sales': return <div className="p-6">Sales Content</div>;
-            case 'products': return <Product/>;
+            case 'products': return <Product products={products} />;
             case 'members': return <div className="p-6">Prime Members Content</div>;
             case 'settings': return <div className="p-6">Settings Content</div>;
             default: return <div className="p-6">You're logged in!</div>;

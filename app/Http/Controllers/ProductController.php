@@ -95,4 +95,49 @@ public function index()
     return back()->with('success', 'Product created successfully');
 }
 
+ public function edit($id)
+{
+    $product = Product::findOrFail($id);
+
+    return Inertia::render('Dashboard/EditProductForm', [
+        'product' => [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'description' => $product->description,
+            'image' => $product->image_path, 
+        ]
+    ]);
+}
+
+public function update(Request $request, Product $product)
+{
+    $data = $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric',
+        'description' => 'nullable|string',
+        'image' => 'nullable|image|max:2048',
+    ]);
+
+    if ($request->hasFile('image')) {
+        $data['image_path'] = $request->file('image')->store('products', 'public');
+    }
+
+    $product->update($data);
+
+    return redirect()->route('dashboard.products')->with('success', 'Product updated!');
+}
+
+
+
+
+   public function destroy($id)
+{
+    $product = Product::findOrFail($id);
+    $product->delete();
+
+    return redirect()->back()->with('success', 'Product deleted successfully!');
+}
+
+
 }

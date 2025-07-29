@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Product;
 
 class DashboardController extends Controller
 {
@@ -89,10 +89,24 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', ['section' => 'sales']);
     }
 
-    public function products()
-    {
-        return Inertia::render('Dashboard', ['section' => 'products']);
-    }
+   public function products()
+{
+    $products = Product::paginate(5)->through(function ($product) {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'imageAlt' => $product->image_alt,
+            'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
+        ];
+    });
+
+    return Inertia::render('Dashboard', [  
+        'section' => 'products',
+        'products' => $products
+    ]);
+}
+
 
     public function members()
     {

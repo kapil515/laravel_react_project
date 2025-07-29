@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import Products from '@/Components/Products'; 
 import UserLayout from "@/Layouts/UserLayout";
 
-export default function ProductsPage({ products,auth }) {
+export default function ProductsPage({ products }) {
     return (
         <>
             <Head title="Products" />
