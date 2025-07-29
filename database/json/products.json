@@ -1,0 +1,1493 @@
+[
+  {
+    "category_id": 1,
+    "subcategory_id": 1,
+    "name": "Mobile Phones Product 1",
+    "price": 2634,
+    "image_alt": "Mobile Phones product image",
+    "description": "Sample description for Mobile Phones product 1.",
+    "images": [
+      "mobile_phones1_1.jpg",
+      "mobile_phones1_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "Blue"
+    ],
+    "sizes": [
+      "L",
+      "XL",
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Mobile Phones product 1.",
+    "reviews_average": 3.0,
+    "reviews_total_count": 69,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 1,
+    "name": "Mobile Phones Product 2",
+    "price": 1278,
+    "image_alt": "Mobile Phones product image",
+    "description": "Sample description for Mobile Phones product 2.",
+    "images": [
+      "mobile_phones2_1.jpg",
+      "mobile_phones2_2.jpg"
+    ],
+    "colors": [
+      "White",
+      "Black"
+    ],
+    "sizes": [
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Mobile Phones product 2.",
+    "reviews_average": 4.9,
+    "reviews_total_count": 50,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 2,
+    "name": "Laptops Product 1",
+    "price": 1316,
+    "image_alt": "Laptops product image",
+    "description": "Sample description for Laptops product 1.",
+    "images": [
+      "laptops1_1.jpg",
+      "laptops1_2.jpg"
+    ],
+    "colors": [
+      "Blue",
+      "Silver"
+    ],
+    "sizes": [
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Laptops product 1.",
+    "reviews_average": 3.8,
+    "reviews_total_count": 84,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 2,
+    "name": "Laptops Product 2",
+    "price": 1458,
+    "image_alt": "Laptops product image",
+    "description": "Sample description for Laptops product 2.",
+    "images": [
+      "laptops2_1.jpg",
+      "laptops2_2.jpg"
+    ],
+    "colors": [
+      "Gold",
+      "Red"
+    ],
+    "sizes": [
+      "L",
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Laptops product 2.",
+    "reviews_average": 3.6,
+    "reviews_total_count": 64,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 3,
+    "name": "Tablets Product 1",
+    "price": 7555,
+    "image_alt": "Tablets product image",
+    "description": "Sample description for Tablets product 1.",
+    "images": [
+      "tablets1_1.jpg",
+      "tablets1_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "Blue"
+    ],
+    "sizes": [
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Tablets product 1.",
+    "reviews_average": 3.1,
+    "reviews_total_count": 63,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 3,
+    "name": "Tablets Product 2",
+    "price": 3745,
+    "image_alt": "Tablets product image",
+    "description": "Sample description for Tablets product 2.",
+    "images": [
+      "tablets2_1.jpg",
+      "tablets2_2.jpg"
+    ],
+    "colors": [
+      "White",
+      "Black"
+    ],
+    "sizes": [
+      "XL"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Tablets product 2.",
+    "reviews_average": 4.1,
+    "reviews_total_count": 92,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 4,
+    "name": "Headphones Product 1",
+    "price": 5483,
+    "image_alt": "Headphones product image",
+    "description": "Sample description for Headphones product 1.",
+    "images": [
+      "headphones1_1.jpg",
+      "headphones1_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Silver"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Headphones product 1.",
+    "reviews_average": 4.3,
+    "reviews_total_count": 5,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 4,
+    "name": "Headphones Product 2",
+    "price": 3549,
+    "image_alt": "Headphones product image",
+    "description": "Sample description for Headphones product 2.",
+    "images": [
+      "headphones2_1.jpg",
+      "headphones2_2.jpg"
+    ],
+    "colors": [
+      "Black",
+      "Silver"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Headphones product 2.",
+    "reviews_average": 4.4,
+    "reviews_total_count": 24,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 5,
+    "name": "Smart Watches Product 1",
+    "price": 2759,
+    "image_alt": "Smart Watches product image",
+    "description": "Sample description for Smart Watches product 1.",
+    "images": [
+      "smart_watches1_1.jpg",
+      "smart_watches1_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "Red"
+    ],
+    "sizes": [
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Smart Watches product 1.",
+    "reviews_average": 3.2,
+    "reviews_total_count": 76,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 1,
+    "subcategory_id": 5,
+    "name": "Smart Watches Product 2",
+    "price": 5783,
+    "image_alt": "Smart Watches product image",
+    "description": "Sample description for Smart Watches product 2.",
+    "images": [
+      "smart_watches2_1.jpg",
+      "smart_watches2_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "Blue"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Smart Watches product 2.",
+    "reviews_average": 4.6,
+    "reviews_total_count": 7,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 6,
+    "name": "Men's Clothing Product 1",
+    "price": 1295,
+    "image_alt": "Men's Clothing product image",
+    "description": "Sample description for Men's Clothing product 1.",
+    "images": [
+      "men's_clothing1_1.jpg",
+      "men's_clothing1_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "Green"
+    ],
+    "sizes": [
+      "XL",
+      "M"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Men's Clothing product 1.",
+    "reviews_average": 4.0,
+    "reviews_total_count": 13,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 6,
+    "name": "Men's Clothing Product 2",
+    "price": 2480,
+    "image_alt": "Men's Clothing product image",
+    "description": "Sample description for Men's Clothing product 2.",
+    "images": [
+      "men's_clothing2_1.jpg",
+      "men's_clothing2_2.jpg"
+    ],
+    "colors": [
+      "White",
+      "Red"
+    ],
+    "sizes": [
+      "L",
+      "M"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Men's Clothing product 2.",
+    "reviews_average": 3.6,
+    "reviews_total_count": 14,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 7,
+    "name": "Women's Clothing Product 1",
+    "price": 3440,
+    "image_alt": "Women's Clothing product image",
+    "description": "Sample description for Women's Clothing product 1.",
+    "images": [
+      "women's_clothing1_1.jpg",
+      "women's_clothing1_2.jpg"
+    ],
+    "colors": [
+      "White",
+      "Red"
+    ],
+    "sizes": [
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Women's Clothing product 1.",
+    "reviews_average": 4.3,
+    "reviews_total_count": 31,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 7,
+    "name": "Women's Clothing Product 2",
+    "price": 6558,
+    "image_alt": "Women's Clothing product image",
+    "description": "Sample description for Women's Clothing product 2.",
+    "images": [
+      "women's_clothing2_1.jpg",
+      "women's_clothing2_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "Blue"
+    ],
+    "sizes": [
+      "M",
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Women's Clothing product 2.",
+    "reviews_average": 4.0,
+    "reviews_total_count": 36,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 8,
+    "name": "Kids' Wear Product 1",
+    "price": 3220,
+    "image_alt": "Kids' Wear product image",
+    "description": "Sample description for Kids' Wear product 1.",
+    "images": [
+      "kids'_wear1_1.jpg",
+      "kids'_wear1_2.jpg"
+    ],
+    "colors": [
+      "White",
+      "Black"
+    ],
+    "sizes": [
+      "M",
+      "S",
+      "XL"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Kids' Wear product 1.",
+    "reviews_average": 3.7,
+    "reviews_total_count": 32,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 8,
+    "name": "Kids' Wear Product 2",
+    "price": 6331,
+    "image_alt": "Kids' Wear product image",
+    "description": "Sample description for Kids' Wear product 2.",
+    "images": [
+      "kids'_wear2_1.jpg",
+      "kids'_wear2_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Green"
+    ],
+    "sizes": [
+      "XL",
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Kids' Wear product 2.",
+    "reviews_average": 3.4,
+    "reviews_total_count": 66,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 9,
+    "name": "Footwear Product 1",
+    "price": 6737,
+    "image_alt": "Footwear product image",
+    "description": "Sample description for Footwear product 1.",
+    "images": [
+      "footwear1_1.jpg",
+      "footwear1_2.jpg"
+    ],
+    "colors": [
+      "Blue",
+      "White"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Footwear product 1.",
+    "reviews_average": 3.9,
+    "reviews_total_count": 81,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 9,
+    "name": "Footwear Product 2",
+    "price": 6516,
+    "image_alt": "Footwear product image",
+    "description": "Sample description for Footwear product 2.",
+    "images": [
+      "footwear2_1.jpg",
+      "footwear2_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Blue"
+    ],
+    "sizes": [
+      "S",
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Footwear product 2.",
+    "reviews_average": 3.5,
+    "reviews_total_count": 43,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 10,
+    "name": "Accessories Product 1",
+    "price": 6175,
+    "image_alt": "Accessories product image",
+    "description": "Sample description for Accessories product 1.",
+    "images": [
+      "accessories1_1.jpg",
+      "accessories1_2.jpg"
+    ],
+    "colors": [
+      "White",
+      "Blue"
+    ],
+    "sizes": [
+      "L",
+      "M"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Accessories product 1.",
+    "reviews_average": 3.1,
+    "reviews_total_count": 88,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 2,
+    "subcategory_id": 10,
+    "name": "Accessories Product 2",
+    "price": 8665,
+    "image_alt": "Accessories product image",
+    "description": "Sample description for Accessories product 2.",
+    "images": [
+      "accessories2_1.jpg",
+      "accessories2_2.jpg"
+    ],
+    "colors": [
+      "Blue",
+      "White"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Accessories product 2.",
+    "reviews_average": 3.9,
+    "reviews_total_count": 2,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 11,
+    "name": "Furniture Product 1",
+    "price": 3616,
+    "image_alt": "Furniture product image",
+    "description": "Sample description for Furniture product 1.",
+    "images": [
+      "furniture1_1.jpg",
+      "furniture1_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Blue"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Furniture product 1.",
+    "reviews_average": 3.7,
+    "reviews_total_count": 3,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 11,
+    "name": "Furniture Product 2",
+    "price": 3908,
+    "image_alt": "Furniture product image",
+    "description": "Sample description for Furniture product 2.",
+    "images": [
+      "furniture2_1.jpg",
+      "furniture2_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "Red"
+    ],
+    "sizes": [
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Furniture product 2.",
+    "reviews_average": 4.9,
+    "reviews_total_count": 51,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 12,
+    "name": "Kitchen Appliances Product 1",
+    "price": 1857,
+    "image_alt": "Kitchen Appliances product image",
+    "description": "Sample description for Kitchen Appliances product 1.",
+    "images": [
+      "kitchen_appliances1_1.jpg",
+      "kitchen_appliances1_2.jpg"
+    ],
+    "colors": [
+      "Gold",
+      "Red"
+    ],
+    "sizes": [
+      "XL",
+      "L",
+      "M"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Kitchen Appliances product 1.",
+    "reviews_average": 4.2,
+    "reviews_total_count": 100,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 12,
+    "name": "Kitchen Appliances Product 2",
+    "price": 2898,
+    "image_alt": "Kitchen Appliances product image",
+    "description": "Sample description for Kitchen Appliances product 2.",
+    "images": [
+      "kitchen_appliances2_1.jpg",
+      "kitchen_appliances2_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "Blue"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Kitchen Appliances product 2.",
+    "reviews_average": 4.0,
+    "reviews_total_count": 8,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 13,
+    "name": "Home Decor Product 1",
+    "price": 8182,
+    "image_alt": "Home Decor product image",
+    "description": "Sample description for Home Decor product 1.",
+    "images": [
+      "home_decor1_1.jpg",
+      "home_decor1_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "White"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Home Decor product 1.",
+    "reviews_average": 3.2,
+    "reviews_total_count": 90,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 13,
+    "name": "Home Decor Product 2",
+    "price": 5313,
+    "image_alt": "Home Decor product image",
+    "description": "Sample description for Home Decor product 2.",
+    "images": [
+      "home_decor2_1.jpg",
+      "home_decor2_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "Black"
+    ],
+    "sizes": [
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Home Decor product 2.",
+    "reviews_average": 4.4,
+    "reviews_total_count": 21,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 14,
+    "name": "Storage & Organization Product 1",
+    "price": 8350,
+    "image_alt": "Storage & Organization product image",
+    "description": "Sample description for Storage & Organization product 1.",
+    "images": [
+      "storage_&_organization1_1.jpg",
+      "storage_&_organization1_2.jpg"
+    ],
+    "colors": [
+      "Blue",
+      "White"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Storage & Organization product 1.",
+    "reviews_average": 3.1,
+    "reviews_total_count": 77,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 14,
+    "name": "Storage & Organization Product 2",
+    "price": 1878,
+    "image_alt": "Storage & Organization product image",
+    "description": "Sample description for Storage & Organization product 2.",
+    "images": [
+      "storage_&_organization2_1.jpg",
+      "storage_&_organization2_2.jpg"
+    ],
+    "colors": [
+      "Black",
+      "Blue"
+    ],
+    "sizes": [
+      "XL",
+      "L",
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Storage & Organization product 2.",
+    "reviews_average": 4.2,
+    "reviews_total_count": 93,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 15,
+    "name": "Cleaning Supplies Product 1",
+    "price": 7953,
+    "image_alt": "Cleaning Supplies product image",
+    "description": "Sample description for Cleaning Supplies product 1.",
+    "images": [
+      "cleaning_supplies1_1.jpg",
+      "cleaning_supplies1_2.jpg"
+    ],
+    "colors": [
+      "Blue",
+      "Red"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Cleaning Supplies product 1.",
+    "reviews_average": 3.2,
+    "reviews_total_count": 46,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 3,
+    "subcategory_id": 15,
+    "name": "Cleaning Supplies Product 2",
+    "price": 1190,
+    "image_alt": "Cleaning Supplies product image",
+    "description": "Sample description for Cleaning Supplies product 2.",
+    "images": [
+      "cleaning_supplies2_1.jpg",
+      "cleaning_supplies2_2.jpg"
+    ],
+    "colors": [
+      "Black",
+      "Blue"
+    ],
+    "sizes": [
+      "S",
+      "XL"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Cleaning Supplies product 2.",
+    "reviews_average": 3.1,
+    "reviews_total_count": 57,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 16,
+    "name": "Skin Care Product 1",
+    "price": 5239,
+    "image_alt": "Skin Care product image",
+    "description": "Sample description for Skin Care product 1.",
+    "images": [
+      "skin_care1_1.jpg",
+      "skin_care1_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "Blue"
+    ],
+    "sizes": [
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Skin Care product 1.",
+    "reviews_average": 3.5,
+    "reviews_total_count": 48,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 16,
+    "name": "Skin Care Product 2",
+    "price": 8823,
+    "image_alt": "Skin Care product image",
+    "description": "Sample description for Skin Care product 2.",
+    "images": [
+      "skin_care2_1.jpg",
+      "skin_care2_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Black"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Skin Care product 2.",
+    "reviews_average": 4.7,
+    "reviews_total_count": 19,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 17,
+    "name": "Hair Care Product 1",
+    "price": 6316,
+    "image_alt": "Hair Care product image",
+    "description": "Sample description for Hair Care product 1.",
+    "images": [
+      "hair_care1_1.jpg",
+      "hair_care1_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Black"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Hair Care product 1.",
+    "reviews_average": 3.5,
+    "reviews_total_count": 8,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 17,
+    "name": "Hair Care Product 2",
+    "price": 4367,
+    "image_alt": "Hair Care product image",
+    "description": "Sample description for Hair Care product 2.",
+    "images": [
+      "hair_care2_1.jpg",
+      "hair_care2_2.jpg"
+    ],
+    "colors": [
+      "Black",
+      "Silver"
+    ],
+    "sizes": [
+      "M",
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Hair Care product 2.",
+    "reviews_average": 3.9,
+    "reviews_total_count": 82,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 18,
+    "name": "Makeup Product 1",
+    "price": 5616,
+    "image_alt": "Makeup product image",
+    "description": "Sample description for Makeup product 1.",
+    "images": [
+      "makeup1_1.jpg",
+      "makeup1_2.jpg"
+    ],
+    "colors": [
+      "Black",
+      "Gold"
+    ],
+    "sizes": [
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Makeup product 1.",
+    "reviews_average": 4.4,
+    "reviews_total_count": 80,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 18,
+    "name": "Makeup Product 2",
+    "price": 4380,
+    "image_alt": "Makeup product image",
+    "description": "Sample description for Makeup product 2.",
+    "images": [
+      "makeup2_1.jpg",
+      "makeup2_2.jpg"
+    ],
+    "colors": [
+      "Blue",
+      "Green"
+    ],
+    "sizes": [
+      "L",
+      "XL",
+      "M"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Makeup product 2.",
+    "reviews_average": 4.3,
+    "reviews_total_count": 78,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 19,
+    "name": "Fragrances Product 1",
+    "price": 5644,
+    "image_alt": "Fragrances product image",
+    "description": "Sample description for Fragrances product 1.",
+    "images": [
+      "fragrances1_1.jpg",
+      "fragrances1_2.jpg"
+    ],
+    "colors": [
+      "White",
+      "Gold"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Fragrances product 1.",
+    "reviews_average": 4.1,
+    "reviews_total_count": 9,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 19,
+    "name": "Fragrances Product 2",
+    "price": 2533,
+    "image_alt": "Fragrances product image",
+    "description": "Sample description for Fragrances product 2.",
+    "images": [
+      "fragrances2_1.jpg",
+      "fragrances2_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "Green"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Fragrances product 2.",
+    "reviews_average": 3.3,
+    "reviews_total_count": 87,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 20,
+    "name": "Personal Hygiene Product 1",
+    "price": 7288,
+    "image_alt": "Personal Hygiene product image",
+    "description": "Sample description for Personal Hygiene product 1.",
+    "images": [
+      "personal_hygiene1_1.jpg",
+      "personal_hygiene1_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Silver"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Personal Hygiene product 1.",
+    "reviews_average": 3.2,
+    "reviews_total_count": 10,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 4,
+    "subcategory_id": 20,
+    "name": "Personal Hygiene Product 2",
+    "price": 4185,
+    "image_alt": "Personal Hygiene product image",
+    "description": "Sample description for Personal Hygiene product 2.",
+    "images": [
+      "personal_hygiene2_1.jpg",
+      "personal_hygiene2_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "White"
+    ],
+    "sizes": [
+      "M",
+      "XL"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Personal Hygiene product 2.",
+    "reviews_average": 3.3,
+    "reviews_total_count": 38,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 21,
+    "name": "Action Figures Product 1",
+    "price": 9195,
+    "image_alt": "Action Figures product image",
+    "description": "Sample description for Action Figures product 1.",
+    "images": [
+      "action_figures1_1.jpg",
+      "action_figures1_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "White"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Action Figures product 1.",
+    "reviews_average": 3.2,
+    "reviews_total_count": 58,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 21,
+    "name": "Action Figures Product 2",
+    "price": 9306,
+    "image_alt": "Action Figures product image",
+    "description": "Sample description for Action Figures product 2.",
+    "images": [
+      "action_figures2_1.jpg",
+      "action_figures2_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "White"
+    ],
+    "sizes": [
+      "M"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Action Figures product 2.",
+    "reviews_average": 3.3,
+    "reviews_total_count": 29,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 22,
+    "name": "Educational Toys Product 1",
+    "price": 2945,
+    "image_alt": "Educational Toys product image",
+    "description": "Sample description for Educational Toys product 1.",
+    "images": [
+      "educational_toys1_1.jpg",
+      "educational_toys1_2.jpg"
+    ],
+    "colors": [
+      "Black",
+      "Green"
+    ],
+    "sizes": [
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Educational Toys product 1.",
+    "reviews_average": 3.5,
+    "reviews_total_count": 20,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 22,
+    "name": "Educational Toys Product 2",
+    "price": 1935,
+    "image_alt": "Educational Toys product image",
+    "description": "Sample description for Educational Toys product 2.",
+    "images": [
+      "educational_toys2_1.jpg",
+      "educational_toys2_2.jpg"
+    ],
+    "colors": [
+      "Silver",
+      "Gold"
+    ],
+    "sizes": [
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Educational Toys product 2.",
+    "reviews_average": 3.9,
+    "reviews_total_count": 84,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 23,
+    "name": "Board Games Product 1",
+    "price": 3043,
+    "image_alt": "Board Games product image",
+    "description": "Sample description for Board Games product 1.",
+    "images": [
+      "board_games1_1.jpg",
+      "board_games1_2.jpg"
+    ],
+    "colors": [
+      "Red",
+      "Blue"
+    ],
+    "sizes": [
+      "L",
+      "M",
+      "XL"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Board Games product 1.",
+    "reviews_average": 3.0,
+    "reviews_total_count": 76,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 23,
+    "name": "Board Games Product 2",
+    "price": 9030,
+    "image_alt": "Board Games product image",
+    "description": "Sample description for Board Games product 2.",
+    "images": [
+      "board_games2_1.jpg",
+      "board_games2_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "Blue"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Board Games product 2.",
+    "reviews_average": 4.4,
+    "reviews_total_count": 41,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 24,
+    "name": "Outdoor Play Product 1",
+    "price": 5081,
+    "image_alt": "Outdoor Play product image",
+    "description": "Sample description for Outdoor Play product 1.",
+    "images": [
+      "outdoor_play1_1.jpg",
+      "outdoor_play1_2.jpg"
+    ],
+    "colors": [
+      "Black",
+      "Blue"
+    ],
+    "sizes": [
+      "L",
+      "S"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Outdoor Play product 1.",
+    "reviews_average": 3.4,
+    "reviews_total_count": 96,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 2
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 24,
+    "name": "Outdoor Play Product 2",
+    "price": 3404,
+    "image_alt": "Outdoor Play product image",
+    "description": "Sample description for Outdoor Play product 2.",
+    "images": [
+      "outdoor_play2_1.jpg",
+      "outdoor_play2_2.jpg"
+    ],
+    "colors": [
+      "Green",
+      "Red"
+    ],
+    "sizes": [],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Outdoor Play product 2.",
+    "reviews_average": 3.1,
+    "reviews_total_count": 22,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 25,
+    "name": "Dolls & Plushies Product 1",
+    "price": 1392,
+    "image_alt": "Dolls & Plushies product image",
+    "description": "Sample description for Dolls & Plushies product 1.",
+    "images": [
+      "dolls_&_plushies1_1.jpg",
+      "dolls_&_plushies1_2.jpg"
+    ],
+    "colors": [
+      "Gold",
+      "Red"
+    ],
+    "sizes": [
+      "S",
+      "XL",
+      "L"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Dolls & Plushies product 1.",
+    "reviews_average": 3.8,
+    "reviews_total_count": 85,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  },
+  {
+    "category_id": 5,
+    "subcategory_id": 25,
+    "name": "Dolls & Plushies Product 2",
+    "price": 2142,
+    "image_alt": "Dolls & Plushies product image",
+    "description": "Sample description for Dolls & Plushies product 2.",
+    "images": [
+      "dolls_&_plushies2_1.jpg",
+      "dolls_&_plushies2_2.jpg"
+    ],
+    "colors": [
+      "Blue",
+      "Silver"
+    ],
+    "sizes": [
+      "L",
+      "XL",
+      "M"
+    ],
+    "highlights": [
+      "High quality",
+      "Affordable",
+      "Popular choice"
+    ],
+    "details": "Detailed info about Dolls & Plushies product 2.",
+    "reviews_average": 3.7,
+    "reviews_total_count": 77,
+    "created_at": "2025-07-29T09:49:01",
+    "updated_at": "2025-07-29T09:49:01",
+    "user_id": 1
+  }
+]

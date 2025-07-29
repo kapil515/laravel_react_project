@@ -1,14 +1,15 @@
 
 
 import React from 'react';
-import AuthLayout from '@/Layouts/AuthLayout';
+import AuthLayout from '@/Layouts/UserLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 
 export default function Index({ products, categories, auth }) {
-    const { data, setData } = React.useState({
-        category_id: '',
-        subcategory_id: ''
-    });
+   const [data, setData] = React.useState({
+    category_id: '',
+    subcategory_id: '',
+});
+
 
     function handleFilter(e) {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -25,7 +26,7 @@ export default function Index({ products, categories, auth }) {
                         href={route('products.create')}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                     >
-                        + Create Product
+                        Create Product
                     </Link>
                 </div>
 
@@ -42,6 +43,7 @@ export default function Index({ products, categories, auth }) {
                             <option key={cat.id} value={cat.id}>{cat.name}</option>
                         ))}
                     </select>
+                                        
                 </div>
 
                 {/* Product Table */}
@@ -49,6 +51,7 @@ export default function Index({ products, categories, auth }) {
                     <table className="w-full table-auto text-left border-collapse">
                         <thead>
                             <tr className="bg-gray-100">
+                                <th className="border p-2">Image</th>
                                 <th className="border p-2">Name</th>
                                 <th className="border p-2">Price</th>
                                 <th className="border p-2">Category</th>
@@ -59,14 +62,30 @@ export default function Index({ products, categories, auth }) {
                         <tbody>
                             {products.data.map(product => (
                                 <tr key={product.id}>
+                                     <td className="border p-2">
+    {product.images && product.images.length > 0 ? (
+        <div className="flex gap-2">
+            {product.images.slice(0, 3).map((img, idx) => (
+                <img
+                    key={idx}
+                    src={`/storage/${img}`}
+                    alt={product.name}
+                    className="w-12 h-12 object-cover rounded"
+                />
+            ))}
+        </div>
+    ) : (
+        <span>No Image</span>
+    )}
+</td>
                                     <td className="border p-2">{product.name}</td>
                                     <td className="border p-2">{product.price}</td>
-                                    <td className="border p-2">{product.category?.name}</td>
+                                    <td className="border p-2">{product.category}</td>
                                     <td className="border p-2">{product.user?.name}</td>
                                     <td className="border p-2 space-x-2">
                                         <Link
                                             href={route('products.edit', product.id)}
-                                            className="text-blue-500 hover:underline"
+                                             className="px-3 py-1 text-sm bg-yellow-400 text-white rounded hover:bg-yellow-500"
                                         >
                                             Edit
                                         </Link>
@@ -76,7 +95,7 @@ export default function Index({ products, categories, auth }) {
                                                     router.delete(route('products.destroy', product.id));
                                                 }
                                             }}
-                                            className="text-red-600 hover:underline"
+                                           className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
                                         >
                                             Delete
                                         </button>
@@ -89,15 +108,16 @@ export default function Index({ products, categories, auth }) {
 
                 {/* Pagination */}
                 <div className="mt-6 flex justify-center gap-2">
-                    {products.links.map((link, i) => (
-                        <button
-                            key={i}
-                            disabled={!link.url}
-                            onClick={() => router.visit(link.url)}
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                            className={`px-3 py-1 border rounded ${link.active ? 'bg-blue-600 text-white' : ''}`}
-                        />
-                    ))}
+                    {Array.isArray(products.links) && products.links.map((link, i) => (
+    <button
+        key={i}
+        disabled={!link.url}
+        onClick={() => router.visit(link.url)}
+        dangerouslySetInnerHTML={{ __html: link.label }}
+        className={`px-3 py-1 border rounded ${link.active ? 'bg-blue-600 text-white' : ''}`}
+    />
+))}
+
                 </div>
             </div>
         </AuthLayout>

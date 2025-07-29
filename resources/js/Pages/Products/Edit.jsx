@@ -1,5 +1,5 @@
 
-import AuthLayout from '@/Layouts/AuthLayout';
+import AuthLayout from '@/Layouts/UserLayout';
 import ProductForm from '@/Components/ProductForm';
 
 export default function Edit({ product, categories, subcategories }) {
