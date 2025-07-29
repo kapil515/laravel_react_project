@@ -43,7 +43,6 @@ Route::get('/best-sellers', function () {
 
 Route::get('/productpage', [ProductController::class, 'index']);
 
-<<<<<<< HEAD
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
@@ -71,6 +70,4 @@ Route::middleware('auth')->group(function () {
 
 
 require __DIR__.'/auth.php';
-=======
-require __DIR__ . '/auth.php';
->>>>>>> 2c751acd1cd555e0d108d67bc7dd1ae4fbe358e1
+
