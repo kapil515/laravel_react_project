@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -65,6 +66,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+});
+
+
+
+Route::middleware(['auth'])->group(function () {
+    
+    // List all products (admin sees all, user sees own)
+    Route::get('/admin/products', [AdminProductController::class, 'index'])->name('products.index');
+    Route::get('/admin/products/create', [AdminProductController::class, 'create'])->name('products.create');
+    Route::post('/admin/products', [AdminProductController::class, 'store'])->name('products.store');
+    Route::get('/admin/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+    Route::put('/admin/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
+    Route::delete('/admin/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+
 });
 
 
