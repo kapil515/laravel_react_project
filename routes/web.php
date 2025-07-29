@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategorySubcategoryController;
 use Inertia\Inertia;
 use App\Http\Controllers\CartController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -80,19 +81,28 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::middleware(['auth'])->group(function () {
-    
-    // List all products (admin sees all, user sees own)
-    Route::get('/admin/products', [AdminProductController::class, 'index'])->name('products.index');
-    Route::get('/admin/products/create', [AdminProductController::class, 'create'])->name('products.create');
-    Route::post('/admin/products', [AdminProductController::class, 'store'])->name('products.store');
-    Route::get('/admin/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
-    Route::put('/admin/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
-    Route::delete('/admin/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+// Route::middleware(['auth'])->group(function () {
+//     // List products (user sees their own, admin sees all)
+//     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
-});
+//     // Show single product (public or protected depending on your setup)
+//     Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
+//     // Create product form (authenticated)
+//     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 
+//     // Store product (authenticated)
+//     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+
+//     // Edit form (only for owner or admin)
+//     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+
+//     // Update product (only for owner or admin)
+//     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+
+//     // Delete product (only for owner or admin)
+//     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+// });
 
 require __DIR__.'/auth.php';
 
