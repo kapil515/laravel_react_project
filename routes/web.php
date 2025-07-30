@@ -41,9 +41,9 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 // Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-// Route::get('/best-sellers', function () {
-//     return Inertia::render('BestSellers');
-// });
+Route::get('/best-sellers', function () {
+    return Inertia::render('BestSellers');
+});
 
 
 // // Show edit form
