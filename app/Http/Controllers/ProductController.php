@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Subcategory;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 class ProductController extends Controller
