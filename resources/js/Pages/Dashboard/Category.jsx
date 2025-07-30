@@ -47,7 +47,7 @@ export default function Index({ categories }) {
                         value={data.name}
                         onChange={e => setData('name', e.target.value)}
                         placeholder="Category name"
-                        className="border p-2 mr-2 rounded"
+                        className="w-[20%]  border p-2 mr-2 rounded"
                     />
                     <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
                     {errors.name && <div className="text-red-500">{errors.name}</div>}
@@ -59,7 +59,7 @@ export default function Index({ categories }) {
                     <select
                         value={data.category_id}
                         onChange={e => setData('category_id', e.target.value)}
-                        className="border p-2 mr-2 rounded"
+                        className=" w-[20%]  border p-2 mr-2 rounded"
                     >
                         <option value="">Select Category</option>
                         {categories.map(category => (
@@ -71,7 +71,7 @@ export default function Index({ categories }) {
                         value={data.name}
                         onChange={e => setData('name', e.target.value)}
                         placeholder="Subcategory name"
-                        className="border p-2 mr-2 rounded"
+                        className="border w-[20%]   p-2 mr-2 rounded"
                     />
                     <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
                     {errors.name && <div className="text-red-500">{errors.name}</div>}
