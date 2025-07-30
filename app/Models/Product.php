@@ -18,6 +18,7 @@ class Product extends Model
         'highlights' => 'array',
     ];
 
+ 
     //  public function category()
     // {
     //     return $this->belongsTo(Category::class);

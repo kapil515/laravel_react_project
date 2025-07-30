@@ -1,23 +1,28 @@
-import { useForm } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 
 export default function AddToCartButton({ productId }) {
-    const { post } = useForm();
+    function handleAddToCart() {
+        console.log('Adding product', productId);
 
-    const handleAddToCart = () => {
-        post(route('cart.add'), {
+        router.post(route('cart.add'), {
             product_id: productId,
-            quantity: 1,
+            quantity: 1
         }, {
             preserveScroll: true,
             onSuccess: () => {
-                // Navigate to cart after adding
-                window.location.href = route('cart.index');
+                console.log('Product added to cart');
+            },
+            onError: (errors) => {
+                console.error('Cart add error:', errors);
             }
         });
-    };
+    }
 
     return (
-        <button onClick={handleAddToCart} className="px-4 py-2 text-white bg-green-600 rounded">
+        <button
+            onClick={handleAddToCart}
+            className="px-4 py-2 text-white bg-blue-600 rounded"
+        >
             Add to Cart
         </button>
     );
