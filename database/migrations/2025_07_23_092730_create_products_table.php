@@ -25,6 +25,8 @@ return new class extends Migration
             $table->text('details')->nullable();
             $table->float('reviews_average')->nullable();
             $table->integer('reviews_total_count')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable()->change();
+            $table->unsignedBigInteger('subcategory_id')->nullable()->change();
             $table->timestamps();
         });
     }

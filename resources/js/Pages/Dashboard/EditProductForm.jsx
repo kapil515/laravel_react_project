@@ -40,7 +40,7 @@ export default function EditProduct({ product, onClose }) {
                 <div className="mb-4">
                     <label className="block">Price</label>
                     <input
-                        type="text"
+                        type="number"
                         className="border rounded w-full p-2"
                         value={data.price}
                         onChange={(e) => setData('price', e.target.value)}
