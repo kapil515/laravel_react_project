@@ -6,7 +6,13 @@ export default function AddToCartButton({ productId }) {
     const handleAddToCart = () => {
         post(route('cart.add'), {
             product_id: productId,
-            quantity: 1
+            quantity: 1,
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Navigate to cart after adding
+                window.location.href = route('cart.index');
+            }
         });
     };
 

@@ -1,51 +1,60 @@
-import { useForm } from '@inertiajs/react';
+import React from 'react';
+import { usePage, Link } from '@inertiajs/react';
 
-export default function Cart({ cart }) {
-    const { post, delete: destroy } = useForm();
+export default function Cart() {
+    // Get cartItems from server-side props. Default to empty array if undefined.
+    const { cartItems = [] } = usePage().props;
 
-    const handleUpdate = (productId, quantity) => {
-        post(route('cart.update'), { product_id: productId, quantity });
-    };
-
-    const handleRemove = (productId) => {
-        destroy(route('cart.remove'), { data: { product_id: productId } });
-    };
-
-    const cartItems = Object.values(cart);
+    // Calculate total price
+    const total = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+    );
 
     return (
-        <div className="max-w-4xl mx-auto mt-10">
-            <h1 className="mb-6 text-3xl font-bold">Your Cart</h1>
+        <div className="max-w-4xl mx-auto p-6">
+            <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
+
             {cartItems.length === 0 ? (
-                <p>Your cart is empty.</p>
+                <div className="text-gray-600">
+                    Your cart is empty.
+                    <Link
+                        href="/products"
+                        className="ml-2 text-blue-600 underline"
+                    >
+                        Browse Products
+                    </Link>
+                </div>
             ) : (
-                <div className="space-y-4">
-                    {cartItems.map((item) => (
-                        <div key={item.id} className="flex items-center justify-between border-b pb-2">
-                            <div className="flex items-center gap-4">
-                                <img src={`/storage/${item.image}`} className="w-16 h-16 object-cover" />
-                                <div>
-                                    <p>{item.name}</p>
-                                    <p>${item.price} × {item.quantity} = <strong>${item.price * item.quantity}</strong></p>
-                                </div>
+                <div className="space-y-6">
+                    {cartItems.map(item => (
+                        <div
+                            key={item.id}
+                            className="flex justify-between items-center border-b pb-4"
+                        >
+                            <div>
+                                <h2 className="text-lg font-semibold">{item.name}</h2>
+                                <p className="text-gray-600">
+                                    ₹{item.price} × {item.quantity}
+                                </p>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="number"
-                                    min="1"
-                                    value={item.quantity}
-                                    onChange={(e) => handleUpdate(item.id, Number(e.target.value))}
-                                    className="w-16 border rounded px-2 py-1"
-                                />
-                                <button
-                                    onClick={() => handleRemove(item.id)}
-                                    className="text-red-600 hover:underline"
-                                >
-                                    Remove
-                                </button>
+                            <div className="text-lg font-bold">
+                                ₹{item.price * item.quantity}
                             </div>
                         </div>
                     ))}
+
+                    <div className="flex justify-between items-center mt-6 pt-6 border-t">
+                        <h2 className="text-xl font-bold">Total</h2>
+                        <div className="text-xl font-bold">₹{total}</div>
+                    </div>
+
+                    <button
+                        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+                        onClick={() => alert('Checkout coming soon!')}
+                    >
+                        Proceed to Checkout
+                    </button>
                 </div>
             )}
         </div>

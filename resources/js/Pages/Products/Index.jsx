@@ -84,6 +84,12 @@ export default function Index({ products, categories, auth }) {
                                     <td className="border p-2">{product.user?.name}</td>
                                     <td className="border p-2 space-x-2">
                                         <Link
+        href={route('products.show', product.id)}
+        className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+    >
+        View
+    </Link>
+                                        <Link
                                             href={route('products.edit', product.id)}
                                              className="px-3 py-1 text-sm bg-yellow-400 text-white rounded hover:bg-yellow-500"
                                         >

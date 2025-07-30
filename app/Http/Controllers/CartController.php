@@ -5,40 +5,43 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Product;
+use Illuminate\Support\Facades\Redirect;
 
 class CartController extends Controller
 {
-     public function index(Request $request)
-    {
-        $cart = session()->get('cart', []);
-        return Inertia::render('Cart', [
-            'cart' => $cart,
-        ]);
-    }
+   public function add(Request $request)
+{
+    $productId = $request->input('product_id');
+    $quantity = $request->input('quantity', 1);
 
-    public function add(Request $request)
-    {
-        $product = Product::findOrFail($request->product_id);
+    $cart = session()->get('cart', []);
+    $cart[$productId] = [
+        'product_id' => $productId,
+        'quantity' => ($cart[$productId]['quantity'] ?? 0) + $quantity
+    ];
 
-        $cart = session()->get('cart', []);
-        $quantity = $request->quantity ?? 1;
+    session()->put('cart', $cart);
 
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity'] += $quantity;
-        } else {
-            $cart[$product->id] = [
+    return redirect()->route('cart.index')->with('success', 'Product added  to cart');
+}
+
+public function index()
+{
+    $cart = session('cart', []);
+    $productIds = array_keys($cart);
+    $products = Product::whereIn('id', $productIds)->get();
+
+    return Inertia::render('Cart', [
+        'cartItems' => $products->map(function ($product) use ($cart) {
+            return [
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
-                'image' => $product->images[0] ?? null,
-                'quantity' => $quantity,
+                'quantity' => $cart[$product->id]['quantity'],
             ];
-        }
-
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('message', 'Product added to cart.');
-    }
+        }),
+    ]);
+}
 
     public function update(Request $request)
     {
@@ -48,7 +51,7 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
-        return redirect()->back();
+       return redirect()->route('cart.index')->with('success', 'Product updated');
     }
 
     public function remove(Request $request)
@@ -57,7 +60,7 @@ class CartController extends Controller
         unset($cart[$request->product_id]);
         session()->put('cart', $cart);
 
-        return redirect()->back();
+       return redirect()->route('cart.index')->with('success', 'Product removed from cart');
     }
 }
 

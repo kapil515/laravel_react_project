@@ -6,6 +6,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import UserLayout from '@/Layouts/UserLayout';
+import AddToCartButton from '@/Components/AddToCartButton';
+
 
 
 function classNames(...classes) {
@@ -126,14 +128,17 @@ export default function SingleProduct() {
                                     </div>
                                 </div>
 
-                                <form className="mt-10">
+                                {/* <form className="mt-10">
                                     <button
                                         type="submit"
                                         className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                     >
                                         Add to bag
                                     </button>
-                                </form>
+                                </form> */}
+                                <div className="mt-10">
+    <AddToCartButton productId={product.id} />
+</div>
                             </div>
                         </div>
                     </div>

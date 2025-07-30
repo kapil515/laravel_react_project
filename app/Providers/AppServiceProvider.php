@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
-        Inertia::share([
+       Inertia::share([
         'cartCount' => function () {
-            $cart = session()->get('cart', []);
+            $cart = session('cart', []);
             return collect($cart)->sum('quantity');
         },
     ]);
