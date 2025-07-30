@@ -39,36 +39,36 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-// Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-// Route::get('/best-sellers', function () {
-//     return Inertia::render('BestSellers');
-// });
-
-
-// // Show edit form
-// Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-
-// // Update product (PUT method via Inertia)
-// Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-
-
-// Route::get('/productpage', [ProductController::class, 'index']);
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
-
-    // Category Routes
-    Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
-    Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
-    Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');
-
-    // Subcategory Routes
-    Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
-    Route::put('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'updateSubcategory'])->name('admin.subcategories.update');
-    Route::delete('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'deleteSubcategory'])->name('admin.subcategories.delete');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+Route::get('/best-sellers', function () {
+    return Inertia::render('BestSellers');
 });
+
+
+// Show edit form
+Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+
+// Update product (PUT method via Inertia)
+Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+
+
+Route::get('/productpage', [ProductController::class, 'index']);
+
+
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
+
+//     // Category Routes
+//     Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
+//     Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
+//     Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');
+
+//     // Subcategory Routes
+//     Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
+//     Route::put('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'updateSubcategory'])->name('admin.subcategories.update');
+//     Route::delete('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'deleteSubcategory'])->name('admin.subcategories.delete');
+// });
 
 
 
@@ -79,14 +79,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 });
 
-
-Route::middleware(['auth', 'admin'])->group(function () {
-     Route::get('/dashboard/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('products', [ProductController::class, 'store'])->name('products.store');
-    Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-});
 require __DIR__.'/auth.php';
 
