@@ -26,7 +26,7 @@ class CategorySubcategoryController extends Controller
 
         $categories = Category::with('subcategories')->get();
 
-        return inertia('Categories/Index', [
+        return inertia('Dashboard/Category', [
             'categories' => $categories
         ]);
     }

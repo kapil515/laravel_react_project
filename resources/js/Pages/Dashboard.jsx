@@ -6,11 +6,12 @@ import Product from './Dashboard/Products';
 import { usePage } from '@inertiajs/react';
 import EditUser from '@/Components/Users/Edit';
 import CreateUser from '@/Components/Users/CreateUser'; 
+import Category from './Dashboard/Category'; 
 
 
 export default function Dashboard({ section,products }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { users } = usePage().props;
+    const { users,categories } = usePage().props;
 
     const renderContent = () => {
         switch (section) {
@@ -22,6 +23,7 @@ export default function Dashboard({ section,products }) {
             case 'products': return <Product products={products} />;
             case 'members': return <div className="p-6">Prime Members Content</div>;
             case 'settings': return <div className="p-6">Settings Content</div>;
+             case 'Categories': return <Category categories={categories} />;
             default: return <div className="p-6">You're logged in!</div>;
         }
     };
@@ -54,6 +56,7 @@ export default function Dashboard({ section,products }) {
                         <SidebarLink href="/dashboard/sales" label="Sales" />
                         <SidebarLink href="/dashboard/products" label="Products" />
                         <SidebarLink href="/dashboard/members" label="Prime Members" />
+                       <SidebarLink href="/dashboard/Categories" label="Categories" />
                         <SidebarLink href="/dashboard/settings" label="Settings" />
                     </nav>
                 </aside>

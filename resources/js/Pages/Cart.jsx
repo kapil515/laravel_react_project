@@ -101,7 +101,7 @@ export default function Cart() {
                             </button>
                             <button
                                 onClick={() => alert('Proceed to payment')}
-                                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-green-700"
                             >
                                 Pay Now
                             </button>

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Category;
 use App\Models\Product;
 
 class DashboardController extends Controller
@@ -119,4 +120,18 @@ public function products()
     {
         return Inertia::render('Dashboard', ['section' => 'settings']);
     }
+
+public function Category()
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
+    $categories = Category::with('subcategories')->get();
+
+    return Inertia::render('Dashboard', [
+        'section' => 'Categories',
+        'categories' => $categories
+    ]);
+}
+
 }
