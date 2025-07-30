@@ -6,7 +6,7 @@ import Product from './Dashboard/Products';
 import { usePage } from '@inertiajs/react';
 import EditUser from '@/Components/Users/Edit';
 import CreateUser from '@/Components/Users/CreateUser'; 
-import Cart from './Cart';
+
 
 export default function Dashboard({ section,products }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
