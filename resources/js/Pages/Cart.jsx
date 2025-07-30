@@ -1,62 +1,115 @@
 import React from 'react';
-import { usePage, Link } from '@inertiajs/react';
+import { usePage, router } from '@inertiajs/react';
+import UserLayout from '@/Layouts/UserLayout';
 
 export default function Cart() {
-    // Get cartItems from server-side props. Default to empty array if undefined.
-    const { cartItems = [] } = usePage().props;
+    const { cartItems } = usePage().props;
 
-    // Calculate total price
-    const total = cartItems.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-    );
+    const handleQuantityChange = (id, newQuantity) => {
+        if (newQuantity < 1) return;
+
+       router.post(route('cart.update'), {
+    product_id: id,
+    quantity: newQuantity,
+}, {
+    preserveScroll: true,
+});
+
+    };
+
+    const getItemById = (id) => cartItems.find(item => item.id === id);
+
+    const handleRemove = (id) => {
+        router.post(route('cart.remove', id), {}, {
+            method: 'post',
+            preserveScroll: true,
+        });
+    };
+
+    const handleClear = () => {
+        router.post(route('cart.clear'), {}, {
+            method: 'post',
+            preserveScroll: true,
+        });
+    };
+
+    const getTotal = () => {
+        return cartItems.reduce((total, item) => {
+            return total + item.price * item.quantity;
+        }, 0);
+    };
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <UserLayout>
+        <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
             {cartItems.length === 0 ? (
-                <div className="text-gray-600">
-                    Your cart is empty.
-                    <Link
-                        href="/products"
-                        className="ml-2 text-blue-600 underline"
-                    >
-                        Browse Products
-                    </Link>
-                </div>
+                <p className="text-gray-500">Your cart is empty.</p>
             ) : (
                 <div className="space-y-6">
                     {cartItems.map(item => (
-                        <div
-                            key={item.id}
-                            className="flex justify-between items-center border-b pb-4"
-                        >
-                            <div>
+                        <div key={item.id} className="flex items-center border p-4 rounded-lg shadow-md">
+                            <img
+                                src={item.image_url}
+                                alt={item.name}
+                                className="w-24 h-24 object-cover rounded"
+                            />
+                            <div className="ml-4 flex-1">
                                 <h2 className="text-lg font-semibold">{item.name}</h2>
-                                <p className="text-gray-600">
-                                    ₹{item.price} × {item.quantity}
-                                </p>
+                                <p className="text-gray-600">Price: ₹{item.price}</p>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <button
+                                        onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                                        className="bg-gray-200 px-2 py-1 rounded"
+                                    >
+                                        −
+                                    </button>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={item.quantity}
+                                        onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                                        className="w-30 text-center border rounded"
+                                    />
+                                    <button
+                                        onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                                        className="bg-gray-200 px-2 py-1 rounded"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                <p className="text-sm mt-1 text-gray-500">Item Total: ₹{item.price * item.quantity}</p>
                             </div>
-                            <div className="text-lg font-bold">
-                                ₹{item.price * item.quantity}
-                            </div>
+                            <button
+                                onClick={() => handleRemove(item.id)}
+                                className="text-red-500 hover:text-red-700 font-semibold"
+                            >
+                                Remove
+                            </button>
                         </div>
                     ))}
 
-                    <div className="flex justify-between items-center mt-6 pt-6 border-t">
-                        <h2 className="text-xl font-bold">Total</h2>
-                        <div className="text-xl font-bold">₹{total}</div>
+                    <div className="flex justify-between items-center mt-6">
+                        <h2 className="text-xl font-bold">Total: ₹{getTotal()}</h2>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={handleClear}
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                            >
+                                Clear Cart
+                            </button>
+                            <button
+                                onClick={() => alert('Proceed to payment')}
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                            >
+                                Pay Now
+                            </button>
+                        </div>
                     </div>
-
-                    <button
-                        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-                        onClick={() => alert('Checkout coming soon!')}
-                    >
-                        Proceed to Checkout
-                    </button>
                 </div>
             )}
         </div>
+    </UserLayout>
     );
 }

@@ -55,6 +55,8 @@ Route::put('/products/{product}', [ProductController::class, 'update'])->name('p
 
 Route::get('/productpage', [ProductController::class, 'index']);
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard/Categories', [DashboardController::class, 'Category'])->name('dashboard.categories');
 
 Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
 
@@ -63,24 +65,21 @@ Route::post('/categories-with-subcategory', [CategorySubcategoryController::clas
 // Route::middleware(['auth'])->group(function () {
 //     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
 
-//     // Category Routes
-//     Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
-//     Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
-//     Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');
-
-//     // Subcategory Routes
-//     Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
-//     Route::put('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'updateSubcategory'])->name('admin.subcategories.update');
-//     Route::delete('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'deleteSubcategory'])->name('admin.subcategories.delete');
-// });
+    // Subcategory Routes
+    Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
+    Route::put('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'updateSubcategory'])->name('admin.subcategories.update');
+    Route::delete('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'deleteSubcategory'])->name('admin.subcategories.delete');
+});
 
 
 
 Route::middleware('auth')->group(function () {
-  Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-   Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 });
 
 require __DIR__.'/auth.php';

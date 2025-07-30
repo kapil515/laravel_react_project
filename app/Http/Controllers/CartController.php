@@ -2,65 +2,94 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use App\Models\CartItem;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
-   public function add(Request $request)
-{
-    $productId = $request->input('product_id');
-    $quantity = $request->input('quantity', 1);
+     public function index()
+    {
+        $user = Auth::user();
+        $cartItems = CartItem::with('product')
+            ->where('user_id', $user->id)
+            ->get()
+            ->map(function ($item) {
+                $images = is_string($item->product->images)
+                    ? json_decode($item->product->images, true)
+                    : $item->product->images;
 
-    $cart = session()->get('cart', []);
-    $cart[$productId] = [
-        'product_id' => $productId,
-        'quantity' => ($cart[$productId]['quantity'] ?? 0) + $quantity
-    ];
+                return [
+                    'id' => $item->product->id,
+                    'name' => $item->product->name,
+                    'price' => $item->product->price,
+                    'image_url' => !empty($images[0]) ? Storage::url($images[0]) : asset('default.png'),
+                    'quantity' => $item->quantity,
+                ];
+            });
 
-    session()->put('cart', $cart);
+        return Inertia::render('Cart', [
+            'cartItems' => $cartItems,
+        ]);
+    }
 
-    return redirect()->route('cart.index')->with('success', 'Product added  to cart');
-}
+    public function add(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-public function index()
-{
-    $cart = session('cart', []);
-    $productIds = array_keys($cart);
-    $products = Product::whereIn('id', $productIds)->get();
+        $user = Auth::user();
 
-    return Inertia::render('Cart', [
-        'cartItems' => $products->map(function ($product) use ($cart) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $cart[$product->id]['quantity'],
-            ];
-        }),
-    ]);
-}
+        $cartItem = CartItem::where('user_id', $user->id)
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->increment('quantity', $request->quantity);
+        } else {
+            CartItem::create([
+                'user_id' => $user->id,
+                'product_id' => $request->product_id,
+                'quantity' => $request->quantity,
+            ]);
+        }
+
+        return redirect()->route('cart.index')->with('message', 'Product added to cart!');
+    }
 
     public function update(Request $request)
     {
-        $cart = session()->get('cart', []);
-        if (isset($cart[$request->product_id])) {
-            $cart[$request->product_id]['quantity'] = $request->quantity;
-            session()->put('cart', $cart);
-        }
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-       return redirect()->route('cart.index')->with('success', 'Product updated');
+        CartItem::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->update(['quantity' => $request->quantity]);
+
+        return redirect()->route('cart.index');
     }
 
-    public function remove(Request $request)
+    public function remove($id)
     {
-        $cart = session()->get('cart', []);
-        unset($cart[$request->product_id]);
-        session()->put('cart', $cart);
+        CartItem::where('user_id', Auth::id())
+            ->where('product_id', $id)
+            ->delete();
 
-       return redirect()->route('cart.index')->with('success', 'Product removed from cart');
+        return redirect()->route('cart.index')->with('message', 'Item removed from cart.');
+    }
+
+    public function clear()
+    {
+        CartItem::where('user_id', Auth::id())->delete();
+
+        return redirect()->route('cart.index')->with('message', 'Cart cleared.');
     }
 }
-
