@@ -9,7 +9,7 @@ class Product extends Model
     protected $fillable = [
         'name', 'price', 'image_src', 'image_alt', 'description', 'images', 'colors', 'sizes',
         'highlights', 'details', 'reviews_average', 'reviews_total_count',
-        'category_id', 'subcategory_id','user_id'
+        'category_id', 'subcategory_id'
     ];
 
     protected $casts = [
@@ -27,8 +27,5 @@ class Product extends Model
     public function subcategory()
     {
         return $this->belongsTo(Subcategory::class);
-    }
-    public function user() {
-        return $this->belongsTo(User::class);
     }
 }
