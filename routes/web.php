@@ -64,6 +64,10 @@ Route::post('/categories-with-subcategory', [CategorySubcategoryController::clas
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
+    // Category Routes
+    Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
+    Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
+    Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');
 
     // Subcategory Routes
     Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
