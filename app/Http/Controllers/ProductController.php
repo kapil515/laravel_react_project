@@ -13,10 +13,7 @@ class ProductController extends Controller
 {
    public function index(Request $request)
 {
-    $user = Auth::user();
-
-    $products = Product::with(['category', 'subcategory', 'user'])
-        ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+    $products = Product::with(['category', 'subcategory'])
         ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
         ->when($request->subcategory_id, fn($q) => $q->where('subcategory_id', $request->subcategory_id))
         ->latest()
@@ -30,10 +27,6 @@ class ProductController extends Controller
                 'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
                 'category' => $product->category?->name,
                 'subcategory' => $product->subcategory?->name,
-                'user' => [
-                    'id' => $product->user?->id,
-                    'name' => $product->user?->name,
-                ],
             ];
         });
 
@@ -44,7 +37,6 @@ class ProductController extends Controller
         'products' => $products,
         'categories' => $categories,
         'subcategories' => $subcategories,
-        'user_id' => $user->id,
     ]);
 }
     public function show($id)
@@ -117,7 +109,6 @@ class ProductController extends Controller
             'category_id' => $validated['category_id'],
             'subcategory_id' => $validated['subcategory_id'],
             'images' => json_encode($imagePaths),
-            'user_id' => Auth::id(), 
         ]);
 
         Log::info('Product created:', $product->toArray());
@@ -129,10 +120,10 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Restrict access for normal users
-        if (Auth::user()->role !== 'admin' && $product->user_id !== Auth::id()) {
-            abort(403);
-        }
+        // // Restrict access for normal users
+        // if (Auth::user()->role !== 'admin') {
+        //     abort(403);
+        // }
 
         return Inertia::render('Products/Edit', [
             'product' => [
@@ -150,9 +141,9 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        if (Auth::user()->role !== 'admin' && $product->user_id !== Auth::id()) {
-            abort(403);
-        }
+        // if (Auth::user()->role !== 'admin') {
+        //     abort(403);
+        // }
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -178,9 +169,9 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        if (Auth::user()->role !== 'admin' && $product->user_id !== Auth::id()) {
-            abort(403);
-        }
+        // if (Auth::user()->role !== 'admin') {
+        //     abort(403);
+        // }
 
         $product->delete();
 
