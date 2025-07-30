@@ -89,13 +89,14 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', ['section' => 'sales']);
     }
 
-   public function products()
+public function products()
 {
-    $products = Product::paginate(5)->through(function ($product) {
+    $products = Product::latest()->paginate(5)->through(function ($product) {
         return [
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
+            'description' => $product->description, 
             'imageAlt' => $product->image_alt,
             'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
         ];
@@ -106,6 +107,7 @@ class DashboardController extends Controller
         'products' => $products
     ]);
 }
+
 
 
     public function members()

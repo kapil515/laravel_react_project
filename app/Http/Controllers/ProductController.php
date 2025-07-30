@@ -14,7 +14,7 @@ class ProductController extends Controller
 
 public function index()
     {
-        $products = Product::all()->map(function ($product) {
+        $products = Product::latest()->paginate(5)->through(function ($product) {
             return [
                 'id' => $product->id,
                 'name' => $product->name,
