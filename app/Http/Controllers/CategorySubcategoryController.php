@@ -11,107 +11,140 @@ use App\Models\Subcategory;
 
 class CategorySubcategoryController extends Controller
 {
-    private function authorizeAdmin()
-    {
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Unauthorized');
-        }
-    }
+    // private function authorizeAdmin()
+    // {
+    //     if (Auth::user()->role !== 'admin') {
+    //         abort(403, 'Unauthorized');
+    //     }
+    // }
 
-    // ========================= CATEGORY METHOD =========================
+    // // ========================= CATEGORY METHOD =========================
 
-    public function index()
-    {
-        $this->authorizeAdmin();
+    // public function index()
+    // {
+    //     $this->authorizeAdmin();
 
-        $categories = Category::with('subcategories')->get();
+    //     $categories = Category::with('subcategories')->get();
 
-        return inertia('Categories/Index', [
-            'categories' => $categories
-        ]);
-    }
+    //     return inertia('Categories/Index', [
+    //         'categories' => $categories
+    //     ]);
+    // }
 
-    public function storeCategory(Request $request)
-    {
-        $this->authorizeAdmin();
+    // public function storeCategory(Request $request)
+    // {
+    //     $this->authorizeAdmin();
 
-        $request->validate([
-            'name' => 'required|string|unique:categories,name'
-        ]);
+    //     $request->validate([
+    //         'name' => 'required|string|unique:categories,name'
+    //     ]);
 
-        Category::create([
-            'name' => $request->name
-        ]);
+    //     Category::create([
+    //         'name' => $request->name
+    //     ]);
 
-        return redirect()->back()->with('success', 'Category created.');
-    }
+    //     return redirect()->back()->with('success', 'Category created.');
+    // }
 
-    public function updateCategory(Request $request, Category $category)
-    {
-        $this->authorizeAdmin();
+    // public function updateCategory(Request $request, Category $category)
+    // {
+    //     $this->authorizeAdmin();
 
-        $request->validate([
-            'name' => 'required|string|unique:categories,name,' . $category->id
-        ]);
+    //     $request->validate([
+    //         'name' => 'required|string|unique:categories,name,' . $category->id
+    //     ]);
 
-        $category->update([
-            'name' => $request->name
-        ]);
+    //     $category->update([
+    //         'name' => $request->name
+    //     ]);
 
-        return redirect()->back()->with('success', 'Category updated.');
-    }
+    //     return redirect()->back()->with('success', 'Category updated.');
+    // }
 
-    public function deleteCategory(Category $category)
-    {
-        $this->authorizeAdmin();
+    // public function deleteCategory(Category $category)
+    // {
+    //     $this->authorizeAdmin();
 
-        $category->delete();
+    //     $category->delete();
 
-        return redirect()->back()->with('success', 'Category deleted.');
-    }
+    //     return redirect()->back()->with('success', 'Category deleted.');
+    // }
 
-    // ===================== SUBCATEGORY METHODS =========================
+    // // ===================== SUBCATEGORY METHODS =========================
 
-    public function storeSubcategory(Request $request)
-    {
-        $this->authorizeAdmin();
+    // public function storeSubcategory(Request $request)
+    // {
+    //     $this->authorizeAdmin();
 
-        $request->validate([
-            'name' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-        ]);
+    //     $request->validate([
+    //         'name' => 'required|string',
+    //         'category_id' => 'required|exists:categories,id',
+    //     ]);
 
+    //     Subcategory::create([
+    //         'name' => $request->name,
+    //         'category_id' => $request->category_id
+    //     ]);
+
+    //     return redirect()->back()->with('success', 'Subcategory created.');
+    // }
+
+    // public function updateSubcategory(Request $request, Subcategory $subcategory)
+    // {
+    //     $this->authorizeAdmin();
+
+    //     $request->validate([
+    //         'name' => 'required|string',
+    //         'category_id' => 'required|exists:categories,id',
+    //     ]);
+
+    //     $subcategory->update([
+    //         'name' => $request->name,
+    //         'category_id' => $request->category_id
+    //     ]);
+
+    //     return redirect()->back()->with('success', 'Subcategory updated.');
+    // }
+
+    // public function deleteSubcategory(Subcategory $subcategory)
+    // {
+    //     $this->authorizeAdmin();
+
+    //     $subcategory->delete();
+
+    //     return redirect()->back()->with('success', 'Subcategory deleted.');
+    // }
+
+    public function storeWithSubcategory(Request $request)
+{
+    $request->validate([
+        'category' => 'required|string|max:255',
+        'subcategory' => 'nullable|string|max:255',
+    ]);
+
+    // Create or find existing category
+    $category = Category::firstOrCreate([
+        'name' => $request->category,
+    ]);
+
+    // If subcategory is given, create and associate
+    if ($request->filled('subcategory')) {
         Subcategory::create([
-            'name' => $request->name,
-            'category_id' => $request->category_id
+            'name' => $request->subcategory,
+            'category_id' => $category->id,
         ]);
-
-        return redirect()->back()->with('success', 'Subcategory created.');
     }
 
-    public function updateSubcategory(Request $request, Subcategory $subcategory)
-    {
-        $this->authorizeAdmin();
+    return back()->with('success', 'Category and subcategory saved successfully.');
+}
 
-        $request->validate([
-            'name' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-        ]);
+public function create()
+{
+    $categories = Category::with('subcategories')->get(); // assuming `subcategories()` relation exists
 
-        $subcategory->update([
-            'name' => $request->name,
-            'category_id' => $request->category_id
-        ]);
+    return Inertia::render('YourProductCreatePage', [
+        'categories' => $categories,
+    ]);
+}
 
-        return redirect()->back()->with('success', 'Subcategory updated.');
-    }
-
-    public function deleteSubcategory(Subcategory $subcategory)
-    {
-        $this->authorizeAdmin();
-
-        $subcategory->delete();
-
-        return redirect()->back()->with('success', 'Subcategory deleted.');
-    }
 }

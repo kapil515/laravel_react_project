@@ -38,7 +38,7 @@ export default function SingleProduct() {
                         <nav aria-label="Breadcrumb">
                             <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                                 {product.breadcrumbs
-                                    .filter(breadcrumb => breadcrumb.name !== 'Home') // skip 'Home'
+                                    .filter(breadcrumb => breadcrumb.name !== 'Home') 
                                     .map((breadcrumb) => (
                                         <li key={breadcrumb.id}>
                                             <div className="flex items-center">
@@ -69,7 +69,6 @@ export default function SingleProduct() {
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-                                {/* LEFT SIDE: Swiper Slider */}
                                 <div>
                                     <Swiper
                                         spaceBetween={10}
@@ -95,7 +94,6 @@ export default function SingleProduct() {
                                     </Swiper>
                                 </div>
 
-                                {/* RIGHT SIDE: Product Info */}
                                 <div className="flex flex-col ">
                                     <div>
                                         <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">

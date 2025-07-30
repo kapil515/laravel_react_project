@@ -10,7 +10,7 @@ class Product extends Model
     
     protected $fillable = [
         'name', 'price', 'image_src', 'image_alt', 'description', 'images', 'colors', 'sizes',
-        'highlights', 'details', 'reviews_average', 'reviews_total_count',
+        'highlights', 'details', 'reviews_average', 'reviews_total_count', 'category_id', 'subcategory_id',
     ];
 
     protected $casts = [
@@ -20,13 +20,13 @@ class Product extends Model
         'highlights' => 'array',
     ];
 
-    //  public function category()
-    // {
-    //     return $this->belongsTo(Category::class);
-    // }
+     public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
-    // public function subcategory()
-    // {
-    //     return $this->belongsTo(Subcategory::class);
-    // }
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
+    }
 }

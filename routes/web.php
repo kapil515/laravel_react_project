@@ -56,6 +56,10 @@ Route::put('/products/{product}', [ProductController::class, 'update'])->name('p
 Route::get('/productpage', [ProductController::class, 'index']);
 
 
+Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
+
+
+
 // Route::middleware(['auth'])->group(function () {
 //     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
 

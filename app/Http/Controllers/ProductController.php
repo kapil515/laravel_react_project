@@ -14,15 +14,21 @@ class ProductController extends Controller
 
 public function index()
     {
-        $products = Product::latest()->paginate(5)->through(function ($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'imageAlt' => $product->image_alt,
-                'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
-            ];
-        });
+    $products = Product::with(['category', 'subcategory'])
+    ->latest()
+    ->paginate(5)
+    ->through(function ($product) {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'imageAlt' => $product->image_alt,
+            'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
+            'category' => $product->category ? $product->category->name : null,
+            'subcategory' => $product->subcategory ? $product->subcategory->name : null,
+        ];
+    });
+
 
         return Inertia::render('ProductPage', [
             'products' => $products
@@ -70,7 +76,9 @@ public function index()
         'reviews_average' => 'nullable|numeric',
         'reviews_total_count' => 'nullable|integer',
         'images' => 'required|array',
-        'images.*' => 'image|max:2048', 
+        'images.*' => 'image|max:2048',
+        'category_id' => 'nullable|exists:categories,id',
+        'subcategory_id' => 'nullable|exists:subcategories,id',
     ]);
 
     $imagePaths = [];
@@ -90,6 +98,8 @@ public function index()
         'reviews_average' => $validated['reviews_average'],
         'reviews_total_count' => $validated['reviews_total_count'],
         'images' => json_encode($imagePaths), 
+        'category_id' => $validated['category_id'] ?? null,
+        'subcategory_id' => $validated['subcategory_id'] ?? null,
     ]);
 
     Log::info('Product created:', $product->toArray());
@@ -97,9 +107,11 @@ public function index()
     return back()->with('success', 'Product created successfully');
 }
 
- public function edit($id)
+public function edit($id)
 {
     $product = Product::findOrFail($id);
+    $categories = Category::all();
+    $subcategories = Subcategory::all();
 
     return Inertia::render('Dashboard/EditProductForm', [
         'product' => [
@@ -107,10 +119,14 @@ public function index()
             'name' => $product->name,
             'price' => $product->price,
             'description' => $product->description,
-            'image' => $product->image_path, 
-        ]
+            'category_id' => $product->category_id,
+            'subcategory_id' => $product->subcategory_id,
+        ],
+        'categories' => $categories,
+        'subcategories' => $subcategories,
     ]);
 }
+
 
 public function update(Request $request, Product $product)
 {

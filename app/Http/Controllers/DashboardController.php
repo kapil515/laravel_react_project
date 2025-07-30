@@ -4,6 +4,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Category;
 
 class DashboardController extends Controller
 {
@@ -102,9 +103,12 @@ public function products()
         ];
     });
 
+    $categories = Category::with('subcategories')->get(); 
+
     return Inertia::render('Dashboard', [  
         'section' => 'products',
-        'products' => $products
+        'products' => $products,
+        'categories' => $categories 
     ]);
 }
 

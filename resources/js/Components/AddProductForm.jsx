@@ -1,8 +1,8 @@
-import { useForm, router  } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import { useRef } from 'react';
 
 
-export default function AddProductForm({ onClose }) {
+export default function AddProductForm({ onClose, categories = [] }) {
     const fileInputRef = useRef(null);
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -16,6 +16,8 @@ export default function AddProductForm({ onClose }) {
         details: '',
         reviews_average: null,
         reviews_total_count: null,
+        category_id: '',
+        subcategory_id: '',
     });
 
     const handleSubmit = (e) => {
@@ -29,6 +31,9 @@ export default function AddProductForm({ onClose }) {
         formData.append('details', data.details);
         formData.append('reviews_average', data.reviews_average);
         formData.append('reviews_total_count', data.reviews_total_count);
+        formData.append('category_id', data.category_id);
+        formData.append('subcategory_id', data.subcategory_id);
+
 
         data.images.forEach((file, index) => {
             formData.append(`images[${index}]`, file);
@@ -38,7 +43,7 @@ export default function AddProductForm({ onClose }) {
             forceFormData: true,
             onSuccess: () => {
                 if (typeof onClose === 'function') {
-                    onClose(); 
+                    onClose();
                 }
             }
         });
@@ -119,6 +124,45 @@ export default function AddProductForm({ onClose }) {
                         />
                         {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
                     </div>
+                    {/* Category Dropdown */}
+                    <div className="mb-4">
+                        <label className="mb-2 inline-block text-sm text-gray-800 sm:text-base">Category</label>
+                        <select
+                            value={data.category_id}
+                            onChange={(e) => {
+                                setData('category_id', e.target.value);
+                                setData('subcategory_id', ''); // reset subcategory when category changes
+                            }}
+                            className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none focus:ring"
+                        >
+                            <option value="">Select Category</option>
+                            {categories.map(category => (
+                                <option key={category.id} value={category.id}>{category.name}</option>
+                            ))}
+                        </select>
+                        {errors.category_id && <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>}
+                    </div>
+
+                    {/* Subcategory Dropdown */}
+                    <div className="mb-4">
+                        <label className="mb-2 inline-block text-sm text-gray-800 sm:text-base">Subcategory</label>
+                        <select
+                            value={data.subcategory_id}
+                            onChange={(e) => setData('subcategory_id', e.target.value)}
+                            className="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none focus:ring"
+                            disabled={!data.category_id}
+                        >
+                            <option value="">Select Subcategory</option>
+                            {categories
+                                .find(cat => cat.id == data.category_id)?.subcategories
+                                ?.map(sub => (
+                                    <option key={sub.id} value={sub.id}>{sub.name}</option>
+                                ))
+                            }
+                        </select>
+                        {errors.subcategory_id && <p className="text-red-500 text-sm mt-1">{errors.subcategory_id}</p>}
+                    </div>
+
                     <button
                         type="submit"
                         disabled={processing}
