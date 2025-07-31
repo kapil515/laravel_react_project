@@ -100,11 +100,11 @@ export default function Cart() {
                                 Clear Cart
                             </button>
                             <button
-                                onClick={() => alert('Proceed to payment')}
-                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                            >
-                                Pay Now
-                            </button>
+    onClick={() => router.get(route('orders.create'))}
+    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-green-700"
+>
+    Checkout
+</button>
                         </div>
                     </div>
                 </div>
