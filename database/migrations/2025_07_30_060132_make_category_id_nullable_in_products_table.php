@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->unsignedBigInteger('category_id')->nullable()->change();
-            $table->unsignedBigInteger('subcategory_id')->nullable()->change();
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('subcategory_id')->nullable();
         });
     }
 
@@ -22,9 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->unsignedBigInteger('category_id')->nullable(false)->change();
-            $table->unsignedBigInteger('subcategory_id')->nullable(false)->change();
-        });
+       
     }
 };

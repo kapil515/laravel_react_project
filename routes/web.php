@@ -56,35 +56,36 @@ Route::put('/products/{product}', [ProductController::class, 'update'])->name('p
 
 Route::get('/productpage', [ProductController::class, 'index']);
 
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/dashboard/Categories', [DashboardController::class, 'Category'])->name('dashboard.categories');
-
-// Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
-
-
-
-// // Route::middleware(['auth'])->group(function () {
-// //     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
-
-//     // Subcategory Routes
-//     Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
-//     Route::put('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'updateSubcategory'])->name('admin.subcategories.update');
-//     Route::delete('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'deleteSubcategory'])->name('admin.subcategories.delete');
-// });
-
-
 Route::middleware(['auth'])->group(function () {
-Route::get('/dashboard/Categories', [DashboardController::class, 'Category'])->name('dashboard.categories');
-    // Category Routes
-    Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
-    Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
-    Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');
+    Route::get('/dashboard/Categories', [DashboardController::class, 'Category'])->name('dashboard.categories');
+
+Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
+
+
+
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
 
     // Subcategory Routes
     Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
     Route::put('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'updateSubcategory'])->name('admin.subcategories.update');
     Route::delete('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'deleteSubcategory'])->name('admin.subcategories.delete');
 });
+
+
+// Route::middleware(['auth'])->group(function () {
+// Route::get('/dashboard/Categories', [DashboardController::class, 'Category'])->name('dashboard.categories');
+// //     Route::get('/admin/categories', [CategorySubcategoryController::class, 'index'])->name('admin.categories.index');
+//     // Category Routes
+//     Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
+//     Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
+//     Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');
+
+//     // Subcategory Routes
+//     Route::post('/admin/subcategories', [CategorySubcategoryController::class, 'storeSubcategory'])->name('admin.subcategories.store');
+//     Route::put('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'updateSubcategory'])->name('admin.subcategories.update');
+//     Route::delete('/admin/subcategories/{subcategory}', [CategorySubcategoryController::class, 'deleteSubcategory'])->name('admin.subcategories.delete');
+// });
 
 
 
