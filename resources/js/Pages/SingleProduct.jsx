@@ -104,7 +104,7 @@ export default function SingleProduct() {
                                         </p>
 
 
-                                        <div className="mt-6">
+                                        {/* <div className="mt-6">
                                             <div className="flex items-center">
                                                 {[0, 1, 2, 3, 4].map((rating) => (
                                                     <StarIcon
@@ -120,7 +120,7 @@ export default function SingleProduct() {
                                                     {reviews.totalCount} reviews
                                                 </a>
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                         <div className="mt-6">
                                             <p className="text-base text-gray-900">{product.description || 'No description'}</p>

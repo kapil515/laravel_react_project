@@ -4,10 +4,10 @@ import { useState } from 'react';
 import EditProduct from './EditProductForm';
 import { usePage } from '@inertiajs/react';
 
-export default function Products({ products}) {
+export default function Products({ products }) {
     const [editProduct, setEditProduct] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false);
-     const { props } = usePage();
+    const { props } = usePage();
 
 
     const handleDelete = (id) => {
@@ -67,18 +67,21 @@ export default function Products({ products}) {
                 </ul>
 
                 {/* Pagination Links */}
-                <div className="mt-6">
-                    {products.links.map((link, index) => (
-                        <button
-                            key={index}
-                            disabled={!link.url}
-                            onClick={() => router.visit(link.url)}
-                            className={`px-3 py-1 rounded mx-1 ${link.active ? 'bg-blue-600 text-white' : 'bg-gray-200'
-                                }`}
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                        />
-                    ))}
-                </div>
+                {products.data.length > 0 && products.links.length + 2 > 5 && (
+                    <div className="mt-6">
+                        {products.links.map((link, index) => (
+                            <button
+                                key={index}
+                                disabled={!link.url}
+                                onClick={() => router.visit(link.url)}
+                                className={`px-3 py-1 rounded mx-1 ${link.active ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                                    }`}
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            />
+                        ))}
+                    </div>
+                )}
+
             </div>
             {editProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">
@@ -107,7 +110,7 @@ export default function Products({ products}) {
                         </button>
 
                         {/* ✅ Pass onClose function as prop */}
-                        <AddProductForm onClose={() => setShowAddForm(false)} categories={props.categories}/>
+                        <AddProductForm onClose={() => setShowAddForm(false)} categories={props.categories} />
                     </div>
                 </div>
             )}
