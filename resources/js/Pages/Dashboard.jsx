@@ -20,7 +20,7 @@ export default function Dashboard({ section,products }) {
             case 'edit-user': return <EditUser user={usePage().props.user} />
             case 'transactions': return <div className="p-6">Transactions</div>;
             case 'sales': return <div className="p-6">Sales Content</div>;
-            case 'products': return <Product products={products} categories={usePage().props.categories} />;
+            case 'products':  return <Product products={products} categories={usePage().props.categories} />;;
             case 'members': return <div className="p-6">Prime Members Content</div>;
             case 'settings': return <div className="p-6">Settings Content</div>;
              case 'Categories': return <Category categories={categories} />;
