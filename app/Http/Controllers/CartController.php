@@ -92,4 +92,38 @@ class CartController extends Controller
 
         return redirect()->route('cart.index')->with('message', 'Cart cleared.');
     }
+
+
+public function checkoutSelected(Request $request)
+{
+    $request->validate([
+        'product_ids' => 'required|array',
+        'product_ids.*' => 'integer|exists:products,id',
+    ]);
+
+    $user = Auth::user();
+
+    $cartItems = CartItem::with('product')
+        ->where('user_id', $user->id)
+        ->whereIn('product_id', $request->product_ids)
+        ->get()
+        ->map(function ($item) {
+            $images = is_string($item->product->images)
+                ? json_decode($item->product->images, true)
+                : $item->product->images;
+
+            return [
+                'id' => $item->product_id,
+                'name' => $item->product->name,
+                'price' => $item->product->price,
+                'image_url' => !empty($images[0]) ? Storage::url($images[0]) : asset('default.png'),
+                'quantity' => $item->quantity,
+            ];
+        });
+
+    return Inertia::render('OrderForm', [
+        'cartItems' => $cartItems,
+    ]);
+}
+
 }

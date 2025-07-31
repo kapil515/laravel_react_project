@@ -29,7 +29,9 @@ class AppServiceProvider extends ServiceProvider
    
     Inertia::share([
         'cartCount' => function () {
-            return Auth::check() ? CartItem::where('user_id', Auth::id())->sum('quantity') : 0;
+            return Auth::check()
+                ? CartItem::where('user_id', Auth::id())->count()  
+                : 0;
         },
     ]);
     }

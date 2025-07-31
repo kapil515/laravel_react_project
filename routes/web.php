@@ -13,6 +13,7 @@ use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
@@ -40,7 +41,6 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/best-sellers', function () {
     return Inertia::render('BestSellers');
@@ -79,6 +79,7 @@ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+ Route::post('/checkout/selected', [CartController::class, 'checkoutSelected'])->name('checkout.selected');
 });
 
 
@@ -86,8 +87,7 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 Route::middleware(['auth'])->group(function () {
     Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::get('/order/thankyou', [OrderController::class, 'thankyou'])->name('orders.thankyou');
+    Route::get('/order/thankyou/{order}', [OrderController::class, 'show'])->name('orders.thankyou');
 });
 
 
