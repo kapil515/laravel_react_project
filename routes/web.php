@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/best-sellers', function () {
     return Inertia::render('BestSellers');
@@ -60,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/Categories', [DashboardController::class, 'Category'])->name('dashboard.categories');
 
 Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
-// Category Routes
+    // Category Routes
     Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
     Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
     Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');

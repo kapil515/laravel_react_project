@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link,router } from '@inertiajs/react';
 
 export default function Products({ products }) {
     const productList = products?.data || [];
@@ -11,7 +11,7 @@ export default function Products({ products }) {
                         productList.map((product) => (
                             <Link
                                 key={product.id}
-                                href={`/products/${product.id}`}
+                                href={`/product/${product.id}`}
                                 className="group"
                             >
                                 <div className="aspect-square w-full overflow-hidden rounded-lg bg-gray-200">
@@ -34,21 +34,21 @@ export default function Products({ products }) {
                     )}
                 </div>
 
-                {products?.links?.length > 0 && (
-                    <div className="mt-6 flex justify-center gap-2 flex-wrap">
+                {products.data.length > 0 && products.links.length + 2 > 5 && (
+                    <div className="mt-6">
                         {products.links.map((link, index) => (
-                            <Link
+                            <button
                                 key={index}
-                                href={link.url || '#'}
-                                className={`px-3 py-1 rounded-md text-sm ${link.active
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                disabled={!link.url}
+                                onClick={() => router.visit(link.url)}
+                                className={`px-3 py-1 rounded mx-1 ${link.active ? 'bg-blue-600 text-white' : 'bg-gray-200'
                                     }`}
                                 dangerouslySetInnerHTML={{ __html: link.label }}
                             />
                         ))}
                     </div>
                 )}
+
             </div>
         </div>
     );

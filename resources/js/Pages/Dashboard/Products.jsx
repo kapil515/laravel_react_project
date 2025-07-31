@@ -2,14 +2,12 @@ import AddProductForm from '@/Components/AddProductForm';
 import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import EditProduct from './EditProductForm';
-import CreateCategoryWithSubcategory from '@/Components/CreateCategoryWithSubcategory';
 import { usePage } from '@inertiajs/react';
 
-export default function Products({ products}) {
+export default function Products({ products }) {
     const [editProduct, setEditProduct] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false);
-    const [showCategoryForm, setShowCategoryForm] = useState(false);
-     const { props } = usePage();
+    const { props } = usePage();
 
 
     const handleDelete = (id) => {
@@ -22,19 +20,13 @@ export default function Products({ products}) {
         <>
             <div className="p-6 space-y-4">
                 <div className='flex justify-between items-center relative'>
-                    <h1 className="text-2xl font-bold mb-4">All Products</h1>
+                    <h1 className="text-2xl font-bold mb-4">All Products List</h1>
                     <div>
                         <button
                             onClick={() => setShowAddForm(true)}
                             className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mr-4"
                         >
                             Add New Product
-                        </button>
-                        <button
-                            onClick={() => setShowCategoryForm(true)}
-                            className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                        >
-                            Add New Category
                         </button>
                     </div>
                 </div>
@@ -53,7 +45,7 @@ export default function Products({ products}) {
                                 />
                                 <div>
                                     <h2 className="text-lg font-semibold">{product.name}</h2>
-                                    <p className="text-green-600">{product.price}</p>
+                                    <p className="text-green-600">{product.price ? `$${product.price}` : 'N/A'}</p>
                                 </div>
                             </div>
 
@@ -75,18 +67,21 @@ export default function Products({ products}) {
                 </ul>
 
                 {/* Pagination Links */}
-                <div className="mt-6">
-                    {products.links.map((link, index) => (
-                        <button
-                            key={index}
-                            disabled={!link.url}
-                            onClick={() => router.visit(link.url)}
-                            className={`px-3 py-1 rounded mx-1 ${link.active ? 'bg-blue-600 text-white' : 'bg-gray-200'
-                                }`}
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                        />
-                    ))}
-                </div>
+                {products.data.length > 0 && products.links.length + 2 > 5 && (
+                    <div className="mt-6">
+                        {products.links.map((link, index) => (
+                            <button
+                                key={index}
+                                disabled={!link.url}
+                                onClick={() => router.visit(link.url)}
+                                className={`px-3 py-1 rounded mx-1 ${link.active ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                                    }`}
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            />
+                        ))}
+                    </div>
+                )}
+
             </div>
             {editProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">
@@ -106,7 +101,7 @@ export default function Products({ products}) {
 
             {showAddForm && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded w-full max-w-lg relative">
+                    <div className="bg-white p-6 rounded w-full max-w-4xl relative">
                         <button
                             onClick={() => setShowAddForm(false)}
                             className="absolute top-2 right-3 text-xl text-red-500"
@@ -115,21 +110,7 @@ export default function Products({ products}) {
                         </button>
 
                         {/* ✅ Pass onClose function as prop */}
-                        <AddProductForm onClose={() => setShowAddForm(false)} categories={props.categories}/>
-                    </div>
-                </div>
-            )}
-
-            {showCategoryForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded w-full max-w-lg relative">
-                        <button
-                            onClick={() => setShowCategoryForm(false)}
-                            className="absolute top-2 right-3 text-xl text-red-500"
-                        >
-                            &times;
-                        </button>
-                        <CreateCategoryWithSubcategory onClose={() => setShowCategoryForm(false)} />
+                        <AddProductForm onClose={() => setShowAddForm(false)} categories={props.categories} />
                     </div>
                 </div>
             )}
