@@ -3,23 +3,31 @@ import { Head, useForm, router } from '@inertiajs/react';
 
 export default function Index({ categories }) {
     const { data, setData, post, delete: destroy, processing, errors, reset } = useForm({
-        name: '',
-        category_id: ''
+      category_name: '',
+    subcategory_name: '',
+    category_id: '',
     });
 
-    const handleCategorySubmit = (e) => {
-        e.preventDefault();
-        post(route('admin.categories.store'), {
-            onSuccess: () => reset('name')
-        });
-    };
+const handleCategorySubmit = (e) => {
+    e.preventDefault();
+    post(route('admin.categories.store'), 
+        { name: data.category_name },
+        { onSuccess: () => reset('category_name') }
+    );
+};
 
-    const handleSubcategorySubmit = (e) => {
-        e.preventDefault();
-        post(route('admin.subcategories.store'), {
-            onSuccess: () => reset('name', 'category_id')
-        });
-    };
+const handleSubcategorySubmit = (e) => {
+    e.preventDefault();
+    post(route('admin.subcategories.store'), 
+        {
+            name: data.subcategory_name,
+            category_id: data.category_id
+        },
+        { onSuccess: () => reset('subcategory_name', 'category_id') }
+    );
+};
+
+
 
     const handleDeleteCategory = (id) => {
         if (confirm('Are you sure you want to delete this category?')) {
@@ -40,42 +48,44 @@ export default function Index({ categories }) {
                 <h1 className="text-2xl font-bold mb-6">Categories & Subcategories</h1>
 
                 {/* Add Category */}
-                <form onSubmit={handleCategorySubmit} className="mb-6">
-                    <h2 className="font-semibold mb-2">Add Category</h2>
-                    <input
-                        type="text"
-                        value={data.name}
-                        onChange={e => setData('name', e.target.value)}
-                        placeholder="Category name"
-                        className="w-[20%]  border p-2 mr-2 rounded"
-                    />
-                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
-                    {errors.name && <div className="text-red-500">{errors.name}</div>}
-                </form>
+               <form onSubmit={handleCategorySubmit} className="mb-6">
+    <h2 className="font-semibold mb-2">Add Category</h2>
+    <input
+        type="text"
+        value={data.category_name}
+        onChange={e => setData('category_name', e.target.value)}
+        placeholder="Category name"
+        className="w-[20%] border p-2 mr-2 rounded"
+    />
+    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+    {errors.name && <div className="text-red-500">{errors.name}</div>}
+</form>
 
-                
-                <form onSubmit={handleSubcategorySubmit} className="mb-8">
-                    <h2 className="font-semibold mb-2">Add Subcategory</h2>
-                    <select
-                        value={data.category_id}
-                        onChange={e => setData('category_id', e.target.value)}
-                        className=" w-[20%]  border p-2 mr-2 rounded"
-                    >
-                        <option value="">Select Category</option>
-                        {categories.map(category => (
-                            <option key={category.id} value={category.id}>{category.name}</option>
-                        ))}
-                    </select>
-                    <input
-                        type="text"
-                        value={data.name}
-                        onChange={e => setData('name', e.target.value)}
-                        placeholder="Subcategory name"
-                        className="border w-[20%]   p-2 mr-2 rounded"
-                    />
-                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
-                    {errors.name && <div className="text-red-500">{errors.name}</div>}
-                </form>
+
+               <form onSubmit={handleSubcategorySubmit} className="mb-8">
+    <h2 className="font-semibold mb-2">Add Subcategory</h2>
+    <select
+        value={data.category_id}
+        onChange={e => setData('category_id', e.target.value)}
+        className="w-[20%] border p-2 mr-2 rounded"
+    >
+        <option value="">Select Category</option>
+        {categories.map(category => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+        ))}
+    </select>
+    <input
+        type="text"
+        value={data.subcategory_name}
+        onChange={e => setData('subcategory_name', e.target.value)}
+        placeholder="Subcategory name"
+        className="border w-[20%] p-2 mr-2 rounded"
+    />
+    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+  {errors.name && data.subcategory_name && <div className="text-red-500">{errors.name}</div>}
+
+</form>
+
 
                 {/* Display Categories & Subcategories */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
