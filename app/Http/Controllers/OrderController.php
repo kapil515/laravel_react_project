@@ -105,15 +105,14 @@ public function orders()
         return Inertia::render('ThankYou', ['order' => $order]);
     }
 
-    public function adminShow(Order $order)
+   public function adminShow(Order $order)
 {
     if (auth()->user()->role !== 'admin') {
         abort(403, 'Unauthorized');
     }
 
-    $order->load(['items.product', 'user']);
+    $order->load(['items.product.category', 'items.product.subcategory', 'user']);
 
-    // Convert product image paths
     foreach ($order->items as $item) {
         $images = is_string($item->product->images)
             ? json_decode($item->product->images, true)
@@ -124,10 +123,22 @@ public function orders()
         });
     }
 
-    return Inertia::render('OrderDetails', ['order' => $order]);
+    return Inertia::render('Dashboard', [
+        'section' => 'order-details',
+        'order' => [
+            ...$order->toArray(),
+            'address' => [
+                'address_line1' => $order->address_line1,
+                'address_line2' => $order->address_line2,
+                'city' => $order->city,
+                'state' => $order->state,
+                'postal_code' => $order->postal_code,
+                'country' => $order->country,
+            ],
+        ],
+    ]);
 }
 
-    
 public function destroy(string $id)
 {
     if (auth()->user()->role !== 'admin') {
