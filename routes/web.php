@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -28,18 +29,19 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard/members', [DashboardController::class, 'members'])->name('dashboard.members');
     Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
     Route::resource('products', ProductController::class);
-
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/logout', function () {Auth::logout();return redirect('home');})->name('logout');
-
+    Route::post('/logout', function () {
+        Auth::logout();
+        return redirect('home');
+    })->name('logout');
 });
 
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/best-sellers', function () {
     return Inertia::render('BestSellers');
@@ -58,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
 // Category Routes
+    // Category Routes
     Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
     Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
     Route::delete('/admin/categories/{category}', [CategorySubcategoryController::class, 'deleteCategory'])->name('admin.categories.delete');
@@ -78,13 +81,17 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+    Route::match(['get', 'post'], '/checkout/selected', [CartController::class, 'checkoutSelected'])->name('checkout.selected');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::get('/order/thankyou', [OrderController::class, 'thankyou'])->name('orders.thankyou');
+    Route::get('/order/thankyou/{order}', [OrderController::class, 'show'])->name('orders.thankyou');
+    Route::get('/dashboard/orders', [OrderController::class, 'orders'])->name('dashboard.orders');
+    Route::delete('/dashboard/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
 });
 
 Route::get('/chat', function () {
     return Inertia::render('ChatApp');
 });
 Route::post('/api/chat', [AiChatController::class, 'chat']);
+
 require __DIR__ . '/auth.php';

@@ -12,7 +12,7 @@ use Inertia\Inertia;
 
 class CartController extends Controller
 {
-     public function index()
+    public function index()
     {
         $user = Auth::user();
         $cartItems = CartItem::with('product')
@@ -91,5 +91,48 @@ class CartController extends Controller
         CartItem::where('user_id', Auth::id())->delete();
 
         return redirect()->route('cart.index')->with('message', 'Cart cleared.');
+    }
+
+    public function checkoutSelected(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'product_ids' => 'required|array',
+                'product_ids.*' => 'integer|exists:products,id',
+            ]);
+
+            $user = Auth::user();
+
+            $cartItems = CartItem::with('product')
+                ->where('user_id', $user->id)
+                ->whereIn('product_id', $request->product_ids)
+                ->get()
+                ->map(function ($item) {
+                    $images = is_string($item->product->images)
+                        ? json_decode($item->product->images, true)
+                        : $item->product->images;
+
+                    return [
+                        'id' => $item->product_id,
+                        'name' => $item->product->name,
+                        'price' => $item->product->price,
+                        'image_url' => !empty($images[0]) ? Storage::url($images[0]) : asset('default.png'),
+                        'quantity' => $item->quantity,
+                    ];
+                });
+
+            // Save the selected items in session
+            session(['checkout_selected_cart' => $cartItems]);
+
+            // Redirect to GET version of the route
+            return redirect()->route('checkout.selected');
+        }
+
+        // If GET: retrieve from session and show page
+        $cartItems = session('checkout_selected_cart', []);
+
+        return Inertia::render('OrderForm', [
+            'cartItems' => $cartItems,
+        ]);
     }
 }

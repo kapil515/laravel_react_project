@@ -103,12 +103,14 @@ public function products()
         ];
     });
 
-    $categories = Category::with('subcategories')->get(); 
+    $categories = Category::with('subcategories')->get();
+    $totalProducts = Product::count();
 
     return Inertia::render('Dashboard', [  
         'section' => 'products',
         'products' => $products,
-        'categories' => $categories 
+        'categories' => $categories ,
+        'totalProducts' => $totalProducts
     ]);
 }
 
