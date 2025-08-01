@@ -9,17 +9,9 @@ export default function Orders({ orders }) {
         }  
     }
 
-
-    function handleDeleteAll() {
-    if (window.confirm('Are you sure you want to delete all orders?')) {
-        router.delete(route('orders.destroy'));
-    }
-}
-
-
     return (
         <div className="p-6">
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center justify-between mb-10">
         <h2 className="text-2xl capitalize text-red-600 font-bold hover:text-red-500">
             All Orders
         </h2>
@@ -65,7 +57,7 @@ export default function Orders({ orders }) {
                                     <tr key={`${order.id}-${item.id}`} className="text-sm border-t">
                                         {index === 0 && (
                                             <>
-                                                <td className="px-4 py-2 border" rowSpan={order.items.length}>{order.id}</td>
+                                              <td className="px-4 py-2 border" rowSpan={order.items.length}>{order.order_number}</td>
                                                 <td className="px-4 py-2 border" rowSpan={order.items.length}>{order.user.name}</td>
                                                 <td className="px-4 py-2 border" rowSpan={order.items.length}>{order.user.email}</td>
                                                 <td className="px-4 py-2 border" rowSpan={order.items.length}>{order.user.role}</td>
