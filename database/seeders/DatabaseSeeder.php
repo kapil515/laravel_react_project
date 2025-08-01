@@ -19,5 +19,5 @@ class DatabaseSeeder extends Seeder
         CategorySubcategorySeeder::class
     ]);
     }
-    
+
 }
