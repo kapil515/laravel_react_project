@@ -104,16 +104,57 @@ public function orders()
         $order->load(['items.product', 'user']);
         return Inertia::render('ThankYou', ['order' => $order]);
     }
-    
-public function destroy(Order $order)
+
+    public function adminShow(Order $order)
 {
     if (auth()->user()->role !== 'admin') {
         abort(403, 'Unauthorized');
     }
 
+    $order->load(['items.product', 'user']);
+
+    // Convert product image paths
+    foreach ($order->items as $item) {
+        $images = is_string($item->product->images)
+            ? json_decode($item->product->images, true)
+            : ($item->product->images ?? []);
+
+        $item->product->images = collect($images)->map(function ($image) {
+            return Storage::url($image);
+        });
+    }
+
+    return Inertia::render('OrderDetails', ['order' => $order]);
+}
+
+    
+public function destroy(string $id)
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
+
+    $order = Order::findOrFail($id);
     $order->delete();
 
     return back()->with('success', 'Order deleted successfully.');
 }
+
+public function massDestroy(Request $request)
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
+
+    $request->validate([
+        'order_ids' => 'required|array',
+        'order_ids.*' => 'exists:orders,id',
+    ]);
+
+    Order::whereIn('id', $request->order_ids)->delete();
+
+    return back()->with('success', 'All selected orders deleted successfully.');
+}
+
 
 }

@@ -8,6 +8,7 @@ import EditUser from '@/Components/Users/Edit';
 import CreateUser from '@/Components/Users/CreateUser'; 
 import Category from './Dashboard/Category'; 
 import Orders from './Dashboard/Orders';
+import Settings from './Dashboard/Settings';
 
 
 export default function Dashboard({ section,products }) {
@@ -23,7 +24,7 @@ export default function Dashboard({ section,products }) {
             case 'sales': return <div className="p-6">Sales Content</div>;
             case 'products':  return <Product products={products} categories={usePage().props.categories} />;;
             case 'members': return <div className="p-6">Prime Members Content</div>;
-            case 'settings': return <div className="p-6">Settings Content</div>;
+           case 'settings': return <Settings admin={usePage().props.admin} users={usePage().props.users} />;
              case 'Categories': return <Category categories={categories} />;
              case 'orders': return <Orders orders={usePage().props.orders} />;
             default: return <div className="p-6">You're logged in!</div>;

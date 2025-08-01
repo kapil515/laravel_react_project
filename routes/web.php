@@ -85,8 +85,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/order/thankyou/{order}', [OrderController::class, 'show'])->name('orders.thankyou');
     Route::get('/dashboard/orders', [OrderController::class, 'orders'])->name('dashboard.orders');
+    Route::get('/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.adminshow');
     Route::delete('/dashboard/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::post('/orders/mass-destroy', [OrderController::class, 'massDestroy'])->name('orders.massDestroy');
 
+
+});
+
+Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
+    Route::post('/settings/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.updateProfile');
+    Route::post('/settings/password', [DashboardController::class, 'updatePassword'])->name('dashboard.updatePassword');
+    Route::post('/settings/assign-role', [DashboardController::class, 'assignRole'])->name('dashboard.assignRole');
 });
 
 
