@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AiChatController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategorySubcategoryController;
 use App\Http\Controllers\DashboardController;
@@ -87,8 +88,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/orders', [OrderController::class, 'orders'])->name('dashboard.orders');
     Route::get('/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.adminshow');
     Route::delete('/dashboard/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::put('/users/{user}/toggle-active', [RegisteredUserController::class, 'toggleActive'])->name('users.toggleActive');
     Route::post('/orders/mass-destroy', [OrderController::class, 'massDestroy'])->name('orders.massDestroy');
-
 
 });
 

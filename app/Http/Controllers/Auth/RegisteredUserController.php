@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -31,15 +30,28 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'phone'         => 'nullable|string|max:20',
+            'image'         => 'nullable|image|max:2048',
+            'active'        => 'boolean',
+            'registered_at' => 'nullable|date',
+            'password'      => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('users', 'public');
+        }
+
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'phone'         => $request->phone,
+            'image'         => $imagePath,
+            'active'        => $request->active ?? true,
+            'registered_at' => $request->registered_at,
+            'password'      => Hash::make($request->password),
         ]);
 
         event(new Registered($user));
@@ -48,4 +60,17 @@ class RegisteredUserController extends Controller
 
         return redirect(route('home', absolute: false));
     }
+
+    public function toggleActive($id)
+    {
+        $user = User::find($id);
+
+        if ($user) {
+            $user->active = ! $user->active;
+            $user->save();
+        }
+
+        return back();
+    }
+
 }

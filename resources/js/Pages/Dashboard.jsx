@@ -5,16 +5,16 @@ import Users from './Dashboard/Users';
 import Product from './Dashboard/Products';
 import { usePage } from '@inertiajs/react';
 import EditUser from '@/Components/Users/Edit';
-import CreateUser from '@/Components/Users/CreateUser'; 
-import Category from './Dashboard/Category'; 
+import CreateUser from '@/Components/Users/CreateUser';
+import Category from './Dashboard/Category';
 import Orders from './Dashboard/Orders';
 import Settings from './Dashboard/Settings';
 import OrderDetails from './Dashboard/OrderDetails'
 
 
-export default function Dashboard({ section,products }) {
+export default function Dashboard({ section, products }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { users,categories,order } = usePage().props;
+    const { users, categories, order } = usePage().props;
 
     const renderContent = () => {
         switch (section) {
@@ -23,12 +23,12 @@ export default function Dashboard({ section,products }) {
             case 'edit-user': return <EditUser user={usePage().props.user} />
             case 'transactions': return <div className="p-6">Transactions</div>;
             case 'sales': return <div className="p-6">Sales Content</div>;
-            case 'products':  return <Product products={products} categories={usePage().props.categories} />;;
+            case 'products': return <Product products={products} categories={usePage().props.categories} />;
             case 'members': return <div className="p-6">Prime Members Content</div>;
-           case 'settings': return <Settings admin={usePage().props.admin} users={usePage().props.users} />;
-             case 'Categories': return <Category categories={categories} />;
-             case 'orders': return <Orders orders={usePage().props.orders} />;
-              case 'order-details': return <OrderDetails order={order} />;
+            case 'settings': return <div className="p-6">Settings Content</div>;
+            case 'Categories': return <Category categories={categories} />;
+            case 'orders': return <Orders orders={usePage().props.orders} />;
+            case 'order-details': return <OrderDetails order={order} />;
             default: return <div className="p-6">You're logged in!</div>;
         }
     };
@@ -61,18 +61,18 @@ export default function Dashboard({ section,products }) {
                         <SidebarLink href="/dashboard/sales" label="Sales" />
                         <SidebarLink href="/dashboard/products" label="Products" />
                         <SidebarLink href="/dashboard/members" label="Prime Members" />
-                       <SidebarLink href="/dashboard/Categories" label="Categories" />
-                       <SidebarLink href="/dashboard/orders" label="All Orders" />
-                      <SidebarLink
-                        label="Settings"
+                        <SidebarLink href="/dashboard/Categories" label="Categories" />
+                        <SidebarLink href="/dashboard/orders" label="All Orders" />
+                        <SidebarLink
+                            label="Settings"
                             subLinks={[
-            { href: '/dashboard/settings?tab=profile', label: 'Update Profile' },
-            { href: '/dashboard/settings?tab=password', label: 'Change Password' },
-            { href: '/dashboard/settings?tab=role', label: 'Assign Role' },
-           { href: route('logout'), label: 'Logout', method: 'post', as: 'button' },
+                                { href: '/dashboard/settings?tab=profile', label: 'Update Profile' },
+                                { href: '/dashboard/settings?tab=password', label: 'Change Password' },
+                                { href: '/dashboard/settings?tab=role', label: 'Assign Role' },
+                                { href: route('logout'), label: 'Logout', method: 'post', as: 'button' },
 
-        ]}
-    />
+                            ]}
+                        />
                     </nav>
                 </aside>
 
@@ -108,17 +108,17 @@ function SidebarLink({ href, label, subLinks = [] }) {
                 </button>
                 {isOpen && (
                     <div className="ml-6">
-                     {subLinks.map(({ href, label, method, as }) => (
-                    <Link
-                        key={label}
-                        href={href}
-                        method={method}
-                        as={as}
-                        className="block px-4 py-2 text-sm text-green-700 hover:bg-green-50"
-                    >
-                        {label}
-                    </Link>
-                ))}
+                        {subLinks.map(({ href, label, method, as }) => (
+                            <Link
+                                key={label}
+                                href={href}
+                                method={method}
+                                as={as}
+                                className="block px-4 py-2 text-sm text-green-700 hover:bg-green-50"
+                            >
+                                {label}
+                            </Link>
+                        ))}
 
                     </div>
                 )}

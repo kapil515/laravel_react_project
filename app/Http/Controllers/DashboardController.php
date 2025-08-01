@@ -98,6 +98,8 @@ public function products()
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
+            'category_id' => $product->category_id,
+            'subcategory_id' => $product->subcategory_id,
             'description' => $product->description, 
             'imageAlt' => $product->image_alt,
             'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import EditProduct from './EditProductForm';
 import { usePage } from '@inertiajs/react';
 
-export default function Products({ products }) {
+export default function Products({ products, categories, subcategories }) {
     const [editProduct, setEditProduct] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false);
     const { props } = usePage();
@@ -94,7 +94,13 @@ export default function Products({ products }) {
                         </button>
 
                         {/* Existing UpdateProductForm ka component yaha call karo */}
-                        <EditProduct product={editProduct} onClose={() => setEditProduct(null)} />
+                        <EditProduct
+                            product={editProduct}
+                            categories={categories}
+                            subcategories={subcategories}
+                            onClose={() => setEditProduct(null)}
+                        />
+
                     </div>
                 </div>
             )}
