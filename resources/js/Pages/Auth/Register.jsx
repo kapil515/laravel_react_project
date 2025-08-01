@@ -11,6 +11,10 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        phone: '',
+        image: null,
+        active: true,
+        registered_at: new Date().toISOString().slice(0, 16),
     });
 
     const submit = (e) => {
@@ -18,6 +22,7 @@ export default function Register() {
 
         post(route('register'), {
             onFinish: () => reset('password', 'password_confirmation'),
+            forceFormData: true,
         });
     };
 
@@ -25,7 +30,7 @@ export default function Register() {
         <GuestLayout>
             <Head title="Register" />
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} enctype="multipart/form-data">
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -58,6 +63,59 @@ export default function Register() {
                     />
 
                     <InputError message={errors.email} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="phone" value="Phone Number" />
+                    <TextInput
+                        id="phone"
+                        type="tel"
+                        name="phone"
+                        value={data.phone}
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData('phone', e.target.value)}
+                        required
+                    />
+                    <InputError message={errors.phone} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="image" value="Profile Image" />
+                    <input
+                        id="image"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setData('image', e.target.files[0])}
+                        className="mt-1 block w-full text-sm text-gray-500"
+                    />
+                    <InputError message={errors.image} className="mt-2" />
+                </div>
+
+              <div className="mt-4">
+                    <InputLabel htmlFor="registered_at" value="Date & Time" />
+                    <input
+                        id="registered_at"
+                        type="datetime-local"
+                        value={data.registered_at}
+                        onChange={(e) => setData('registered_at', e.target.value)}
+                        className="mt-1 block w-full rounded border-gray-300 shadow-sm"
+                    />
+                    <InputError message={errors.registered_at} className="mt-2" />
+                </div>
+
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="active" value="Active" />
+                    <label className="flex items-center space-x-2 mt-1">
+                        <input
+                            id="active"
+                            type="checkbox"
+                            checked={data.active}
+                            onChange={(e) => setData('active', e.target.checked)}
+                            className="form-checkbox h-5 w-5 text-green-600"
+                        />
+                        <span>{data.active ? 'Active' : 'Inactive'}</span>
+                    </label>
                 </div>
 
                 <div className="mt-4">

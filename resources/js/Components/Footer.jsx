@@ -3,7 +3,7 @@ import FloatingChat from './FloatingChat';
 
 export default function Footer() {
     return (
-        <footer className="bg-red-300 text-white pt-12 pb-8 px-4">
+        <footer className="bg-gray-600 text-white pt-12 pb-8 px-4">
             <div className="mx-auto px-4 container overflow-hidden flex flex-col lg:flex-row justify-between">
                 <a href="/" className="block mr-4 w-1/3">
                     <img
@@ -53,7 +53,7 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="pt-4 mt-4 pt-6 text-gray-600 border-t border-gray-800 text-center">
+            <div className="pt-4 mt-4 text-gray-600 border-t border-gray-800 text-center">
                 © 2025 WeTeach. All rights reserved.
             </div>
              <FloatingChat />
