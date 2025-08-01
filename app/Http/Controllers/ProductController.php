@@ -37,7 +37,6 @@ public function index()
     public function show($id)
 {
     $product = Product::findOrFail($id);
-    \Log::info('Showing product with ID:', ['id' => $id, 'product' => $product->toArray()]);
 
     return Inertia::render('SingleProduct', [
         'product' => [
@@ -106,46 +105,49 @@ public function index()
     return back()->with('success', 'Product created successfully');
 }
 
-public function edit($id)
-{
-    $product = Product::findOrFail($id);
-    $categories = Category::all();
-    $subcategories = Subcategory::all();
-
-    return Inertia::render('Dashboard/EditProductForm', [
-        'product' => [
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'description' => $product->description,
-            'category_id' => $product->category_id,
-            'subcategory_id' => $product->subcategory_id,
-        ],
-        'categories' => $categories,
-        'subcategories' => $subcategories,
-    ]);
-}
-
-
 public function update(Request $request, Product $product)
 {
-    $data = $request->validate([
-        'name' => 'required|string|max:255',
-        'price' => 'required|numeric',
-        'description' => 'nullable|string',
-        'image' => 'nullable|image|max:2048',
+    $validated = $request->validate([
+        'name' => 'sometimes|required|string|max:255',
+        'price' => 'sometimes|required|numeric',
+        'description' => 'sometimes|required|string',
+        'category_id' => 'nullable|exists:categories,id',
+        'subcategory_id' => 'nullable|exists:subcategories,id',
+        'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'imageAlt' => 'nullable|string|max:255',
     ]);
 
-    if ($request->hasFile('image')) {
-        $data['image_path'] = $request->file('image')->store('products', 'public');
+    $product->update([
+        'name' => $request->input('name', $product->name),
+        'price' => $request->input('price', $product->price),
+        'description' => $request->input('description', $product->description),
+        'category_id' => $request->input('category_id', $product->category_id),
+        'subcategory_id' => $request->input('subcategory_id', $product->subcategory_id),
+        'image_alt' => $request->input('imageAlt', $product->image_alt),
+    ]);
+
+    $finalImages = [];
+
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('products', 'public');
+            $finalImages[] = $path;
+        }
+    } elseif ($request->has('existingImages')) {
+        $existingImages = $request->input('existingImages');
+
+        $finalImages = is_array($existingImages)
+            ? $existingImages
+            : json_decode($existingImages, true);
     }
 
-    $product->update($data);
+    if (!empty($finalImages)) {
+        $product->images = json_encode($finalImages);
+        $product->save();
+    }
 
-    return redirect()->route('dashboard.products')->with('success', 'Product updated!');
+    return redirect()->back()->with('success', 'Product updated successfully');
 }
-
-
 
 
    public function destroy($id)

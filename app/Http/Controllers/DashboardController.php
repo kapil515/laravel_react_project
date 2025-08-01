@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
+   use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
@@ -97,6 +98,8 @@ public function products()
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
+            'category_id' => $product->category_id,
+            'subcategory_id' => $product->subcategory_id,
             'description' => $product->description, 
             'imageAlt' => $product->image_alt,
             'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
@@ -121,10 +124,64 @@ public function products()
         return Inertia::render('Dashboard', ['section' => 'members']);
     }
 
-    public function settings()
-    {
-        return Inertia::render('Dashboard', ['section' => 'settings']);
+
+public function settings()
+{
+    return Inertia::render('Dashboard', [
+        'section' => 'settings',
+        'admin'   => auth()->user(),
+        'users'   => User::where('id', '!=', auth()->id())->get(),
+    ]);
+}
+
+public function updateProfile(Request $request)
+{
+    $user = auth()->user();
+
+    $data = $request->validate([
+        'name'  => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+    ]);
+
+    $user->update($data);
+
+    return redirect()->back()->with('success', 'Profile updated successfully.');
+}
+
+public function updatePassword(Request $request)
+{
+    $request->validate([
+        'current_password' => 'required',
+        'new_password'     => 'required|min:6|confirmed',
+    ]);
+
+    $user = auth()->user();
+
+    if (!Hash::check($request->current_password, $user->password)) {
+        return back()->withErrors(['current_password' => 'Current password is incorrect.']);
     }
+
+    $user->update([
+        'password' => Hash::make($request->new_password),
+    ]);
+
+    return back()->with('success', 'Password updated successfully.');
+}
+
+public function assignRole(Request $request)
+{
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'role'    => 'required|in:user,admin',
+    ]);
+
+    $user = User::findOrFail($request->user_id);
+    $user->role = $request->role;
+    $user->save();
+
+    return back()->with('success', 'Role updated successfully.');
+}
+
 
 public function Category()
 {
