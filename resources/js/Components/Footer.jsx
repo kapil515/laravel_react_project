@@ -1,4 +1,5 @@
 import React from 'react';
+import FloatingChat from './FloatingChat';
 
 export default function Footer() {
     return (
@@ -55,6 +56,7 @@ export default function Footer() {
             <div className="pt-4 mt-4 pt-6 text-gray-600 border-t border-gray-800 text-center">
                 © 2025 WeTeach. All rights reserved.
             </div>
+             <FloatingChat />
         </footer>
     );
 }
