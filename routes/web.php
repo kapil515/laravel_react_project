@@ -30,15 +30,16 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard/members', [DashboardController::class, 'members'])->name('dashboard.members');
     Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
     Route::resource('products', ProductController::class);
-
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/logout', function () {Auth::logout();return redirect('home');})->name('logout');
-
+    Route::post('/logout', function () {
+        Auth::logout();
+        return redirect('home');
+    })->name('logout');
 });
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('products.show');
@@ -60,7 +61,7 @@ Route::get('/productpage', [ProductController::class, 'index']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/Categories', [DashboardController::class, 'Category'])->name('dashboard.categories');
 
-Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
+    Route::post('/categories-with-subcategory', [CategorySubcategoryController::class, 'storeWithSubcategory'])->name('categories.with.subcategory');
     // Category Routes
     Route::post('/admin/categories', [CategorySubcategoryController::class, 'storeCategory'])->name('admin.categories.store');
     Route::put('/admin/categories/{category}', [CategorySubcategoryController::class, 'updateCategory'])->name('admin.categories.update');
@@ -75,22 +76,18 @@ Route::post('/categories-with-subcategory', [CategorySubcategoryController::clas
 
 Route::middleware('auth')->group(function () {
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
- Route::post('/checkout/selected', [CartController::class, 'checkoutSelected'])->name('checkout.selected');
-});
-
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+    Route::match(['get', 'post'], '/checkout/selected', [CartController::class, 'checkoutSelected'])->name('checkout.selected');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/order/thankyou/{order}', [OrderController::class, 'show'])->name('orders.thankyou');
+    Route::get('/dashboard/orders', [OrderController::class, 'orders'])->name('dashboard.orders');
+    Route::delete('/dashboard/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
 });
 
 
-require __DIR__.'/auth.php';
-
+require __DIR__ . '/auth.php';

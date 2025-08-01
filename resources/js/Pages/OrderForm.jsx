@@ -19,10 +19,11 @@ export default function OrderForm() {
         })),
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        post(route('orders.store'));
-    };
+   const handleSubmit = (e) => {
+    e.preventDefault(); 
+     console.log('Submitting data:', data); 
+    post(route('orders.store')); 
+};
 
     return (
         <UserLayout>

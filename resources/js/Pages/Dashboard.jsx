@@ -7,6 +7,7 @@ import { usePage } from '@inertiajs/react';
 import EditUser from '@/Components/Users/Edit';
 import CreateUser from '@/Components/Users/CreateUser'; 
 import Category from './Dashboard/Category'; 
+import Orders from './Dashboard/Orders';
 
 
 export default function Dashboard({ section,products }) {
@@ -24,6 +25,7 @@ export default function Dashboard({ section,products }) {
             case 'members': return <div className="p-6">Prime Members Content</div>;
             case 'settings': return <div className="p-6">Settings Content</div>;
              case 'Categories': return <Category categories={categories} />;
+             case 'orders': return <Orders orders={usePage().props.orders} />;
             default: return <div className="p-6">You're logged in!</div>;
         }
     };
@@ -57,6 +59,7 @@ export default function Dashboard({ section,products }) {
                         <SidebarLink href="/dashboard/products" label="Products" />
                         <SidebarLink href="/dashboard/members" label="Prime Members" />
                        <SidebarLink href="/dashboard/Categories" label="Categories" />
+                       <SidebarLink href="/dashboard/orders" label="All Orders" />
                         <SidebarLink href="/dashboard/settings" label="Settings" />
                     </nav>
                 </aside>
