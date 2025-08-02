@@ -91,33 +91,6 @@ export default function Register() {
                     <InputError message={errors.image} className="mt-2" />
                 </div>
 
-              <div className="mt-4">
-                    <InputLabel htmlFor="registered_at" value="Date & Time" />
-                    <input
-                        id="registered_at"
-                        type="datetime-local"
-                        value={data.registered_at}
-                        onChange={(e) => setData('registered_at', e.target.value)}
-                        className="mt-1 block w-full rounded border-gray-300 shadow-sm"
-                    />
-                    <InputError message={errors.registered_at} className="mt-2" />
-                </div>
-
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="active" value="Active" />
-                    <label className="flex items-center space-x-2 mt-1">
-                        <input
-                            id="active"
-                            type="checkbox"
-                            checked={data.active}
-                            onChange={(e) => setData('active', e.target.checked)}
-                            className="form-checkbox h-5 w-5 text-green-600"
-                        />
-                        <span>{data.active ? 'Active' : 'Inactive'}</span>
-                    </label>
-                </div>
-
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
