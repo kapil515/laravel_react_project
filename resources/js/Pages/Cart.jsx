@@ -45,15 +45,25 @@ export default function Cart() {
     };
 
     const handleCheckout = () => {
-        if (selectedItems.length === 0) {
-            alert("Please select at least one item to checkout.");
-            return;
-        }
-
+    if (cartItems.length === 1) {
+       
+        const onlyProductId = cartItems[0].id;
         router.post(route('checkout.selected'), {
-            product_ids: selectedItems
+            product_ids: [onlyProductId],
         });
-    };
+        return;
+    }
+
+    if (selectedItems.length === 0) {
+        alert("Please select at least one item to checkout.");
+        return;
+    }
+
+    router.post(route('checkout.selected'), {
+        product_ids: selectedItems,
+    });
+};
+
 
     return (
         <UserLayout>

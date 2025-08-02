@@ -24,7 +24,7 @@ public function orders()
         abort(403, 'Unauthorized');
     }
 
-    $orders = Order::with(['items', 'user'])->latest()->get();
+    $orders = Order::with(['items', 'user'])->latest()->paginate(8); 
     $orders->map(function ($order) {
         $order->items->map(function ($item) {
             $images = is_string($item->product->images)
