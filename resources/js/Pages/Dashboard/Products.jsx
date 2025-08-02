@@ -16,6 +16,20 @@ export default function Products({ products, categories, subcategories }) {
         }
     };
 
+    const getCategoryName = (id) => {
+        const category = categories.find(cat => cat.id === id);
+        return category ? category.name : 'N/A';
+    };
+
+    const getSubcategoryName = (id) => {
+        for (let cat of categories) {
+            const sub = cat.subcategories.find(sub => sub.id === id);
+            if (sub) return sub.name;
+        }
+        return 'N/A';
+    };
+
+
     return (
         <>
             <div className="p-6 space-y-4">
@@ -31,40 +45,66 @@ export default function Products({ products, categories, subcategories }) {
                     </div>
                 </div>
 
-                <ul className="space-y-4">
-                    {products.data.map((product) => (
-                        <li
-                            key={product.id}
-                            className="bg-white rounded-lg shadow flex items-center justify-between p-4"
-                        >
-                            <div className="flex items-center">
-                                <img
-                                    src={`/storage/${product.images[0]}`}
-                                    alt={product.imageAlt}
-                                    className="w-20 h-20 object-cover rounded mr-4"
-                                />
-                                <div>
-                                    <h2 className="text-lg font-semibold">{product.name}</h2>
-                                    <p className="text-green-600">{product.price ? `$${product.price}` : 'N/A'}</p>
-                                </div>
-                            </div>
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead>
+                        <tr className="bg-gray-100 text-gray-700 text-left text-sm uppercase">
+                            <th className="p-3 border">S.No</th>
+                            <th className="p-3 border">Image</th>
+                            <th className="p-3 border">Category</th>
+                            <th className="p-3 border">Subcategory</th>
+                            <th className="p-3 border">Product</th>
+                            <th className="p-3 border">Discount</th>
+                            <th className="p-3 border">Active/Inactive</th>
+                            <th className="p-3 border">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {products.data.map((product, index) => (
+                            <tr key={product.id} className="border-t hover:bg-gray-50 text-sm">
+                                <td className="p-3 border">{index + 1}</td>
+                                <td className="p-3 border">
+                                    <img
+                                        src={`/storage/${product.images[0]}`}
+                                        alt={product.imageAlt}
+                                        className="w-16 h-16 object-cover rounded"
+                                    />
+                                </td>
+                                <td className="p-3 border">{getCategoryName(product.category_id)}</td>
+                                <td className="p-3 border">{getSubcategoryName(product.subcategory_id)}</td>
+                                <td className="p-3 border">{product.name}</td>
+                                <td className="p-3 border">
+                                    {product.discount ? `${parseFloat(product.discount).toFixed(2)}% OFF` : '0%'}
+                                </td>
+                                <td className="p-3 border">
+                                    <label className="inline-flex relative items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            className="sr-only peer"
+                                            checked={product.status === 'active'}
+                                            readOnly
+                                        />
+                                        <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-500"></div>
+                                    </label>
+                                </td>
+                                <td className="p-3 border space-x-2">
+                                    <button
+                                        onClick={() => setEditProduct(product)}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                                    >
+                                        ✏️
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(product.id)}
+                                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                                    >
+                                        🗑️
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
 
-                            <div className="flex">
-                                <button onClick={() => setEditProduct(product)}
-                                    className='focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800'>
-                                    Update
-                                </button>
-
-                                <button
-                                    onClick={() => handleDelete(product.id)}
-                                    className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
 
                 {/* Pagination Links */}
                 {products.data.length > 0 && products.links.length + 2 > 5 && (
