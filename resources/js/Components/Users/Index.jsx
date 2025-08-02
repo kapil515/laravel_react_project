@@ -40,10 +40,10 @@ export default function UserList({ users }) {
                                         <img
                                             src={`/storage/${user.image}`}
                                             alt={user.name}
-                                            className="w-10 h-10 rounded-full object-cover"
+                                            className="w-20 h-20 rounded object-cover"
                                         />
                                     ) : (
-                                        <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white text-sm">
+                                        <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-white text-sm">
                                             👤
                                         </div>
                                     )}
@@ -111,8 +111,8 @@ export default function UserList({ users }) {
                             ))}
                         </div>
                     )}
-
                 </table>
+
 
 
             )}
