@@ -145,7 +145,9 @@ public function updateProfile(Request $request)
 
     $user->update($data);
 
-    return redirect()->back()->with('success', 'Profile updated successfully.');
+   return redirect()->route('dashboard.settings', ['tab' => 'profile'])
+    ->with('success', 'Profile updated successfully.');
+
 }
 
 public function updatePassword(Request $request)
@@ -165,7 +167,9 @@ public function updatePassword(Request $request)
         'password' => Hash::make($request->new_password),
     ]);
 
-    return back()->with('success', 'Password updated successfully.');
+   return redirect()->route('dashboard.settings', ['tab' => 'password'])
+    ->with('success', 'Password updated successfully.');
+
 }
 
 public function assignRole(Request $request)
@@ -179,7 +183,9 @@ public function assignRole(Request $request)
     $user->role = $request->role;
     $user->save();
 
-    return back()->with('success', 'Role updated successfully.');
+ return redirect()->route('dashboard.settings', ['tab' => 'role'])
+    ->with('success', 'Role updated successfully.');
+
 }
 
 

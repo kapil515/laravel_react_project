@@ -90,6 +90,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/dashboard/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::put('/users/{user}/toggle-active', [RegisteredUserController::class, 'toggleActive'])->name('users.toggleActive');
     Route::post('/orders/mass-destroy', [OrderController::class, 'massDestroy'])->name('orders.massDestroy');
+    Route::get('/payment/credit/{order}', [OrderController::class, 'creditPayment'])->name('payment.credit');
+Route::post('/payment/credit/{order}', [OrderController::class, 'processCreditPayment'])->name('payment.credit.process');
 
 });
 

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('payment_method');
             $table->decimal('total_amount', 10, 2);
-            $table->enum('status', ['pending', 'paid', 'shipped', 'delivered'])->default('pending');
+            $table->enum('status', ['pending', 'processing', 'completed', 'failed', 'shipped', 'delivered'])->default('pending');
             $table->timestamps();
         });
     }

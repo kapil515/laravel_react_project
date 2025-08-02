@@ -7,6 +7,7 @@ import AssignRole from '@/Components/Settings/AssignRole';
 export default function Settings({ admin, users }) {
     const [tab, setTab] = useState('profile');
     const { url } = usePage();
+    const { flash } = usePage().props;
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -32,6 +33,11 @@ export default function Settings({ admin, users }) {
     return (
         <div className="flex gap-6 p-6">
             <div className="flex-1 bg-white rounded-lg shadow p-6">
+                {flash.success && (
+    <div className="mb-4 p-4 bg-green-100 text-green-800 rounded">
+        {flash.success}
+    </div>
+)}
                 {renderTabContent()}
             </div>
         </div>

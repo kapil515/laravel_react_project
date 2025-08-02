@@ -58,12 +58,12 @@ export default function Dashboard({ section,products }) {
                     </div>
                     <nav className="flex flex-col mt-2">
                         <SidebarLink href="/dashboard/users" label="All Users" />
-                        <SidebarLink href="/dashboard/transactions" label="Transactions" />
                         <SidebarLink href="/dashboard/sales" label="Sales" />
                         <SidebarLink href="/dashboard/products" label="Products" />
                         <SidebarLink href="/dashboard/members" label="Prime Members" />
                        <SidebarLink href="/dashboard/Categories" label="Categories" />
                        <SidebarLink href="/dashboard/orders" label="All Orders" />
+                       <SidebarLink href="/dashboard/transactions" label="Transactions" />
                       <SidebarLink label="Settings" isDropdown={true}>
                         <Link
                             href="/dashboard/settings?tab=profile"

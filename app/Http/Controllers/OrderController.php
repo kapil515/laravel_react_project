@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+   use App\Models\Payment;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
@@ -54,7 +55,7 @@ public function orders()
             'state' => 'required|max:255',
             'postal_code' => 'required|max:20',
             'country' => 'required|max:100',
-            'payment_method' => 'required|max:50',
+           'payment_method' => 'required|in:cod,credit_card,gpay,online',
             'cart' => 'required|array|min:1',
         ]);
 
@@ -74,7 +75,7 @@ public function orders()
             'postal_code' => $request['postal_code'],
             'country' => $request['country'],
             'payment_method' => $request['payment_method'],
-            'status' => 'pending',
+            'status' => $request['payment_method'] === 'cod' ? 'processing' : 'pending',
             'total_amount' => $totalAmount,
         ]);
 
@@ -94,15 +95,58 @@ public function orders()
             ->delete();
 
         Log::info('Order created', ['order_id' => $order->id]);
+         if ($request['payment_method'] === 'cod') {
+            $shippingFee = 50;
+            $order->total_amount += $shippingFee;
+            $order->status = 'completed';
+            $order->save();
 
-      return redirect()->route('orders.thankyou', ['order' => $order->id]);
+            return redirect()->route('orders.thankyou', ['order' => $order->id]);
+        }
+
+        return redirect()->route('payment.credit', ['order' => $order->id]);
     }
+
+     public function creditPayment(Order $order)
+    {
+        return Inertia::render('CreditCardPayment', ['order' => $order]);
+    }
+
+
+
+public function processCreditPayment(Request $request, Order $order)
+{
+     $method = $request->input('payment_method', 'credit_card');
+
+    if ($method === 'credit_card') {
+        $request->validate([
+            'card_number' => 'required|digits_between:13,19',
+            'expiry' => ['required', 'regex:/^(0[1-9]|1[0-2])\/([0-9]{2})$/'],
+            'cvv' => 'required|digits_between:3,4',
+            'cardholder_name' => 'required|string|max:255',
+        ]);
+    } elseif ($method === 'gpay') {
+        $request->validate([
+            'gpay_email' => 'required|email',
+        ]);
+    } elseif ($method === 'online') {
+        $request->validate([
+            'online_reference' => 'required|string|min:5',
+        ]);
+    }
+
+    $order->update(['status' => 'completed']);
+
+    return redirect()->route('orders.thankyou', $order->id)->with('success', 'Payment successful!');
+}
 
 
     public function show(Order $order)
     {
         $order->load(['items.product', 'user']);
-        return Inertia::render('ThankYou', ['order' => $order]);
+        return Inertia::render('ThankYou', ['order' => $order->toArray() + [
+            'shippingFee' => $order->shippingFee, 
+        ]]);
     }
 
    public function adminShow(Order $order)
