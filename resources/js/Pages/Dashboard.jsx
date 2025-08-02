@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -14,8 +14,19 @@ import OrderDetails from './Dashboard/OrderDetails'
 
 
 export default function Dashboard({ section,products }) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { users,categories,order } = usePage().props;
+     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState(null); 
+    const { users, categories, order } = usePage().props;
+    const { url } = usePage();
+
+     useEffect(() => {
+    if (url.startsWith('/dashboard/settings')) {
+        setOpenDropdown('settings');
+    } else {
+        setOpenDropdown(null);
+    }
+}, [url]);
+
 
     const renderContent = () => {
         switch (section) {
@@ -64,34 +75,41 @@ export default function Dashboard({ section,products }) {
                        <SidebarLink href="/dashboard/Categories" label="Categories" />
                        <SidebarLink href="/dashboard/orders" label="All Orders" />
                        <SidebarLink href="/dashboard/transactions" label="Transactions" />
-                      <SidebarLink label="Settings" isDropdown={true}>
-                        <Link
-                            href="/dashboard/settings?tab=profile"
-                            className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
-                        >
-                            Update Profile
-                        </Link>
-                        <Link
-                            href="/dashboard/settings?tab=password"
-                            className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
-                        >
-                            Update Password
-                        </Link>
-                        <Link
-                            href="/dashboard/settings?tab=role"
-                            className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
-                        >
-                            Assign Role
-                        </Link>
-                        <Link
-                            href="/logout"
-                            method="post"
-                            as="button"
-                            className="block w-full text-left px-8 py-2 text-sm text-green-600 hover:bg-green-200"
-                        >
-                            Logout
-                        </Link>
-                    </SidebarLink>
+                    <SidebarLink
+    label="Settings"
+    isDropdown={true}
+    dropdownKey="settings"
+    openDropdown={openDropdown}
+    setOpenDropdown={setOpenDropdown}
+>
+    <Link
+        href="/dashboard/settings?tab=profile"
+        className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
+    >
+        Update Profile
+    </Link>
+    <Link
+        href="/dashboard/settings?tab=password"
+        className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
+    >
+        Update Password
+    </Link>
+    <Link
+        href="/dashboard/settings?tab=role"
+        className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
+    >
+        Assign Role
+    </Link>
+    <Link
+        href="/logout"
+        method="post"
+        as="button"
+        className="block w-full text-left px-8 py-2 text-sm text-green-600 hover:bg-green-200"
+    >
+        Logout
+    </Link>
+</SidebarLink>
+
                     </nav>
                 </aside>
 
@@ -112,20 +130,44 @@ export default function Dashboard({ section,products }) {
     );
 }
 
-function SidebarLink({ href, label, children, isDropdown = false }) {
-    const [open, setOpen] = useState(false);
+
+export function SidebarLink({
+    href,
+    label,
+    children,
+    isDropdown = false,
+    dropdownKey,           
+    openDropdown,
+    setOpenDropdown
+}) {
+    const { url } = usePage();
+    const isActive = href && url.startsWith(href);
+
+    const isOpen = dropdownKey === openDropdown;
+
+    const handleToggle = () => {
+        if (isOpen) {
+            setOpenDropdown(null); 
+        } else {
+            setOpenDropdown(dropdownKey); 
+        }
+    };
+
+    const linkClasses = `px-6 py-3 text-green-700 font-medium block border-b border-gray-300 ${
+        isActive ? 'bg-green-100' : 'hover:bg-green-100'
+    }`;
 
     if (isDropdown) {
         return (
             <div className="border-b border-gray-300">
                 <button
                     className="w-full text-left px-6 py-3 text-green-700 hover:bg-green-100 font-medium flex justify-between items-center"
-                    onClick={() => setOpen(!open)}
+                    onClick={handleToggle}
                 >
                     {label}
-                    <span>{open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</span>
+                    <span>{isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</span>
                 </button>
-                {open && (
+                {isOpen && (
                     <div className="bg-gray-100">
                         {children}
                     </div>
@@ -135,10 +177,7 @@ function SidebarLink({ href, label, children, isDropdown = false }) {
     }
 
     return (
-        <Link
-            href={href}
-            className="px-6 py-3 text-green-700 hover:bg-green-100 border-b border-gray-300 font-medium block"
-        >
+        <Link href={href} className={linkClasses}>
             {label}
         </Link>
     );

@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 
 export default function OrderDetails({ order }) {
     return (
-        <div className="p-8 max-w-5xl mx-auto bg-white rounded-lg shadow-md space-y-8">
+        <div className="p-8 max-w-5xl mx-auto mb-20 bg-white rounded-lg shadow-md space-y-8">
             <div className="border-b pb-4">
                 <h2 className="text-xl font-bold text-gray-800 mb-2">👤 User Info</h2>
                 <div className="space-y-1 text-gray-700">
