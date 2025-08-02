@@ -17,7 +17,6 @@ class DashboardController extends Controller
     public function users()
     {
         $users = User::where('role', '!=', 'admin')->paginate(5);
-
         return Inertia::render('Dashboard', [
             'section' => 'users',
             'users'   => $users,
@@ -100,7 +99,7 @@ public function products()
             'price' => $product->price,
             'category_id' => $product->category_id,
             'subcategory_id' => $product->subcategory_id,
-            'description' => $product->description, 
+            'description' => $product->description,
             'imageAlt' => $product->image_alt,
             'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
         ];
@@ -109,7 +108,7 @@ public function products()
     $categories = Category::with('subcategories')->get();
     $totalProducts = Product::count();
 
-    return Inertia::render('Dashboard', [  
+    return Inertia::render('Dashboard', [
         'section' => 'products',
         'products' => $products,
         'categories' => $categories ,
