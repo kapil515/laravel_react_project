@@ -1,11 +1,17 @@
 import { router, Link } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export default function UserList({ users, filters = {} }) {
     const userList = users?.data || [];
     const { data, setData, get } = useForm({
         search: filters.search || '',
     });
+
+    useEffect(() => {
+        setData('search', filters.search || '');
+    }, [filters.search]);
+
     return (
 
         <div className="overflow-x-auto bg-white rounded shadow p-6">
@@ -14,10 +20,18 @@ export default function UserList({ users, filters = {} }) {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        get(route('dashboard.users'));
+                        get(route('dashboard.users'), {
+                            preserveState: true,
+                            preserveScroll: true,
+                            only: ['users'],
+                            data: {
+                                search: data.search,
+                            },
+                        });
                     }}
                     className="flex gap-3 mb-4 flex-wrap"
                 >
+
                     <input
                         type="text"
                         placeholder="Search by name, email or phone"
@@ -34,13 +48,20 @@ export default function UserList({ users, filters = {} }) {
                     <button
                         type="button"
                         onClick={() => {
-                            setData('search', '');
-                            get(route('dashboard.users'));
+                            router.get(route('dashboard.users'), { search: '' }, {
+                                preserveScroll: true,
+                                onSuccess: () => {
+                                    setData('search', ''); 
+                                }
+                            });
                         }}
                         className="bg-gray-400 text-white px-4 py-2 rounded text-sm hover:bg-gray-500"
                     >
                         Reset
                     </button>
+
+
+
                 </form>
 
 

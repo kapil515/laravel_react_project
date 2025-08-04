@@ -34,6 +34,7 @@ class DashboardController extends Controller
             'users'   => $query->paginate(10)->withQueryString(),
             'filters' => $request->only('search'),
         ]);
+
     }
 
     public function edit($id)
