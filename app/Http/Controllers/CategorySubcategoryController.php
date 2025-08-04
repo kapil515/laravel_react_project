@@ -104,6 +104,15 @@ class CategorySubcategoryController extends Controller
         return redirect()->back()->with('success', 'Category deleted.');
     }
 
+    // app/Http/Controllers/CategoryController.php
+public function shop()
+{
+    $categories = Category::with('subcategories')->get();
+    return inertia('Category', [ // Note: Renders 'Category' component
+        'categories' => $categories->toArray()
+    ]);
+}
+
     // ===================== SUBCATEGORY METHODS =========================
 
     public function storeSubcategory(Request $request)

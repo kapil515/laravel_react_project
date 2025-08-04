@@ -1,54 +1,77 @@
-const callouts = [
-  {
-    name: 'Desk and Office',
-    description: 'Work from home accessories',
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-01.jpg',
-    imageAlt: 'Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.',
-    href: '#',
-  },
-  {
-    name: 'Self-Improvement',
-    description: 'Journals and note-taking',
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-02.jpg',
-    imageAlt: 'Wood table with porcelain mug, leather journal, brass pen, leather key ring, and a houseplant.',
-    href: '#',
-  },
-  {
-    name: 'Travel',
-    description: 'Daily commute essentials',
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-03.jpg',
-    imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
-    href: '#',
-  },
-]
+import { Head } from '@inertiajs/react';
 
-export default function Category() {
+export default function Category({
+  categories = [],
+  selectedCategoryId,
+  setSelectedCategoryId,
+  selectedSubcategoryId,
+  setSelectedSubcategoryId,
+}) {
+  const selectedCategory = categories.find((category) => category.id === parseInt(selectedCategoryId));
+  const subcategories = selectedCategory ? selectedCategory.subcategories : [];
+
   return (
     <div className="bg-white">
+      <Head title="Shop by Category" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-10">
-          <h2 className="text-2xl font-bold text-gray-900">Shop by Category</h2>
-
-          <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:space-y-0 lg:gap-x-6">
-            {callouts.map((callout) => (
-              <div key={callout.name} className="group relative">
-                <img
-                  alt={callout.imageAlt}
-                  src={callout.imageSrc}
-                  className="w-full rounded-lg bg-white object-cover group-hover:opacity-75 max-sm:h-80 sm:aspect-2/1 lg:aspect-square"
-                />
-                <h3 className="mt-6 text-sm text-gray-500">
-                  <a href={callout.href}>
-                    <span className="absolute inset-0" />
-                    {callout.name}
-                  </a>
-                </h3>
-                <p className="text-base font-semibold text-gray-900">{callout.description}</p>
-              </div>
-            ))}
+        <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-0">
+          <div className="mt-4 mb-6 flex items-center space-x-4">
+            <div className="flex-1 max-w-md">
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                Category
+              </label>
+              <select
+                id="category"
+                value={selectedCategoryId}
+                onChange={(e) => {
+                  setSelectedCategoryId(e.target.value);
+                  setSelectedSubcategoryId('');
+                }}
+                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1 max-w-md">
+              <label htmlFor="subcategory" className="block text-sm font-medium text-gray-700">
+                Subcategory
+              </label>
+              <select
+                id="subcategory"
+                value={selectedSubcategoryId}
+                onChange={(e) => setSelectedSubcategoryId(e.target.value)}
+                disabled={!selectedCategoryId}
+                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              >
+                <option value="">All Subcategories</option>
+                {subcategories.map((subcategory) => (
+                  <option key={subcategory.id} value={subcategory.id}>
+                    {subcategory.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end mt-4">
+              {(selectedCategoryId || selectedSubcategoryId) && (
+                <button
+                  onClick={() => {
+                    setSelectedCategoryId('');
+                    setSelectedSubcategoryId('');
+                  }}
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

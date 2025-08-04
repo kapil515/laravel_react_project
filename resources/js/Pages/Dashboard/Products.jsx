@@ -31,12 +31,6 @@ export default function Products({ products, categories, subcategories }) {
         return 'N/A';
     };
 
-    const { filters } = usePage().props;
-
-    const { data, setData, get } = useForm({
-        search: filters?.search || '',
-    });
-
     const handleToggleStatus = (product) => {
         const newStatus = product.status === 'active' ? 'inactive' : 'active';
 
@@ -49,11 +43,6 @@ export default function Products({ products, categories, subcategories }) {
             },
         });
     };
-
-
-
-
-
 
     return (
         <>

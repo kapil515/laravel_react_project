@@ -15,19 +15,19 @@ import Transactions from './Dashboard/Transactions';
 
 
 
-export default function Dashboard({ section,products }) {
-     const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function Dashboard({ section, products }) {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
     const { users, categories, order } = usePage().props;
     const { url } = usePage();
 
-     useEffect(() => {
-    if (url.startsWith('/dashboard/settings')) {
-        setOpenDropdown('settings');
-    } else {
-        setOpenDropdown(null);
-    }
-}, [url]);
+    useEffect(() => {
+        if (url.startsWith('/dashboard/settings')) {
+            setOpenDropdown('settings');
+        } else {
+            setOpenDropdown(null);
+        }
+    }, [url]);
 
 
     const renderContent = () => {
@@ -35,14 +35,14 @@ export default function Dashboard({ section,products }) {
             case 'users': return <Users users={users} />;
             case 'create': return <CreateUser />;
             case 'edit-user': return <EditUser user={usePage().props.user} />
-           case 'transactions': return <Transactions transactions={usePage().props.transactions} />;
+            case 'transactions': return <Transactions transactions={usePage().props.transactions} />;
             case 'sales': return <div className="p-6">Sales Content</div>;
-            case 'products':  return <Product products={products} categories={usePage().props.categories} />;;
+            case 'products': return <Product products={products} categories={usePage().props.categories} />;;
             case 'members': return <div className="p-6">Prime Members Content</div>;
-          case 'settings':return <Settings admin={usePage().props.admin} users={usePage().props.users} />;
-             case 'Categories': return <Category categories={categories} />;
-             case 'orders': return <Orders orders={usePage().props.orders} />;
-              case 'order-details': return <OrderDetails order={order} />;
+            case 'settings': return <Settings admin={usePage().props.admin} users={usePage().props.users} />;
+            case 'Categories': return <Category categories={categories} />;
+            case 'orders': return <Orders orders={usePage().props.orders} />;
+            case 'order-details': return <OrderDetails order={order} />;
             default: return <div className="p-6">You're logged in!</div>;
         }
     };
@@ -72,43 +72,43 @@ export default function Dashboard({ section,products }) {
                     <nav className="flex flex-col mt-2">
                         <SidebarLink href="/dashboard/users" label="All Users" />
                         <SidebarLink href="/dashboard/products" label="Products" />
-                       <SidebarLink href="/dashboard/Categories" label="Categories" />
-                       <SidebarLink href="/dashboard/orders" label="All Orders" />
-                       <SidebarLink href="/dashboard/transactions" label="Transactions" />
-                    <SidebarLink
-    label="Settings"
-    isDropdown={true}
-    dropdownKey="settings"
-    openDropdown={openDropdown}
-    setOpenDropdown={setOpenDropdown}
->
-    <Link
-        href="/dashboard/settings?tab=profile"
-        className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
-    >
-        Update Profile
-    </Link>
-    <Link
-        href="/dashboard/settings?tab=password"
-        className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
-    >
-        Update Password
-    </Link>
-    <Link
-        href="/dashboard/settings?tab=role"
-        className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
-    >
-        Assign Role
-    </Link>
-    <Link
-        href="/logout"
-        method="post"
-        as="button"
-        className="block w-full text-left px-8 py-2 text-sm text-green-600 hover:bg-green-200"
-    >
-        Logout
-    </Link>
-</SidebarLink>
+                        <SidebarLink href="/dashboard/Categories" label="Categories" />
+                        <SidebarLink href="/dashboard/orders" label="All Orders" />
+                        <SidebarLink href="/dashboard/transactions" label="Transactions" />
+                        <SidebarLink
+                            label="Settings"
+                            isDropdown={true}
+                            dropdownKey="settings"
+                            openDropdown={openDropdown}
+                            setOpenDropdown={setOpenDropdown}
+                        >
+                            <Link
+                                href="/dashboard/settings?tab=profile"
+                                className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
+                            >
+                                Update Profile
+                            </Link>
+                            <Link
+                                href="/dashboard/settings?tab=password"
+                                className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
+                            >
+                                Update Password
+                            </Link>
+                            <Link
+                                href="/dashboard/settings?tab=role"
+                                className="block px-8 py-2 text-sm text-green-700 hover:bg-green-200"
+                            >
+                                Assign Role
+                            </Link>
+                            <Link
+                                href="/logout"
+                                method="post"
+                                as="button"
+                                className="block w-full text-left px-8 py-2 text-sm text-green-600 hover:bg-green-200"
+                            >
+                                Logout
+                            </Link>
+                        </SidebarLink>
 
                     </nav>
                 </aside>
@@ -153,9 +153,8 @@ export function SidebarLink({
         }
     };
 
-    const linkClasses = `px-6 py-3 text-green-700 font-medium block border-b border-gray-300 ${
-        isActive ? 'bg-green-100' : 'hover:bg-green-100'
-    }`;
+    const linkClasses = `px-6 py-3 text-green-700 font-medium block border-b border-gray-300 ${isActive ? 'bg-green-100' : 'hover:bg-green-100'
+        }`;
 
     if (isDropdown) {
         return (
