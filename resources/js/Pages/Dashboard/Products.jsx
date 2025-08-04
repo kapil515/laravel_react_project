@@ -77,7 +77,7 @@ export default function Products({ products, categories, subcategories }) {
                     <tbody>
                         {products.data.map((product, index) => (
                             <tr key={product.id} className="border-t hover:bg-gray-50 text-sm">
-                                <td className="p-3 border">{index + 1}</td>
+                                <td className="p-3 border">{(products.current_page - 1) * 4 + index + 1}</td>
                                 <td className="p-3 border">
                                     <img
                                         src={`/storage/${product.images[0]}`}

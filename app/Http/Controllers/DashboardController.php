@@ -60,25 +60,20 @@ class DashboardController extends Controller
             'password'  => 'nullable|min:6',
         ]);
 
-        // Agar password diya hai to update karo, warna skip
         if (! empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         } else {
             unset($data['password']);
         }
 
-        // Status ko boolean set karna zaruri hai
         $data['status'] = $request->boolean('status');
 
-        // Agar nayi image ayi hai to upload karo
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('users', 'public');
         }
 
-        // User update kar do
         $user->update($data);
 
-        // Redirect wapas user list pe with message
         return redirect()
             ->route('dashboard.users')
             ->with('success', 'User updated successfully.');
