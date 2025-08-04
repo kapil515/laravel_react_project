@@ -43,7 +43,7 @@ export default function Index({ products, categories, auth }) {
                             <option key={cat.id} value={cat.id}>{cat.name}</option>
                         ))}
                     </select>
-                                        
+
                 </div>
 
                 {/* Product Table */}

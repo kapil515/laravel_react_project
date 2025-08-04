@@ -84,7 +84,7 @@ public function index()
     $imagePaths = [];
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $image) {
-            $path = $image->store('products', 'public'); 
+            $path = $image->store('products', 'public');
             $imagePaths[] = $path;
         }
     }
@@ -97,7 +97,7 @@ public function index()
         'details' => $validated['details'],
         'reviews_average' => $validated['reviews_average'],
         'reviews_total_count' => $validated['reviews_total_count'],
-        'images' => json_encode($imagePaths), 
+        'images' => json_encode($imagePaths),
         'category_id' => $validated['category_id'] ?? null,
         'subcategory_id' => $validated['subcategory_id'] ?? null,
     ]);
