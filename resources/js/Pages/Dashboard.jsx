@@ -10,7 +10,9 @@ import CreateUser from '@/Components/Users/CreateUser';
 import Category from './Dashboard/Category'; 
 import Orders from './Dashboard/Orders';
 import Settings from './Dashboard/Settings';
-import OrderDetails from './Dashboard/OrderDetails'
+import OrderDetails from './Dashboard/OrderDetails';
+import Transactions from './Dashboard/Transactions';
+
 
 
 export default function Dashboard({ section,products }) {
@@ -33,7 +35,7 @@ export default function Dashboard({ section,products }) {
             case 'users': return <Users users={users} />;
             case 'create': return <CreateUser />;
             case 'edit-user': return <EditUser user={usePage().props.user} />
-            case 'transactions': return <div className="p-6">Transactions</div>;
+           case 'transactions': return <Transactions transactions={usePage().props.transactions} />;
             case 'sales': return <div className="p-6">Sales Content</div>;
             case 'products':  return <Product products={products} categories={usePage().props.categories} />;;
             case 'members': return <div className="p-6">Prime Members Content</div>;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
@@ -92,9 +93,21 @@ class DashboardController extends Controller
     }
 
     public function transactions()
-    {
-        return Inertia::render('Dashboard', ['section' => 'transactions']);
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
     }
+
+    $transactions = Order::with(['user', 'payment'])
+        ->latest()
+        ->paginate(8);
+
+    return Inertia::render('Dashboard', [
+        'section' => 'transactions',
+        'transactions' => $transactions,
+    ]);
+}
+
 
     public function sales()
     {

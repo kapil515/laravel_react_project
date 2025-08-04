@@ -142,7 +142,7 @@ export default function Orders({ orders }) {
                     </div>
 
                     {/* Pagination */}
-                    {orders.links.length > 8 && (
+                    {orders.total > orders.per_page && (
                         <div className="mt-6 flex justify-center space-x-2 text-sm">
                             {orders.links.map((link, index) => (
                                 <button
