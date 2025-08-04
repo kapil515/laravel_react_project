@@ -6,8 +6,8 @@ import Users from './Dashboard/Users';
 import Product from './Dashboard/Products';
 import { usePage } from '@inertiajs/react';
 import EditUser from '@/Components/Users/Edit';
-import CreateUser from '@/Components/Users/CreateUser'; 
-import Category from './Dashboard/Category'; 
+import CreateUser from '@/Components/Users/CreateUser';
+import Category from './Dashboard/Category';
 import Orders from './Dashboard/Orders';
 import Settings from './Dashboard/Settings';
 import OrderDetails from './Dashboard/OrderDetails';
@@ -17,7 +17,7 @@ import Transactions from './Dashboard/Transactions';
 
 export default function Dashboard({ section,products }) {
      const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [openDropdown, setOpenDropdown] = useState(null); 
+    const [openDropdown, setOpenDropdown] = useState(null);
     const { users, categories, order } = usePage().props;
     const { url } = usePage();
 
@@ -71,9 +71,7 @@ export default function Dashboard({ section,products }) {
                     </div>
                     <nav className="flex flex-col mt-2">
                         <SidebarLink href="/dashboard/users" label="All Users" />
-                        <SidebarLink href="/dashboard/sales" label="Sales" />
                         <SidebarLink href="/dashboard/products" label="Products" />
-                        <SidebarLink href="/dashboard/members" label="Prime Members" />
                        <SidebarLink href="/dashboard/Categories" label="Categories" />
                        <SidebarLink href="/dashboard/orders" label="All Orders" />
                        <SidebarLink href="/dashboard/transactions" label="Transactions" />
@@ -138,7 +136,7 @@ export function SidebarLink({
     label,
     children,
     isDropdown = false,
-    dropdownKey,           
+    dropdownKey,
     openDropdown,
     setOpenDropdown
 }) {
@@ -149,9 +147,9 @@ export function SidebarLink({
 
     const handleToggle = () => {
         if (isOpen) {
-            setOpenDropdown(null); 
+            setOpenDropdown(null);
         } else {
-            setOpenDropdown(dropdownKey); 
+            setOpenDropdown(dropdownKey);
         }
     };
 
