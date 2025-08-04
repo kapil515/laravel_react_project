@@ -1,13 +1,49 @@
 import { router, Link } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 
-export default function UserList({ users }) {
+export default function UserList({ users, filters = {} }) {
     const userList = users?.data || [];
-
+    const { data, setData, get } = useForm({
+        search: filters.search || '',
+    });
     return (
 
         <div className="overflow-x-auto bg-white rounded shadow p-6">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-3xl font-bold text-green-700 underline">All Users</h1>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        get(route('dashboard.users'));
+                    }}
+                    className="flex gap-3 mb-4 flex-wrap"
+                >
+                    <input
+                        type="text"
+                        placeholder="Search by name, email or phone"
+                        value={data.search}
+                        onChange={(e) => setData('search', e.target.value)}
+                        className="border rounded px-3 py-2 text-sm w-64"
+                    />
+                    <button
+                        type="submit"
+                        className="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700"
+                    >
+                        Filter
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setData('search', '');
+                            get(route('dashboard.users'));
+                        }}
+                        className="bg-gray-400 text-white px-4 py-2 rounded text-sm hover:bg-gray-500"
+                    >
+                        Reset
+                    </button>
+                </form>
+
+
                 <button
                     className="px-5 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-500 text-lg"
                     onClick={() => router.visit(route('dashboard.users.create'))}
@@ -101,10 +137,10 @@ export default function UserList({ users }) {
                                     key={index}
                                     href={link.url || ''}
                                     className={`px-3 py-1 border rounded text-sm transition ${link.active
-                                            ? 'bg-green-600 text-white'
-                                            : !link.url
-                                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed pointer-events-none'
-                                                : 'bg-white text-gray-700 hover:bg-gray-200'
+                                        ? 'bg-green-600 text-white'
+                                        : !link.url
+                                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed pointer-events-none'
+                                            : 'bg-white text-gray-700 hover:bg-gray-200'
                                         }`}
                                     dangerouslySetInnerHTML={{ __html: link.label }}
                                 />

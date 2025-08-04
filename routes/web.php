@@ -94,6 +94,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/orders/mass-destroy', [OrderController::class, 'massDestroy'])->name('orders.massDestroy');
     Route::get('/payment/credit/{order}', [OrderController::class, 'creditPayment'])->name('payment.credit');
 Route::post('/payment/credit/{order}', [OrderController::class, 'processCreditPayment'])->name('payment.credit.process');
+Route::get('/dashboard/transactions', [DashboardController::class, 'transactions'])->name('orders.transactions');
+
 
 });
 

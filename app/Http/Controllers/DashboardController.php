@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,12 +16,23 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', ['section' => 'home']);
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        $users = User::where('role', '!=', 'admin')->paginate(10);
+        $query = User::where('role', '!=', 'admin');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
         return Inertia::render('Dashboard', [
             'section' => 'users',
-            'users'   => $users,
+            'users'   => $query->paginate(10)->withQueryString(),
+            'filters' => $request->only('search'),
         ]);
     }
 
@@ -115,7 +127,18 @@ class DashboardController extends Controller
 
     public function transactions()
     {
-        return Inertia::render('Dashboard', ['section' => 'transactions']);
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+
+        $transactions = Order::with(['user', 'payment'])
+            ->latest()
+            ->paginate(8);
+
+        return Inertia::render('Dashboard', [
+            'section'      => 'transactions',
+            'transactions' => $transactions,
+        ]);
     }
 
     public function sales()
