@@ -2,23 +2,43 @@ import { useForm, router } from '@inertiajs/react';
 
 export default function Edit({ user }) {
     const { data, setData, put, processing, errors } = useForm({
-        name: user?.name ?? '',
-        email: user?.email ?? '',
-        phone: user?.phone ?? '',
-        role: user?.role?.toLowerCase() ?? 'user',
-        status: user?.status === 1 || user?.status === true,
-        join_date: user?.join_date ?? '',
+        name: user?.name || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        role: user?.role || 'user',
+        status: user?.status == 1 ? true : false, // Fix: Boolean conversion
         image: null,
         password: '',
+        _method: 'PUT' // Fix: Add method spoofing
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('dashboard.users.update', user.id), {
+
+        // Create FormData for file upload
+        const formData = new FormData();
+
+        // Append all form fields
+        Object.keys(data).forEach(key => {
+            if (key === 'image' && data[key]) {
+                formData.append(key, data[key]);
+            } else if (key === 'status') {
+                formData.append(key, data[key] ? 1 : 0); // Convert boolean to int
+            } else if (data[key] !== null && data[key] !== '') {
+                formData.append(key, data[key]);
+            }
+        });
+
+        // Use post method with _method: PUT for file uploads
+        router.post(route('dashboard.users.update', user.id), formData, {
             forceFormData: true,
+            preserveState: false,
             onSuccess: () => {
-                router.visit(route('dashboard.users')); // redirect after success
+                router.visit(route('dashboard.users'));
             },
+            onError: (errors) => {
+                console.log('Validation errors:', errors);
+            }
         });
     };
 
@@ -29,7 +49,7 @@ export default function Edit({ user }) {
     return (
         <div className="max-w-xl mx-auto p-4 bg-white rounded shadow">
             <h1 className="text-2xl font-bold mb-4 text-green-700">Edit User</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
                 <div>
                     <label className="block font-semibold">Name</label>
                     <input
@@ -38,8 +58,9 @@ export default function Edit({ user }) {
                         value={data.name}
                         onChange={e => setData('name', e.target.value)}
                         className="w-full border px-3 py-2 rounded"
+                        required
                     />
-                    {errors.name && <div className="text-red-600">{errors.name}</div>}
+                    {errors.name && <div className="text-red-600 text-sm mt-1">{errors.name}</div>}
                 </div>
 
                 <div>
@@ -50,8 +71,9 @@ export default function Edit({ user }) {
                         value={data.email}
                         onChange={e => setData('email', e.target.value)}
                         className="w-full border px-3 py-2 rounded"
+                        required
                     />
-                    {errors.email && <div className="text-red-600">{errors.email}</div>}
+                    {errors.email && <div className="text-red-600 text-sm mt-1">{errors.email}</div>}
                 </div>
 
                 <div>
@@ -63,7 +85,7 @@ export default function Edit({ user }) {
                         onChange={e => setData('phone', e.target.value)}
                         className="w-full border px-3 py-2 rounded"
                     />
-                    {errors.phone && <div className="text-red-600">{errors.phone}</div>}
+                    {errors.phone && <div className="text-red-600 text-sm mt-1">{errors.phone}</div>}
                 </div>
 
                 <div>
@@ -73,12 +95,13 @@ export default function Edit({ user }) {
                         value={data.role}
                         onChange={e => setData('role', e.target.value)}
                         className="w-full border px-3 py-2 rounded"
+                        required
                     >
+                        <option value="">Select Role</option>
                         <option value="user">User</option>
                         <option value="admin">Admin</option>
                     </select>
-
-                    {errors.role && <div className="text-red-600">{errors.role}</div>}
+                    {errors.role && <div className="text-red-600 text-sm mt-1">{errors.role}</div>}
                 </div>
 
                 <div>
@@ -88,9 +111,9 @@ export default function Edit({ user }) {
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-full"
+                        className="w-full border px-3 py-2 rounded"
                     />
-                    {errors.image && <div className="text-red-600">{errors.image}</div>}
+                    {errors.image && <div className="text-red-600 text-sm mt-1">{errors.image}</div>}
                 </div>
 
                 <div>
@@ -105,19 +128,7 @@ export default function Edit({ user }) {
                         />
                         <span className="ml-2">{data.status ? 'Active' : 'Inactive'}</span>
                     </label>
-                    {errors.status && <div className="text-red-600">{errors.status}</div>}
-                </div>
-
-                <div>
-                    <label className="block font-semibold">Join Date</label>
-                    <input
-                        name="join_date"
-                        type="date"
-                        value={data.join_date}
-                        onChange={e => setData('join_date', e.target.value)}
-                        className="w-full border px-3 py-2 rounded"
-                    />
-                    {errors.join_date && <div className="text-red-600">{errors.join_date}</div>}
+                    {errors.status && <div className="text-red-600 text-sm mt-1">{errors.status}</div>}
                 </div>
 
                 <div>
@@ -128,16 +139,17 @@ export default function Edit({ user }) {
                         value={data.password}
                         onChange={e => setData('password', e.target.value)}
                         className="w-full border px-3 py-2 rounded"
+                        placeholder="Leave blank to keep current password"
                     />
-                    {errors.password && <div className="text-red-600">{errors.password}</div>}
+                    {errors.password && <div className="text-red-600 text-sm mt-1">{errors.password}</div>}
                 </div>
 
                 <button
                     type="submit"
                     disabled={processing}
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
                 >
-                    Update
+                    {processing ? 'Updating...' : 'Update'}
                 </button>
             </form>
         </div>
