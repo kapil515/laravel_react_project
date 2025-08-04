@@ -1,3 +1,4 @@
+import React from 'react';
 import { Head } from '@inertiajs/react';
 
 export default function Category({
@@ -6,18 +7,21 @@ export default function Category({
   setSelectedCategoryId,
   selectedSubcategoryId,
   setSelectedSubcategoryId,
+  setSearchQuery,
 }) {
   const selectedCategory = categories.find((category) => category.id === parseInt(selectedCategoryId));
   const subcategories = selectedCategory ? selectedCategory.subcategories : [];
+  const [localSearchQuery, setLocalSearchQuery] = React.useState('');
 
   return (
     <div className="bg-white">
       <Head title="Shop by Category" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-semibold text-gray-900">All Products</h2>
         <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-0">
           <div className="mt-4 mb-6 flex items-center space-x-4">
             <div className="flex-1 max-w-md">
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="category" className="block text-md font-medium text-gray-700">
                 Category
               </label>
               <select
@@ -38,7 +42,7 @@ export default function Category({
               </select>
             </div>
             <div className="flex-1 max-w-md">
-              <label htmlFor="subcategory" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="subcategory" className="block text-md font-medium text-gray-700">
                 Subcategory
               </label>
               <select
@@ -56,14 +60,35 @@ export default function Category({
                 ))}
               </select>
             </div>
+            <div className="flex-1 max-w-md">
+              <label htmlFor="search" className="block text-md font-medium text-gray-700">
+                Search Products
+              </label>
+              <input
+                id="search"
+                type="text"
+                value={localSearchQuery}
+                onChange={(e) => setLocalSearchQuery(e.target.value)}
+                placeholder="Enter product name"
+                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             <div className="flex items-end mt-4">
-              {(selectedCategoryId || selectedSubcategoryId) && (
+              <button
+                onClick={() => setSearchQuery(localSearchQuery)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              >
+                Search
+              </button>
+              {(selectedCategoryId || selectedSubcategoryId || localSearchQuery) && (
                 <button
                   onClick={() => {
                     setSelectedCategoryId('');
                     setSelectedSubcategoryId('');
+                    setLocalSearchQuery('');
+                    setSearchQuery('');
                   }}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
+                  className="ml-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
                 >
                   Clear
                 </button>

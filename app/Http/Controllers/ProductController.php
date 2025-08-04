@@ -16,7 +16,7 @@ public function index()
     $products = Product::with(['category', 'subcategory'])
         ->where('status', 'active')
         ->latest()
-        ->paginate(5)
+        ->paginate(4)
         ->through(function ($product) {
             return [
                 'id' => $product->id,
@@ -172,7 +172,7 @@ public function toggleStatus(Request $request, $id)
 
   public function products()
     {
-        $products = Product::latest()->paginate(5)->through(function ($product) {
+        $products = Product::latest()->paginate(4)->through(function ($product) {
             return [
                 'id'             => $product->id,
                 'name'           => $product->name,

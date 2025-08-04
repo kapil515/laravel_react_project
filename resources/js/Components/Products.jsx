@@ -6,6 +6,7 @@ export default function Products({ products }) {
     const { filters } = usePage().props;
 
     // Handle pagination click while preserving filters
+    // Update handlePaginationClick
     const handlePaginationClick = (url) => {
         if (url) {
             router.visit(url, {
@@ -14,6 +15,7 @@ export default function Products({ products }) {
                 data: {
                     category_id: filters?.category_id || '',
                     subcategory_id: filters?.subcategory_id || '',
+                    search_query: filters?.search_query || '',
                 },
             });
         }
@@ -25,8 +27,7 @@ export default function Products({ products }) {
 
     return (
         <div className="bg-white">
-            <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 lg:py-10">
-                <h2 className="text-2xl font-bold text-gray-900 pb-5">Products</h2>
+            <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 lg:py-2">
                 <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                     {productList.length > 0 ? (
                         productList.map((product) => (
@@ -50,7 +51,7 @@ export default function Products({ products }) {
                             </Link>
                         ))
                     ) : (
-                        <p className="text-center text-gray-500">No products found. Check database or logs.</p>
+                        <p className="text-center text-gray-500">No products found.</p>
                     )}
                 </div>
 
