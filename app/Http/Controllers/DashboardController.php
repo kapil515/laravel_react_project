@@ -38,13 +38,35 @@ class DashboardController extends Controller
         $user = User::findOrFail($id);
 
         $data = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role'  => 'required|in:user,admin',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|unique:users,email,' . $user->id,
+            'phone'     => 'nullable|string|max:20',
+            'role'      => 'required|in:user,admin',
+            'status'    => 'boolean',
+            'image'     => 'nullable|image|max:2048',
+            'join_date' => 'nullable|date',
+            'password'  => 'nullable|min:6',
         ]);
 
+        // Agar password diya hai to update karo, warna skip
+        if (! empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        // Status ko boolean set karna zaruri hai
+        $data['status'] = $request->boolean('status');
+
+        // Agar nayi image ayi hai to upload karo
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('users', 'public');
+        }
+
+        // User update kar do
         $user->update($data);
 
+        // Redirect wapas user list pe with message
         return redirect()
             ->route('dashboard.users')
             ->with('success', 'User updated successfully.');

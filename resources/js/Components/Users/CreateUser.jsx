@@ -111,17 +111,6 @@ export default function CreateUser() {
                     {errors.status && <div className="text-red-600">{errors.status}</div>}
                 </div>
 
-                <div>
-                    <label className="block font-semibold">Join Date</label>
-                    <input
-                        type="date"
-                        className="w-full border px-3 py-2 rounded"
-                        value={data.join_date}
-                        onChange={e => setData('join_date', e.target.value)}
-                    />
-                    {errors.join_date && <div className="text-red-600">{errors.join_date}</div>}
-                </div>
-
                 <button
                     type="submit"
                     className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
