@@ -29,6 +29,23 @@ export default function Products({ products, categories, subcategories }) {
         return 'N/A';
     };
 
+    const handleToggleStatus = (product) => {
+    const newStatus = product.status === 'active' ? 'inactive' : 'active';
+
+    router.put(`/products/${product.id}/toggle-status`, {
+        status: newStatus,
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            console.log(`Product ${product.name} toggled to ${newStatus}`);
+        },
+    });
+};
+
+
+
+
+
 
     return (
         <>
@@ -53,7 +70,7 @@ export default function Products({ products, categories, subcategories }) {
                             <th className="p-3 border">Category</th>
                             <th className="p-3 border">Subcategory</th>
                             <th className="p-3 border">Product</th>
-                            <th className="p-3 border">Discount</th>
+                            {/* <th className="p-3 border">Discount</th> */}
                             <th className="p-3 border">Active/Inactive</th>
                             <th className="p-3 border">Action</th>
                         </tr>
@@ -72,19 +89,25 @@ export default function Products({ products, categories, subcategories }) {
                                 <td className="p-3 border">{getCategoryName(product.category_id)}</td>
                                 <td className="p-3 border">{getSubcategoryName(product.subcategory_id)}</td>
                                 <td className="p-3 border">{product.name}</td>
-                                <td className="p-3 border">
+                                {/* <td className="p-3 border">
                                     {product.discount ? `${parseFloat(product.discount).toFixed(2)}% OFF` : '0%'}
-                                </td>
+                                </td> */}
                                 <td className="p-3 border">
                                     <label className="inline-flex relative items-center cursor-pointer">
                                         <input
                                             type="checkbox"
                                             className="sr-only peer"
                                             checked={product.status === 'active'}
-                                            readOnly
+                                            onChange={() => handleToggleStatus(product)}
                                         />
-                                        <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-500"></div>
+                                        <div className="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-green-500 transition-colors duration-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300"></div>
+                                        <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-transform duration-300"></div>
+                                        <span className="ml-3 text-sm text-gray-700">
+                                            {product.status === 'active' ? 'Active' : 'Inactive'}
+                                        </span>
                                     </label>
+
+
                                 </td>
                                 <td className="p-3 border space-x-2">
                                     <button

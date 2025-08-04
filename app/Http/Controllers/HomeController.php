@@ -18,14 +18,17 @@ class HomeController extends Controller
             'canRegister' => Route::has('register'),
             'laravelVersion' => App::version(),
             'phpVersion' => PHP_VERSION,
-            'products' => Product::latest()->paginate(5)->through(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'imageAlt' => $product->image_alt,
-                    'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
-                ];
+            'products' => Product::where('status', 'active') // 👈 Sirf active products
+             ->latest()
+            ->paginate(5)
+            ->through(function ($product) {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'imageAlt' => $product->image_alt,
+            'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
+        ];
             }),
             'auth' => [
                 'user' => Auth::user(),

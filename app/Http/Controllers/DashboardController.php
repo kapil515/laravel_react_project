@@ -130,6 +130,7 @@ class DashboardController extends Controller
                 'id'             => $product->id,
                 'name'           => $product->name,
                 'price'          => $product->price,
+                'status'         => $product->status,
                 'category_id'    => $product->category_id,
                 'subcategory_id' => $product->subcategory_id,
                 'description'    => $product->description,
