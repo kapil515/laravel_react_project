@@ -9,7 +9,7 @@ class Product extends Model
     public $timestamps = true;
     
     protected $fillable = [
-        'name', 'price', 'image_src', 'image_alt', 'description', 'images', 'colors', 'sizes',
+        'name', 'price', 'image_src', 'image_alt', 'description', 'images', 'colors', 'sizes','status',
         'highlights', 'details', 'reviews_average', 'reviews_total_count', 'category_id', 'subcategory_id',
     ];
 

@@ -12,27 +12,29 @@ class ProductController extends Controller
 {
 
 public function index()
-    {
+{
     $products = Product::with(['category', 'subcategory'])
-    ->latest()
-    ->paginate(5)
-    ->through(function ($product) {
-        return [
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'imageAlt' => $product->image_alt,
-            'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
-            'category' => $product->category ? $product->category->name : null,
-            'subcategory' => $product->subcategory ? $product->subcategory->name : null,
-        ];
-    });
+        ->where('status', 'active')
+        ->latest()
+        ->paginate(5)
+        ->through(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'status' => $product->status,
+                'imageAlt' => $product->image_alt,
+                'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
+                'category' => $product->category ? $product->category->name : null,
+                'subcategory' => $product->subcategory ? $product->subcategory->name : null,
+            ];
+        });
 
+    return Inertia::render('ProductPage', [
+        'products' => $products
+    ]);
+}
 
-        return Inertia::render('ProductPage', [
-            'products' => $products
-        ]);
-    }
 
     public function show($id)
 {
@@ -157,6 +159,19 @@ public function update(Request $request, Product $product)
 
     return redirect()->back()->with('success', 'Product deleted successfully!');
 }
+
+public function toggleStatus(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
+    $product->status = $request->status;
+    $product->save();
+
+    return back()->with('message', 'Status updated');
+}
+
+
+
+
 
 
 }
