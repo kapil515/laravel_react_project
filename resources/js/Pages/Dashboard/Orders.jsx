@@ -101,7 +101,7 @@ export default function Orders({ orders }) {
                                             )}
                                             {index === 0 && (
                                                 <td className="px-4 py-2 border" rowSpan={order.items.length}>
-                                                    ${order.items.reduce((acc, i) => acc + i.price * i.quantity, 0).toFixed(2)}
+                                                     ₹{order.items.reduce((acc, i) => acc + i.price * i.quantity, 0).toFixed(2)}
                                                 </td>
                                             )}
                                             {index === 0 && (

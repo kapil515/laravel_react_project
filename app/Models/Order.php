@@ -22,6 +22,7 @@ class Order extends Model
         'country',
         'payment_method',
         'total_amount',
+        'shipping_fee',
         'status',
     ];
 
