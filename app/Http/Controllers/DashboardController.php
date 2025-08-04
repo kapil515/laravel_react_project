@@ -147,33 +147,6 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', ['section' => 'sales']);
     }
 
-    public function products()
-    {
-        $products = Product::latest()->paginate(5)->through(function ($product) {
-            return [
-                'id'             => $product->id,
-                'name'           => $product->name,
-                'price'          => $product->price,
-                'status'         => $product->status,
-                'category_id'    => $product->category_id,
-                'subcategory_id' => $product->subcategory_id,
-                'description'    => $product->description,
-                'imageAlt'       => $product->image_alt,
-                'images'         => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
-            ];
-        });
-
-        $categories    = Category::with('subcategories')->get();
-        $totalProducts = Product::count();
-
-        return Inertia::render('Dashboard', [
-            'section'       => 'products',
-            'products'      => $products,
-            'categories'    => $categories,
-            'totalProducts' => $totalProducts,
-        ]);
-    }
-
     public function members()
     {
         return Inertia::render('Dashboard', ['section' => 'members']);

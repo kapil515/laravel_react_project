@@ -3,6 +3,8 @@ import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import EditProduct from './EditProductForm';
 import { usePage } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
+
 
 export default function Products({ products, categories, subcategories }) {
     const [editProduct, setEditProduct] = useState(null);
@@ -30,37 +32,34 @@ export default function Products({ products, categories, subcategories }) {
     };
 
     const handleToggleStatus = (product) => {
-    const newStatus = product.status === 'active' ? 'inactive' : 'active';
+        const newStatus = product.status === 'active' ? 'inactive' : 'active';
 
-    router.put(`/products/${product.id}/toggle-status`, {
-        status: newStatus,
-    }, {
-        preserveScroll: true,
-        onSuccess: () => {
-            console.log(`Product ${product.name} toggled to ${newStatus}`);
-        },
-    });
-};
-
-
-
-
-
+        router.put(`/products/${product.id}/toggle-status`, {
+            status: newStatus,
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log(`Product ${product.name} toggled to ${newStatus}`);
+            },
+        });
+    };
 
     return (
         <>
             <div className="p-6 space-y-4">
-                <div className='flex justify-between items-center relative'>
-                    <h1 className="text-2xl font-bold mb-4">All Products List</h1>
-                    <div>
+                <div className="flex justify-between items-center mb-4">
+                    <h1 className="text-2xl font-bold">All Products List</h1>
+
+                    <div className="flex gap-2">
                         <button
                             onClick={() => setShowAddForm(true)}
-                            className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mr-4"
+                            className="bg-purple-700 text-white px-5 py-2.5 rounded text-sm"
                         >
                             Add New Product
                         </button>
                     </div>
                 </div>
+
 
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                     <thead>

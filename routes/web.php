@@ -16,7 +16,8 @@ use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-Route::put('/products/{id}/toggle-status', [ProductController::class, 'toggleStatus']);
+Route::get('/shop/categories', [CategoryController::class, 'shop'])->name('category.shop');
+Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -28,10 +29,11 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/dashboard/users', [DashboardController::class, 'store'])->name('dashboard.users.store');
     Route::get('/dashboard/transactions', [DashboardController::class, 'transactions'])->name('dashboard.transactions');
     Route::get('/dashboard/sales', [DashboardController::class, 'sales'])->name('dashboard.sales');
-    Route::get('/dashboard/products', [DashboardController::class, 'products'])->name('dashboard.products');
+    Route::get('/dashboard/products', [ProductController::class, 'products'])->name('dashboard.products');
     Route::get('/dashboard/members', [DashboardController::class, 'members'])->name('dashboard.members');
     Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
     Route::resource('products', ProductController::class);
+    Route::put('/products/{id}/toggle-status', [ProductController::class, 'toggleStatus']);
     
 });
 

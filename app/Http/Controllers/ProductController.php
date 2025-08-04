@@ -16,7 +16,7 @@ public function index()
     $products = Product::with(['category', 'subcategory'])
         ->where('status', 'active')
         ->latest()
-        ->paginate(5)
+        ->paginate(4)
         ->through(function ($product) {
             return [
                 'id' => $product->id,
@@ -84,7 +84,7 @@ public function index()
     $imagePaths = [];
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $image) {
-            $path = $image->store('products', 'public'); 
+            $path = $image->store('products', 'public');
             $imagePaths[] = $path;
         }
     }
@@ -97,7 +97,7 @@ public function index()
         'details' => $validated['details'],
         'reviews_average' => $validated['reviews_average'],
         'reviews_total_count' => $validated['reviews_total_count'],
-        'images' => json_encode($imagePaths), 
+        'images' => json_encode($imagePaths),
         'category_id' => $validated['category_id'] ?? null,
         'subcategory_id' => $validated['subcategory_id'] ?? null,
     ]);
@@ -169,6 +169,33 @@ public function toggleStatus(Request $request, $id)
     return back()->with('message', 'Status updated');
 }
 
+
+  public function products()
+    {
+        $products = Product::latest()->paginate(4)->through(function ($product) {
+            return [
+                'id'             => $product->id,
+                'name'           => $product->name,
+                'price'          => $product->price,
+                'status'         => $product->status,
+                'category_id'    => $product->category_id,
+                'subcategory_id' => $product->subcategory_id,
+                'description'    => $product->description,
+                'imageAlt'       => $product->image_alt,
+                'images'         => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
+            ];
+        });
+
+        $categories    = Category::with('subcategories')->get();
+        $totalProducts = Product::count();
+
+        return Inertia::render('Dashboard', [
+            'section'       => 'products',
+            'products'      => $products,
+            'categories'    => $categories,
+            'totalProducts' => $totalProducts,
+        ]);
+    }
 
 
 
