@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
     Route::resource('products', ProductController::class);
     Route::put('/products/{id}/toggle-status', [ProductController::class, 'toggleStatus']);
+    Route::get('/dashboard/products', [DashboardController::class, 'products'])->name('dashboard.products');
     
 });
 
