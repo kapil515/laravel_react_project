@@ -59,7 +59,7 @@ export default function ThankYou() {
                         )}
                     </div>
                 </div>
-                      {(order.payment_method === 'online' && ['pending', 'failed'].includes(order.status)) ||
+    {(order.payment_method === 'online' && ['pending', 'failed'].includes(order.status)) ||
                  (order.payment_method === 'cod' && order.status === 'pending') ? (
                     <button
                         onClick={() => router.get(route('payment.razorpay', order.id))}
@@ -68,6 +68,7 @@ export default function ThankYou() {
                         {order.payment_method === 'cod' ? 'Pay via Razorpay' : 'Retry Payment via Razorpay'}
                     </button>
                 ) : null}
+
             </div>
         </UserLayout>
     );
