@@ -86,24 +86,26 @@ class RazorpayController extends Controller
         }
     }
 
-    public function callback(Request $request)
+  public function callback(Request $request)
     {
-        Log::info('Razorpay callback received', ['request' => $request->all(), 'headers' => $request->headers->all()]);
+        Log::info('Razorpay Callback Raw:', [
+            'data' => $request->all(),
+            'headers' => $request->headers->all(),
+        ]);
 
         $attributes = $request->all();
-        $requiredFields = ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature'];
 
-        // Validate required fields
-        $missingFields = array_filter($requiredFields, fn($field) => !isset($attributes[$field]) || is_null($attributes[$field]));
+        $requiredFields = ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature'];
+        $missingFields = array_filter($requiredFields, fn($field) => empty($attributes[$field]));
+
         if (!empty($missingFields)) {
-            Log::error('Invalid Razorpay callback data', [
+            Log::error('Missing Razorpay fields', [
+                'missing' => $missingFields,
                 'attributes' => $attributes,
-                'missing_fields' => $missingFields,
-                'request_ip' => $request->ip(),
             ]);
 
-            $order = Order::whereHas('payment', function ($query) use ($attributes) {
-                $query->where('transaction_id', $attributes['razorpay_order_id'] ?? '');
+            $order = Order::whereHas('payment', function ($q) use ($attributes) {
+                $q->where('transaction_id', $attributes['razorpay_order_id'] ?? '');
             })->first();
 
             if ($order) {
@@ -112,11 +114,10 @@ class RazorpayController extends Controller
                     'status' => 'failed',
                     'payment_response' => json_encode($attributes),
                 ]);
-                Log::info('Order marked as failed due to invalid callback', ['order_id' => $order->id]);
             }
 
             return redirect()->route('orders.thankyou', $order ? $order->id : 0)
-                ->with('error', 'Payment failed: Missing or invalid payment data (' . implode(', ', $missingFields) . ').');
+                ->with('error', 'Payment failed: Missing or invalid payment data.');
         }
 
         $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
@@ -128,8 +129,8 @@ class RazorpayController extends Controller
                 'razorpay_signature' => $attributes['razorpay_signature'],
             ]);
 
-            $order = Order::whereHas('payment', function ($query) use ($attributes) {
-                $query->where('transaction_id', $attributes['razorpay_order_id']);
+            $order = Order::whereHas('payment', function ($q) use ($attributes) {
+                $q->where('transaction_id', $attributes['razorpay_order_id']);
             })->firstOrFail();
 
             $order->update(['status' => 'completed']);
@@ -138,18 +139,20 @@ class RazorpayController extends Controller
                 'payment_response' => json_encode($attributes),
             ]);
 
-            Log::info('Razorpay payment successful', ['order_id' => $order->id, 'payment_id' => $attributes['razorpay_payment_id']]);
+            Log::info('Payment successful', [
+                'order_id' => $order->id,
+                'payment_id' => $attributes['razorpay_payment_id'],
+            ]);
 
             return redirect()->route('orders.thankyou', $order->id)->with('success', 'Payment successful!');
         } catch (\Exception $e) {
-            Log::error('Razorpay payment verification failed', [
+            Log::error('Razorpay verification failed', [
                 'error' => $e->getMessage(),
                 'attributes' => $attributes,
-                'request_ip' => $request->ip(),
             ]);
 
-            $order = Order::whereHas('payment', function ($query) use ($attributes) {
-                $query->where('transaction_id', $attributes['razorpay_order_id']);
+            $order = Order::whereHas('payment', function ($q) use ($attributes) {
+                $q->where('transaction_id', $attributes['razorpay_order_id']);
             })->first();
 
             if ($order) {
@@ -161,7 +164,7 @@ class RazorpayController extends Controller
             }
 
             return redirect()->route('orders.thankyou', $order ? $order->id : 0)
-                ->with('error', 'Payment failed: ' . $e->getMessage());
+                ->with('error', 'Payment verification failed: ' . $e->getMessage());
         }
     }
 

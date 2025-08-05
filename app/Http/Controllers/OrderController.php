@@ -49,6 +49,7 @@ class OrderController extends Controller
                     'total_amount' => $order->total_amount,
                     'payment_method' => $order->payment_method,
                     'payment' => $order->payment,
+                    'shipping_fee' => $order->shipping_fee,
                 ];
             });
 
@@ -129,17 +130,20 @@ class OrderController extends Controller
         if ($request['payment_method'] === 'online') {
             return app(RazorpayController::class)->createOrder($order);
         }
-
-        return redirect()->route('payment.credit', ['order' => $order->id]);
     }
 
     public function show(Order $order)
-    {
-        $order->load(['items.product', 'user']);
-        return Inertia::render('ThankYou', ['order' => $order->toArray() + [
+{
+    $order->load(['items.product', 'user', 'payment']);
+
+    return Inertia::render('ThankYou', [
+        'order' => $order->toArray() + [
             'shipping_fee' => $order->shipping_fee,
-        ]]);
-    }
+            'transaction_id' => optional($order->payment)->transaction_id,
+        ],
+    ]);
+}
+
 
     public function adminShow(Order $order)
     {
@@ -175,6 +179,7 @@ class OrderController extends Controller
                 'status' => $order->status,
                 'total_amount' => $order->total_amount,
                 'payment_method' => $order->payment_method,
+                'shipping_fee' => $order->shipping_fee,
                 'address' => [
                     'address_line1' => $order->address_line1,
                     'address_line2' => $order->address_line2 ?? 'N/A',
@@ -216,4 +221,26 @@ class OrderController extends Controller
 
         return redirect()->route('dashboard.orders')->with('success', 'All selected orders deleted successfully.');
     }
+
+
+public function singledelete($id)
+{
+    $order = Order::findOrFail($id);
+    $order->delete();
+
+    return redirect()->back()->with('success', 'Transaction deleted successfully.');
+}
+
+public function multipleDelete(Request $request)
+{
+    $request->validate([
+        'transaction_ids' => 'required|array',
+        'transaction_ids.*' => 'exists:orders,id',
+    ]);
+
+    Order::whereIn('id', $request->transaction_ids)->delete();
+
+    return redirect()->back()->with('success', 'Selected transactions deleted successfully.');
+}
+
 }
