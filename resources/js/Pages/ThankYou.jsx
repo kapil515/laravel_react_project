@@ -9,7 +9,7 @@ export default function ThankYou() {
 
     return (
         <UserLayout>
-            <div className="max-w-2xl mx-auto p-6 text-center">
+            <div className="max-w-2xl mx-auto  mb-4 p-6 text-center">
                 <h1 className="text-3xl font-bold text-green-600 mb-4">
                     {order.status === 'pending' ? 'Order Placed, Awaiting Payment' : 'Thank You for Your Order!'}
                 </h1>
@@ -52,22 +52,22 @@ export default function ThankYou() {
                         ))}
                     </ul>
 
-                    <div className="mt-4 font-bold text-right">
+                    <div className="mt-4 mb-4 font-bold text-right">
                         Total: ${order.total_amount}
                         {order.shipping_fee > 0 && (
                             <p>Shipping Fee: ${order.shipping_fee}</p>
                         )}
                     </div>
                 </div>
-
-                {order.status === 'pending' && order.payment_method === 'online' && (
+                      {(order.payment_method === 'online' && ['pending', 'failed'].includes(order.status)) ||
+                 (order.payment_method === 'cod' && order.status === 'pending') ? (
                     <button
                         onClick={() => router.get(route('payment.razorpay', order.id))}
                         className="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
                     >
-                        Complete Payment
+                        {order.payment_method === 'cod' ? 'Pay via Razorpay' : 'Retry Payment via Razorpay'}
                     </button>
-                )}
+                ) : null}
             </div>
         </UserLayout>
     );

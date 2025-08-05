@@ -108,6 +108,7 @@ Route::middleware(['auth'])->group(function () {
 
     });
 });
+
 Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
     Route::post('/settings/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.updateProfile');

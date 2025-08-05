@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CartItem;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Razorpay\Api\Api;
@@ -50,8 +51,8 @@ class RazorpayController extends Controller
 
     public function retryPayment(Order $order)
     {
-        if ($order->payment_method !== 'online' || $order->status !== 'pending') {
-            Log::warning('Invalid payment retry request', ['order_id' => $order->id, 'payment_method' => $order->payment_method, 'status' => $order->status]);
+        if ($order->status !== 'pending') {
+            Log::warning('Invalid payment retry request', ['order_id' => $order->id, 'status' => $order->status]);
             return redirect()->route('orders.thankyou', $order->id)->with('error', 'Invalid payment retry request.');
         }
 
@@ -67,10 +68,21 @@ class RazorpayController extends Controller
             ]);
             Log::info('Razorpay retry order created', ['razorpay_order_id' => $razorpayOrder->id]);
 
-            $order->payment()->update([
-                'transaction_id' => $razorpayOrder->id,
-                'payment_response' => json_encode($razorpayOrder->toArray()),
-            ]);
+            if ($order->payment_method === 'cod') {
+                $order->update(['payment_method' => 'online']);
+                Payment::create([
+                    'order_id' => $order->id,
+                    'payment_method' => 'online',
+                    'status' => 'pending',
+                    'transaction_id' => $razorpayOrder->id,
+                    'payment_response' => json_encode($razorpayOrder->toArray()),
+                ]);
+            } else {
+                $order->payment()->update([
+                    'transaction_id' => $razorpayOrder->id,
+                    'payment_response' => json_encode($razorpayOrder->toArray()),
+                ]);
+            }
 
             return Inertia::render('RazorpayPayment', [
                 'order' => $order->toArray(),
@@ -138,6 +150,9 @@ class RazorpayController extends Controller
                 'status' => 'completed',
                 'payment_response' => json_encode($attributes),
             ]);
+                CartItem::where('user_id', $order->user_id)
+    ->whereIn('product_id', $order->items->pluck('product_id'))
+    ->delete();
 
             Log::info('Payment successful', [
                 'order_id' => $order->id,

@@ -99,14 +99,6 @@ export default function Transactions() {
                                             </span>
                                         </td>
                                         <td className="px-4 py-2 border space-x-2">
-                                            {order.payment?.status === 'pending' && order.payment_method === 'online' && (
-                                                <button
-                                                    onClick={() => handleRetryPayment(order.id)}
-                                                    className="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700 text-sm"
-                                                >
-                                                    Retry
-                                                </button>
-                                            )}
                                             <button
                                                 onClick={() => handleDeleteTransaction(order.id)}
                                                 className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"

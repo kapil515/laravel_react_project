@@ -101,7 +101,7 @@ class OrderController extends Controller
             'postal_code' => $request['postal_code'],
             'country' => $request['country'],
             'payment_method' => $request['payment_method'],
-            'status' => $request['payment_method'] === 'cod' ? 'processing' : 'pending',
+             'status' => 'pending',
             'total_amount' => $totalAmount,
             'shipping_fee' => $shippingFee,
         ]);
@@ -116,14 +116,10 @@ class OrderController extends Controller
             ]);
         }
 
-        CartItem::where('user_id', Auth::id())
-            ->whereIn('product_id', collect($request['cart'])->pluck('id'))
-            ->delete();
-
         Log::info('Order created', ['order_id' => $order->id, 'payment_method' => $request['payment_method']]);
 
         if ($request['payment_method'] === 'cod') {
-            $order->update(['status' => 'completed']);
+            $order->update(['status' => 'pending']);
             return redirect()->route('orders.thankyou', ['order' => $order->id]);
         }
 

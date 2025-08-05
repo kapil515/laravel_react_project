@@ -36,6 +36,9 @@ export default function RazorpayPayment({
     useEffect(() => {
         if (!razorpay_key || !razorpay_order_id || !amount) {
             setScriptError("Invalid Razorpay configuration.");
+            router.visit(route("orders.thankyou", order.id), {
+                data: { error: "Invalid Razorpay configuration." },
+            });
             return;
         }
 
@@ -55,7 +58,9 @@ export default function RazorpayPayment({
                             !response.razorpay_signature
                         ) {
                             setScriptError("Incomplete payment response.");
-                            router.visit(route("orders.thankyou", order.id));
+                            router.visit(route("orders.thankyou", order.id), {
+                                data: { error: "Incomplete payment response." },
+                            });
                             return;
                         }
 
@@ -78,15 +83,25 @@ export default function RazorpayPayment({
                 const rzp = new window.Razorpay(options);
 
                 rzp.on("payment.failed", function (response) {
-                    setScriptError(
-                        `Payment failed: ${response.error.description}`
-                    );
-                    router.visit(route("orders.thankyou", order.id));
+                    setScriptError(`Payment failed: ${response.error.description}`);
+                    router.visit(route("orders.thankyou", order.id), {
+                        data: { error: `Payment failed: ${response.error.description}` },
+                    });
+                });
+
+                rzp.on("payment.cancel", function () {
+                    setScriptError("Payment was cancelled. Please try again.");
+                    router.visit(route("orders.thankyou", order.id), {
+                        data: { error: "Payment was cancelled. Please try again." },
+                    });
                 });
 
                 rzp.open();
             } else {
                 setScriptError("Razorpay SDK not available. Please try again.");
+                router.visit(route("orders.thankyou", order.id), {
+                    data: { error: "Razorpay SDK not available. Please try again." },
+                });
             }
         };
 
@@ -95,6 +110,9 @@ export default function RazorpayPayment({
             script = loadRazorpayScript(openRazorpay);
         } else {
             setScriptError("Maximum retries reached. Try again later.");
+            router.visit(route("orders.thankyou", order.id), {
+                data: { error: "Maximum retries reached. Try again later." },
+            });
         }
 
         return () => {
