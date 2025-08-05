@@ -5,8 +5,7 @@ export default function Products({ products }) {
     const productList = products?.data || [];
     const { filters } = usePage().props;
 
-    // Handle pagination click while preserving filters
-    // Update handlePaginationClick
+
     const handlePaginationClick = (url) => {
         if (url) {
             router.visit(url, {
@@ -55,13 +54,13 @@ export default function Products({ products }) {
                     )}
                 </div>
 
-                {products.links && products.total > 5 && (
+                {products.data.length > 0 && products.last_page > 1 && (
                     <div className="mt-6 flex justify-center space-x-2">
                         {products.links.map((link, index) => (
                             <button
                                 key={index}
                                 disabled={!link.url}
-                                onClick={() => handlePaginationClick(link.url)}
+                                onClick={() => router.visit(link.url, { preserveState: true, preserveScroll: true })}
                                 className={`px-3 py-1 rounded mx-1 ${link.active ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
                                     } ${!link.url ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-500 hover:text-white'}`}
                                 dangerouslySetInnerHTML={{ __html: link.label }}

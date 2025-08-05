@@ -60,25 +60,20 @@ class DashboardController extends Controller
             'password'  => 'nullable|min:6',
         ]);
 
-        // Agar password diya hai to update karo, warna skip
         if (! empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         } else {
             unset($data['password']);
         }
 
-        // Status ko boolean set karna zaruri hai
         $data['status'] = $request->boolean('status');
 
-        // Agar nayi image ayi hai to upload karo
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('users', 'public');
         }
 
-        // User update kar do
         $user->update($data);
 
-        // Redirect wapas user list pe with message
         return redirect()
             ->route('dashboard.users')
             ->with('success', 'User updated successfully.');
@@ -221,5 +216,66 @@ class DashboardController extends Controller
             'categories' => $categories,
         ]);
     }
+
+    public function products(Request $request)
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
+
+    $categoryId = $request->query('category_id', '');
+    $subcategoryId = $request->query('subcategory_id', '');
+    $searchQuery = $request->query('search_query', '');
+    $productsQuery = Product::where('status', 'active');
+
+    if ($subcategoryId) {
+        $productsQuery->where('subcategory_id', $subcategoryId);
+    } elseif ($categoryId) {
+        $productsQuery->where('category_id', $categoryId);
+    }
+    if ($searchQuery) {
+        $productsQuery->where('name', 'like', '%' . $searchQuery . '%');
+    }
+
+    $products = $productsQuery
+        ->latest()
+        ->paginate(4) 
+        ->appends(array_filter([
+            'category_id' => $categoryId ?: null,
+            'subcategory_id' => $subcategoryId ?: null,
+            'search_query' => $searchQuery ?: null,
+        ]))
+        ->through(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'image_alt' => $product->image_alt,
+                'images' => $product->images ? json_decode(str_replace('\/', '/', $product->images), true) : [],
+                'category_id' => $product->category_id,
+                'subcategory_id' => $product->subcategory_id ?? null,
+                'status' => $product->status,
+            ];
+        });
+
+    return Inertia::render('Dashboard', [
+        'section' => 'products',
+        'products' => $products,
+        'categories' => Category::with('subcategories')->get()->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'subcategories' => $category->subcategories->map(function ($subcategory) {
+                    return ['id' => $subcategory->id, 'name' => $subcategory->name];
+                }),
+            ];
+        }),
+        'filters' => [
+            'category_id' => $categoryId,
+            'subcategory_id' => $subcategoryId,
+            'search_query' => $searchQuery,
+        ],
+    ]);
+}
 
 }
