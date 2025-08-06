@@ -116,7 +116,6 @@ protected function getPaypalAccessToken()
                 ]);
 
                 CartItem::where('user_id', auth()->id())->delete();
-
             Log::info('PayPal payment completed successfully', [
                 'order_id' => $order->id,
                 'transaction_id' => $captureResult['id'] ?? $token
