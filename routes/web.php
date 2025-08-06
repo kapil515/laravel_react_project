@@ -99,7 +99,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/orders/thankyou/{order}', [OrderController::class, 'show'])->name('orders.thankyou');
-    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::any('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/payment/razorpay/{order}', [RazorpayController::class, 'retryPayment'])->name('payment.razorpay');
     Route::post('/payment/razorpay/callback', [RazorpayController::class, 'callback'])->name('payment.razorpay.callback');
     Route::get('/payment/razorpay/debug', [RazorpayController::class, 'debug'])->name('payment.razorpay.debug');

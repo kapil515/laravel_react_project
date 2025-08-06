@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use GuzzleHttp\Client;
 use App\Models\Payment;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 class PayPalController extends Controller
@@ -113,6 +114,8 @@ protected function getPaypalAccessToken()
                     'status' => 'completed',
                     'transaction_id' => $captureResult['id'] ?? $token
                 ]);
+
+                CartItem::where('user_id', auth()->id())->delete();
             
             Log::info('PayPal payment completed successfully', [
                 'order_id' => $order->id,
@@ -187,12 +190,6 @@ private function capturePayment($token)
      */
     public function cancelTransaction(Request $request, Order $order)
     {
-        Log::info('PayPal payment cancelled', ['order_id' => $order->id]);
-        $order->update(['status' => 'cancelled']);
-        Payment::where('order_id', $order->id)
-            ->where('payment_method', 'paypal')
-            ->update(['status' => 'cancelled']);
-
-        return redirect()->route('cart.index')->with('error', 'Payment was cancelled.');
+        return redirect()->route('cart.index')->with('error', 'Payment was pending.');
     }
 }
