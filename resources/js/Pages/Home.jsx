@@ -5,19 +5,40 @@ import Products from '@/Components/Products';
 import UserLayout from '@/Layouts/UserLayout';
 import { Head, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
+
 
 export default function Welcome({ products, categories, filters }) {
-    const [selectedCategoryId, setSelectedCategoryId] = useState(filters.category_id || '');
-    const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(filters.subcategory_id || '');
-    const [searchQuery, setSearchQuery] = useState(filters.search_query || '');
+    const { props } = usePage();
+    const urlParams = new URLSearchParams(window.location.search);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(props.filters.category_id || urlParams.get('category_id') || '');
+    const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(props.filters.subcategory_id || urlParams.get('subcategory_id') || '');
+    const [searchQuery, setSearchQuery] = useState(props.filters.search_query || urlParams.get('search_query') || '');
 
-    // Update useEffect to include searchQuery
+    
     useEffect(() => {
         const handler = setTimeout(() => {
             const params = {};
             if (selectedCategoryId) params.category_id = selectedCategoryId;
             if (selectedSubcategoryId) params.subcategory_id = selectedSubcategoryId;
             if (searchQuery) params.search_query = searchQuery;
+
+            
+            const currentCategoryId = urlParams.get('category_id') || '';
+            const currentSubcategoryId = urlParams.get('subcategory_id') || '';
+            const currentSearchQuery = urlParams.get('search_query') || '';
+            const currentPage = urlParams.get('page') ? parseInt(urlParams.get('page')) : 1;
+
+            
+            if (
+                selectedCategoryId === currentCategoryId &&
+                selectedSubcategoryId === currentSubcategoryId &&
+                searchQuery === currentSearchQuery
+            ) {
+                return; 
+            }
+
+            if (currentPage > 1) params.page = currentPage; 
 
             router.get(
                 '/',

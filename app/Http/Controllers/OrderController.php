@@ -47,7 +47,8 @@ class OrderController extends Controller
                     'status'         => $order->status,
                     'total_amount'   => $order->total_amount,
                     'payment_method' => $order->payment_method,
-                    'payment'        => $order->payment,
+                    'payment' => $order->payment,
+                    'shipping_fee' => $order->shipping_fee,
                 ];
             });
 
@@ -99,9 +100,9 @@ class OrderController extends Controller
             'postal_code'    => $request['postal_code'],
             'country'        => $request['country'],
             'payment_method' => $request['payment_method'],
-            'status'         => $request['payment_method'] === 'cod' ? 'processing' : 'pending',
-            'total_amount'   => $totalAmount,
-            'shipping_fee'   => $shippingFee,
+             'status' => 'pending',
+            'total_amount' => $totalAmount,
+            'shipping_fee' => $shippingFee,
         ]);
 
         foreach ($request['cart'] as $item) {
@@ -114,14 +115,10 @@ class OrderController extends Controller
             ]);
         }
 
-        CartItem::where('user_id', Auth::id())
-            ->whereIn('product_id', collect($request['cart'])->pluck('id'))
-            ->delete();
-
         Log::info('Order created', ['order_id' => $order->id, 'payment_method' => $request['payment_method']]);
 
         if ($request['payment_method'] === 'cod') {
-            $order->update(['status' => 'completed']);
+            $order->update(['status' => 'pending']);
             return redirect()->route('orders.thankyou', ['order' => $order->id]);
         }
 
@@ -133,16 +130,21 @@ class OrderController extends Controller
             return app(\App\Http\Controllers\Api\CheckoutController::class)->process(request(), $order);
         }
 
-        return redirect()->route('payment.credit', ['order' => $order->id]);
+        
     }
 
     public function show(Order $order)
-    {
-        $order->load(['items.product', 'user']);
-        return Inertia::render('ThankYou', ['order' => $order->toArray() + [
+{
+    $order->load(['items.product', 'user', 'payment']);
+
+    return Inertia::render('ThankYou', [
+        'order' => $order->toArray() + [
             'shipping_fee' => $order->shipping_fee,
-        ]]);
-    }
+            'transaction_id' => optional($order->payment)->transaction_id,
+        ],
+    ]);
+}
+
 
     public function adminShow(Order $order)
     {
@@ -178,7 +180,8 @@ class OrderController extends Controller
                 'status'         => $order->status,
                 'total_amount'   => $order->total_amount,
                 'payment_method' => $order->payment_method,
-                'address'        => [
+                'shipping_fee' => $order->shipping_fee,
+                'address' => [
                     'address_line1' => $order->address_line1,
                     'address_line2' => $order->address_line2 ?? 'N/A',
                     'city'          => $order->city,
@@ -219,4 +222,26 @@ class OrderController extends Controller
 
         return redirect()->route('dashboard.orders')->with('success', 'All selected orders deleted successfully.');
     }
+
+
+public function singledelete($id)
+{
+    $order = Order::findOrFail($id);
+    $order->delete();
+
+    return redirect()->back()->with('success', 'Transaction deleted successfully.');
+}
+
+public function multipleDelete(Request $request)
+{
+    $request->validate([
+        'transaction_ids' => 'required|array',
+        'transaction_ids.*' => 'exists:orders,id',
+    ]);
+
+    Order::whereIn('id', $request->transaction_ids)->delete();
+
+    return redirect()->back()->with('success', 'Selected transactions deleted successfully.');
+}
+
 }

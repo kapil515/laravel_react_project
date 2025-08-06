@@ -35,6 +35,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::put('/products/{id}/toggle-status', [ProductController::class, 'toggleStatus']);
 
+    Route::get('/dashboard/products', [DashboardController::class, 'products'])->name('dashboard.products');
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -86,18 +88,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-//     Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
     Route::match(['get', 'post'], '/checkout/selected', [CartController::class, 'checkoutSelected'])->name('checkout.selected');
-//     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-//     Route::get('/order/thankyou/{order}', [OrderController::class, 'show'])->name('orders.thankyou');
-//     Route::get('/dashboard/orders', [OrderController::class, 'orders'])->name('dashboard.orders');
-//     Route::get('/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.adminshow');
-//     Route::delete('/dashboard/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::put('/users/{user}/toggle-active', [RegisteredUserController::class, 'toggleActive'])->name('users.toggleActive');
-//     Route::post('/orders/mass-destroy', [OrderController::class, 'massDestroy'])->name('orders.massDestroy');
-//     Route::get('/payment/credit/{order}', [OrderController::class, 'creditPayment'])->name('payment.credit');
-// Route::post('/payment/credit/{order}', [OrderController::class, 'processCreditPayment'])->name('payment.credit.process');
-// Route::get('/dashboard/transactions', [DashboardController::class, 'transactions'])->name('orders.transactions');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -106,14 +98,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/razorpay/{order}', [RazorpayController::class, 'retryPayment'])->name('payment.razorpay');
     Route::post('/payment/razorpay/callback', [RazorpayController::class, 'callback'])->name('payment.razorpay.callback');
     Route::get('/payment/razorpay/debug', [RazorpayController::class, 'debug'])->name('payment.razorpay.debug');
+     Route::delete('/transactions/{id}', [OrderController::class, 'singledelete'])->name('transactions.singledelete');
+      Route::post('/transactions/mass-delete', [OrderController::class, 'multipleDelete'])->name('transactions.multipleDelete');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/dashboard/orders', [OrderController::class, 'orders'])->name('dashboard.orders');
         Route::get('/dashboard/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.adminshow');
         Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
         Route::post('/orders/mass-destroy', [OrderController::class, 'massDestroy'])->name('orders.massDestroy');
+
     });
 });
+
 Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
     Route::post('/settings/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.updateProfile');

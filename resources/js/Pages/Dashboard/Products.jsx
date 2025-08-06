@@ -1,6 +1,6 @@
 import AddProductForm from '@/Components/AddProductForm';
 import { Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EditProduct from './EditProductForm';
 import { usePage } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
@@ -10,6 +10,10 @@ export default function Products({ products, categories, subcategories }) {
     const [editProduct, setEditProduct] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false);
     const { props } = usePage();
+    const urlParams = new URLSearchParams(window.location.search);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(props.filters.category_id || urlParams.get('category_id') || '');
+    const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(props.filters.subcategory_id || urlParams.get('subcategory_id') || '');
+    const [searchQuery, setSearchQuery] = useState(props.filters.search_query || urlParams.get('search_query') || '');
 
 
     const handleDelete = (id) => {
@@ -44,6 +48,45 @@ export default function Products({ products, categories, subcategories }) {
         });
     };
 
+    // Handle filter changes and send to backend
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            const params = {};
+            if (selectedCategoryId) params.category_id = selectedCategoryId;
+            if (selectedSubcategoryId) params.subcategory_id = selectedSubcategoryId;
+            if (searchQuery) params.search_query = searchQuery;
+
+            const currentUrlParams = new URLSearchParams(window.location.search);
+            const prevUrlParams = new URLSearchParams(props.initialUrl?.split('?')[1] || '');
+
+            const currentPage = currentUrlParams.get('page') ? parseInt(currentUrlParams.get('page')) : 1;
+            const prevPage = prevUrlParams.get('page') ? parseInt(prevUrlParams.get('page')) : 1;
+            const currentCategoryId = currentUrlParams.get('category_id') || '';
+            const currentSubcategoryId = currentUrlParams.get('subcategory_id') || '';
+            const currentSearchQuery = currentUrlParams.get('search_query') || '';
+
+            if (
+                selectedCategoryId === currentCategoryId &&
+                selectedSubcategoryId === currentSubcategoryId &&
+                searchQuery === currentSearchQuery &&
+                currentPage !== prevPage &&
+                currentPage > 1
+            ) {
+                return;
+            }
+
+            if (currentPage > 1) params.page = currentPage;
+
+            router.get(
+                '/dashboard/products',
+                params,
+                { preserveState: true, preserveScroll: true }
+            );
+        }, 300);
+        return () => clearTimeout(handler);
+    }, [selectedCategoryId, selectedSubcategoryId, searchQuery]);
+
+
     return (
         <>
             <div className="p-6 space-y-4">
@@ -60,6 +103,78 @@ export default function Products({ products, categories, subcategories }) {
                     </div>
                 </div>
 
+                <div className="bg-white p-4 rounded-lg shadow mb-4">
+                    <div className="flex items-center space-x-4">
+                        <div className="flex-1 max-w-md">
+                            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                                Category
+                            </label>
+                            <select
+                                id="category"
+                                value={selectedCategoryId}
+                                onChange={(e) => {
+                                    setSelectedCategoryId(e.target.value);
+                                    setSelectedSubcategoryId(''); // Reset subcategory
+                                }}
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">All Categories</option>
+                                {categories.map((category) => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex-1 max-w-md">
+                            <label htmlFor="subcategory" className="block text-sm font-medium text-gray-700">
+                                Subcategory
+                            </label>
+                            <select
+                                id="subcategory"
+                                value={selectedSubcategoryId}
+                                onChange={(e) => setSelectedSubcategoryId(e.target.value)}
+                                disabled={!selectedCategoryId}
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                            >
+                                <option value="">All Subcategories</option>
+                                {categories
+                                    .find((cat) => cat.id === parseInt(selectedCategoryId))?.subcategories.map((subcategory) => (
+                                        <option key={subcategory.id} value={subcategory.id}>
+                                            {subcategory.name}
+                                        </option>
+                                    )) || []}
+                            </select>
+                        </div>
+                        <div className="flex-1 max-w-md">
+                            <label htmlFor="search" className="block text-sm font-medium text-gray-700">
+                                Search Products
+                            </label>
+                            <input
+                                id="search"
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Enter product name"
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div className="flex items-end">
+                            {(selectedCategoryId || selectedSubcategoryId || searchQuery) && (
+                                <button
+                                    onClick={() => {
+                                        setSelectedCategoryId('');
+                                        setSelectedSubcategoryId('');
+                                        setSearchQuery('');
+                                    }}
+                                    className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
+                                >
+                                    Clear
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
 
                 <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                     <thead>
@@ -77,7 +192,7 @@ export default function Products({ products, categories, subcategories }) {
                     <tbody>
                         {products.data.map((product, index) => (
                             <tr key={product.id} className="border-t hover:bg-gray-50 text-sm">
-                                <td className="p-3 border">{index + 1}</td>
+                                <td className="p-3 border">{(products.current_page - 1) * 4 + index + 1}</td>
                                 <td className="p-3 border">
                                     <img
                                         src={`/storage/${product.images[0]}`}

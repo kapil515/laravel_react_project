@@ -12,7 +12,7 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
 {
     $categoryId = $request->query('category_id', '');
     $subcategoryId = $request->query('subcategory_id', '');
@@ -31,7 +31,11 @@ class HomeController extends Controller
     $products = $productsQuery
         ->latest()
         ->paginate(4)
-        ->appends(['category_id' => $categoryId, 'subcategory_id' => $subcategoryId, 'search_query' => $searchQuery])
+        ->appends(array_filter([
+            'category_id' => $categoryId ?: null,
+            'subcategory_id' => $subcategoryId ?: null,
+            'search_query' => $searchQuery ?: null,
+        ]))
         ->through(function ($product) {
             return [
                 'id' => $product->id,
@@ -44,9 +48,7 @@ class HomeController extends Controller
             ];
         });
 
-    // Update return to include search_query in filters
     return Inertia::render('Home', [
-        // ... other props
         'products' => $products,
         'categories' => Category::with('subcategories')->get()->map(function ($category) {
             return [
