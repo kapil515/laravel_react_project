@@ -34,7 +34,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
     Route::resource('products', ProductController::class);
     Route::put('/products/{id}/toggle-status', [ProductController::class, 'toggleStatus']);
-    
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -125,5 +125,6 @@ Route::get('/chat', function () {
     return Inertia::render('ChatApp');
 });
 Route::post('/api/chat', [AiChatController::class, 'chat']);
+
 
 require __DIR__ . '/auth.php';

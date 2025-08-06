@@ -1,17 +1,16 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
-use App\Models\CartItem;
 use App\Models\Payment;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
@@ -28,35 +27,35 @@ class OrderController extends Controller
             ->through(function ($order) {
                 $order->items->map(function ($item) {
                     $images = is_string($item->product->images)
-                        ? json_decode($item->product->images, true)
-                        : ($item->product->images ?? []);
+                    ? json_decode($item->product->images, true)
+                    : ($item->product->images ?? []);
 
                     $item->product->images = collect($images)->map(function ($image) {
                         return Storage::url($image);
                     });
                 });
                 return [
-                    'id' => $order->id,
-                    'order_number' => $order->order_number ?? 'ORD-' . $order->id,
-                    'user' => $order->user ? [
-                        'name' => $order->user->name,
+                    'id'             => $order->id,
+                    'order_number'   => $order->order_number ?? 'ORD-' . $order->id,
+                    'user'           => $order->user ? [
+                        'name'  => $order->user->name,
                         'email' => $order->user->email,
-                        'role' => $order->user->role,
+                        'role'  => $order->user->role,
                         'phone' => $order->user->phone ?? 'N/A',
                     ] : null,
-                    'items' => $order->items,
-                    'status' => $order->status,
-                    'total_amount' => $order->total_amount,
+                    'items'          => $order->items,
+                    'status'         => $order->status,
+                    'total_amount'   => $order->total_amount,
                     'payment_method' => $order->payment_method,
-                    'payment' => $order->payment,
+                    'payment'        => $order->payment,
                 ];
             });
 
         Log::info('Orders retrieved for dashboard', ['total' => $orders->total(), 'user_id' => auth()->id()]);
 
         return Inertia::render('Dashboard', [
-            'section' => 'orders',
-            'orders' => $orders,
+            'section'      => 'orders',
+            'orders'       => $orders,
             'transactions' => $orders,
         ]);
     }
@@ -64,15 +63,15 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'address_line1' => 'required|max:255',
-            'address_line2' => 'nullable|max:255',
-            'city' => 'required|max:255',
-            'state' => 'required|max:255',
-            'postal_code' => 'required|max:20',
-            'country' => 'required|max:100',
-            'payment_method' => 'required|in:cod,credit_card,gpay,online',
-            'cart' => 'required|array|min:1',
-            'cart.*.id' => 'required|exists:products,id',
+            'address_line1'   => 'required|max:255',
+            'address_line2'   => 'nullable|max:255',
+            'city'            => 'required|max:255',
+            'state'           => 'required|max:255',
+            'postal_code'     => 'required|max:20',
+            'country'         => 'required|max:100',
+            'payment_method'  => 'required|in:cod,credit_card,gpay,online,stripe',
+            'cart'            => 'required|array|min:1',
+            'cart.*.id'       => 'required|exists:products,id',
             'cart.*.quantity' => 'required|integer|min:1',
         ]);
 
@@ -91,27 +90,27 @@ class OrderController extends Controller
         }
 
         $order = Order::create([
-            'user_id' => Auth::id(),
-            'order_number' => 'ORD-' . time() . '-' . Auth::id(),
-            'address_line1' => $request['address_line1'],
-            'address_line2' => $request['address_line2'],
-            'city' => $request['city'],
-            'state' => $request['state'],
-            'postal_code' => $request['postal_code'],
-            'country' => $request['country'],
+            'user_id'        => Auth::id(),
+            'order_number'   => 'ORD-' . time() . '-' . Auth::id(),
+            'address_line1'  => $request['address_line1'],
+            'address_line2'  => $request['address_line2'],
+            'city'           => $request['city'],
+            'state'          => $request['state'],
+            'postal_code'    => $request['postal_code'],
+            'country'        => $request['country'],
             'payment_method' => $request['payment_method'],
-            'status' => $request['payment_method'] === 'cod' ? 'processing' : 'pending',
-            'total_amount' => $totalAmount,
-            'shipping_fee' => $shippingFee,
+            'status'         => $request['payment_method'] === 'cod' ? 'processing' : 'pending',
+            'total_amount'   => $totalAmount,
+            'shipping_fee'   => $shippingFee,
         ]);
 
         foreach ($request['cart'] as $item) {
             $product = Product::findOrFail($item['id']);
             OrderItem::create([
-                'order_id' => $order->id,
+                'order_id'   => $order->id,
                 'product_id' => $product->id,
-                'quantity' => $item['quantity'],
-                'price' => $product->price,
+                'quantity'   => $item['quantity'],
+                'price'      => $product->price,
             ]);
         }
 
@@ -128,6 +127,10 @@ class OrderController extends Controller
 
         if ($request['payment_method'] === 'online') {
             return app(RazorpayController::class)->createOrder($order);
+        }
+
+        if ($request['payment_method'] === 'stripe') {
+            return app(\App\Http\Controllers\Api\CheckoutController::class)->process(request(), $order);
         }
 
         return redirect()->route('payment.credit', ['order' => $order->id]);
@@ -152,8 +155,8 @@ class OrderController extends Controller
 
         foreach ($order->items as $item) {
             $images = is_string($item->product->images)
-                ? json_decode($item->product->images, true)
-                : ($item->product->images ?? []);
+            ? json_decode($item->product->images, true)
+            : ($item->product->images ?? []);
 
             $item->product->images = collect($images)->map(function ($image) {
                 return Storage::url($image);
@@ -162,26 +165,26 @@ class OrderController extends Controller
 
         return Inertia::render('Dashboard', [
             'section' => 'order-details',
-            'order' => [
-                'id' => $order->id,
-                'order_number' => $order->order_number ?? 'ORD-' . $order->id,
-                'user' => $order->user ? [
-                    'name' => $order->user->name,
+            'order'   => [
+                'id'             => $order->id,
+                'order_number'   => $order->order_number ?? 'ORD-' . $order->id,
+                'user'           => $order->user ? [
+                    'name'  => $order->user->name,
                     'email' => $order->user->email,
-                    'role' => $order->user->role,
+                    'role'  => $order->user->role,
                     'phone' => $order->user->phone ?? 'N/A',
                 ] : null,
-                'items' => $order->items,
-                'status' => $order->status,
-                'total_amount' => $order->total_amount,
+                'items'          => $order->items,
+                'status'         => $order->status,
+                'total_amount'   => $order->total_amount,
                 'payment_method' => $order->payment_method,
-                'address' => [
+                'address'        => [
                     'address_line1' => $order->address_line1,
                     'address_line2' => $order->address_line2 ?? 'N/A',
-                    'city' => $order->city,
-                    'state' => $order->state,
-                    'postal_code' => $order->postal_code,
-                    'country' => $order->country,
+                    'city'          => $order->city,
+                    'state'         => $order->state,
+                    'postal_code'   => $order->postal_code,
+                    'country'       => $order->country,
                 ],
             ],
         ]);
@@ -208,7 +211,7 @@ class OrderController extends Controller
         }
 
         $request->validate([
-            'order_ids' => 'required|array',
+            'order_ids'   => 'required|array',
             'order_ids.*' => 'exists:orders,id',
         ]);
 

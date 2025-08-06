@@ -103,6 +103,7 @@ export default function OrderForm() {
                         <option value="">Select Payment Method</option>
                         <option value="cod">Cash on Delivery</option>
                         <option value="online">Razorpay</option>
+                        <option value="stripe">Stripe Payment</option>
                     </select>
                     <div className="mt-6">
                         <h3 className="font-bold mb-2">Selected Products:</h3>
