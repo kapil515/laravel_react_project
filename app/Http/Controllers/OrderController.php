@@ -15,17 +15,16 @@ class OrderController extends Controller
     {
 
         $request->validate([
-            'address_line1'     => 'required|max:255',
-            'address_line2'     => 'nullable|max:255',
-            'city'              => 'required|max:255',
-            'state'             => 'required|max:255',
-            'postal_code'       => 'required|max:20',
-            'country'           => 'required|max:100',
-            'payment_method_id' => 'required_if:payment_method,stripe|string',
-            'payment_method'    => 'required|in:cod,credit_card,gpay,online,paypal',
-            'cart'              => 'required|array|min:1',
-            'cart.*.id'         => 'required|exists:products,id',
-            'cart.*.quantity'   => 'required|integer|min:1',
+            'address_line1' => 'required|max:255',
+            'address_line2' => 'nullable|max:255',
+            'city' => 'required|max:255',
+            'state' => 'required|max:255',
+            'postal_code' => 'required|max:20',
+            'country' => 'required|max:100',
+            'payment_method' => 'required|in:cod,credit_card,gpay,online,paypal',
+            'cart' => 'required|array|min:1',
+            'cart.*.id' => 'required|exists:products,id',
+            'cart.*.quantity' => 'required|integer|min:1',
         ]);
 
         $totalAmount = 0;
