@@ -45,4 +45,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'paypal'   => [
+        'client_id'     => env('PAYPAL_CLIENT_ID'),
+        'client_secret' => env('PAYPAL_CLIENT_SECRET'),
+        'api_url'       => env('PAYPAL_API_URL', 'https://api-m.sandbox.paypal.com'),
+    ],
+
 ];

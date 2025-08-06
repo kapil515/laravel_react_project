@@ -21,8 +21,8 @@ class OrderController extends Controller
             'state'             => 'required|max:255',
             'postal_code'       => 'required|max:20',
             'country'           => 'required|max:100',
-            'payment_method'    => 'required|in:cod,online,stripe',
             'payment_method_id' => 'required_if:payment_method,stripe|string',
+            'payment_method'    => 'required|in:cod,credit_card,gpay,online,paypal',
             'cart'              => 'required|array|min:1',
             'cart.*.id'         => 'required|exists:products,id',
             'cart.*.quantity'   => 'required|integer|min:1',
@@ -82,12 +82,28 @@ class OrderController extends Controller
         if ($request['payment_method'] === 'stripe') {
             return app(Api\CheckoutController::class)->processStripePayment($request, $order);
         }
+        if ($request->payment_method === 'paypal') {
+            $paypalUrl = app(PayPalController::class)->createOrder($order);
+
+            if ($paypalUrl) {
+                return Inertia::render('OrderForm', [
+                    'redirect_to' => $paypalUrl,
+                ]);
+            }
+        }
+
+        return redirect()->route('payment.credit', ['order' => $order->id]);
     }
 
     // Rest of your methods remain the same...
     public function show(Order $order)
     {
         $order->load(['items.product', 'user', 'payment']);
+        $order->load(['items.product', 'user']);
+        return Inertia::render('ThankYou', ['order' => $order->toArray() + [
+            'shipping_fee' => $order->shipping_fee,
+            'flash'        => session('flash', []),
+        ]]);
 
         return Inertia::render('ThankYou', [
             'order' => $order->toArray() + [

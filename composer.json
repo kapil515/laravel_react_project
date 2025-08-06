@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.10.1",
         "razorpay/razorpay": "^2.9",
         "stripe/stripe-php": "^17.5",
+        "srmklive/paypal": "^3.0",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

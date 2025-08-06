@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RazorpayController;
+use App\Http\Controllers\PayPalController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -86,6 +87,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 });
+
+Route::get('/paypal/success/{order}', [PayPalController::class, 'success'])->name('paypal.success');
+Route::get('/paypal/cancel/{order}', [PayPalController::class, 'cancelTransaction'])->name('paypal.cancel');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::match(['get', 'post'], '/checkout/selected', [CartController::class, 'checkoutSelected'])->name('checkout.selected');
