@@ -1,67 +1,55 @@
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+export const stripePromise = loadStripe("pk_test_51RsLRGQcdi2EgYJFurE6Hhsgw5REIUpEXuJDVwUin2kWXC59cuV0MOmcFnQfr4NrQ5Nvdx8UA8FPmv1IeUhSxHi000Be09Zzw9");
 
-const OrderForm = ({ orderId }) => {
+export default function StripeForm({ handleSubmit, data, setData, errors, cardError, processing, isStripeReady }) {
     const stripe = useStripe();
     const elements = useElements();
-    const [error, setError] = useState(null);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!stripe || !elements) return;
-
-        const cardElement = elements.getElement(CardElement);
-
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: cardElement,
-        });
-
-
-        if (stripeError) {
-            console.error(stripeError);
-            setError(stripeError.message);
-            return;
-        }
-
-        try {
-            const response = await fetch(`/orders/${orderId}/pay`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-
-                body: JSON.stringify({
-                    payment_method_id: paymentMethod.id, // ✅ REQUIRED
-                }),
-
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                console.log("Payment successful");
-                // e.g., redirect to thank-you page
-            } else {
-                console.error("Order failed:", result);
-                setError(result.error || "Payment failed.");
-            }
-        } catch (err) {
-            console.error('Request error:', err);
-            setError('Something went wrong.');
-        }
-    };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <CardElement />
-            <button type="submit" disabled={!stripe}>Pay</button>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+            {/* Address Line 1 */}
+            <input
+                type="text"
+                placeholder="Address Line 1"
+                value={data.address_line1}
+                onChange={e => setData('address_line1', e.target.value)}
+                className="w-full border px-3 py-2 rounded"
+            />
+            {errors.address_line1 && <p className="text-red-500">{errors.address_line1}</p>}
+
+            {/* ... repeat for City, State, etc. */}
+
+            {/* Payment Method Select */}
+            <select
+                value={data.payment_method}
+                onChange={e => setData('payment_method', e.target.value)}
+                className="w-full border px-3 py-2 rounded"
+            >
+                <option value="">Select Payment Method</option>
+                <option value="cod">Cash on Delivery</option>
+                <option value="online">Razorpay</option>
+                <option value="stripe">Stripe Payment</option>
+            </select>
+            {errors.payment_method && <p className="text-red-500">{errors.payment_method}</p>}
+
+            {/* Stripe Card Input */}
+            {data.payment_method === 'stripe' && (
+                <div className="border p-4 rounded">
+                    <CardElement />
+                    {cardError && <p className="text-red-500">{cardError}</p>}
+                </div>
+            )}
+
+            <button
+                type="submit"
+                disabled={processing || (data.payment_method === 'stripe' && !isStripeReady)}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+                Place Order
+            </button>
+
         </form>
     );
-};
-
-export default OrderForm;
+}
