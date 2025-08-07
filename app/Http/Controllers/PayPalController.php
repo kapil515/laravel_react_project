@@ -95,7 +95,10 @@ class PayPalController extends Controller
                         'status'         => 'completed',
                         'transaction_id' => $captureResult['id'] ?? $token,
                     ]);
-                CartItem::where('user_id', auth()->id())->delete();
+                
+                CartItem::where('user_id', $order->user_id)
+                     ->whereIn('product_id', $order->items->pluck('product_id'))
+                     ->delete();
                 Log::info('PayPal payment completed successfully', [
                     'order_id'       => $order->id,
                     'transaction_id' => $captureResult['id'] ?? $token,
