@@ -5,7 +5,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Stripe\PaymentIntent;
-use Stripe\Stripe;
 
 class CheckoutController extends Controller
 {
@@ -13,8 +12,7 @@ class CheckoutController extends Controller
     {
 
         try {
-            Stripe::setApiKey('sk_test_51RsLRGQcdi2EgYJFbcdB1HIQTUmboA9Nz3lsqRND8Ppusy0NSyEfV3OcjVpnkORKFD2inZFK6Y7cyUdPYGvTF6NH00ohPASISk');
-
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             Log::info('Processing Stripe payment', [
                 'order_id'          => $order->id,
                 'amount'            => $order->total_amount,
