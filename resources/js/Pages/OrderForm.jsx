@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { stripePromise } from '../Pages/stripe';
+import UserLayout from '@/Layouts/UserLayout';
 
 function StripeFormComponent() {
     const { cartItems } = usePage().props;
@@ -138,6 +139,7 @@ function StripeFormComponent() {
 
 
     return (
+        <UserLayout>
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
             <h2 className="text-2xl font-bold mb-6">Checkout</h2>
 
@@ -310,7 +312,8 @@ function StripeFormComponent() {
                     )
                 }
             </form>
-        </div>
+            </div>
+            </UserLayout>
     );
 }
 
