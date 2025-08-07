@@ -79,6 +79,7 @@ public function index()
         'images.*' => 'image|max:2048',
         'category_id' => 'nullable|exists:categories,id',
         'subcategory_id' => 'nullable|exists:subcategories,id',
+        'status' => 'active',
     ]);
 
     $imagePaths = [];
