@@ -226,20 +226,22 @@ class DashboardController extends Controller
     $categoryId = $request->query('category_id', '');
     $subcategoryId = $request->query('subcategory_id', '');
     $searchQuery = $request->query('search_query', '');
-    $productsQuery = Product::where('status', 'active');
+
+    $productsQuery = Product::query(); // ✅ SHOW ALL PRODUCTS
 
     if ($subcategoryId) {
         $productsQuery->where('subcategory_id', $subcategoryId);
     } elseif ($categoryId) {
         $productsQuery->where('category_id', $categoryId);
     }
+
     if ($searchQuery) {
         $productsQuery->where('name', 'like', '%' . $searchQuery . '%');
     }
 
     $products = $productsQuery
         ->latest()
-        ->paginate(4) 
+        ->paginate(4)
         ->appends(array_filter([
             'category_id' => $categoryId ?: null,
             'subcategory_id' => $subcategoryId ?: null,
@@ -277,5 +279,6 @@ class DashboardController extends Controller
         ],
     ]);
 }
+
 
 }
