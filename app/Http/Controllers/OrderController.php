@@ -15,15 +15,15 @@ class OrderController extends Controller
     {
 
         $request->validate([
-            'address_line1' => 'required|max:255',
-            'address_line2' => 'nullable|max:255',
-            'city' => 'required|max:255',
-            'state' => 'required|max:255',
-            'postal_code' => 'required|max:20',
-            'country' => 'required|max:100',
-            'payment_method' => 'required|in:cod,credit_card,gpay,online,paypal',
-            'cart' => 'required|array|min:1',
-            'cart.*.id' => 'required|exists:products,id',
+            'address_line1'   => 'required|max:255',
+            'address_line2'   => 'nullable|max:255',
+            'city'            => 'required|max:255',
+            'state'           => 'required|max:255',
+            'postal_code'     => 'required|max:20',
+            'country'         => 'required|max:100',
+            'payment_method'  => 'required|in:cod,credit_card,gpay,online,stripe,paypal,Stripe Payment',
+            'cart'            => 'required|array|min:1',
+            'cart.*.id'       => 'required|exists:products,id',
             'cart.*.quantity' => 'required|integer|min:1',
         ]);
 
@@ -83,7 +83,6 @@ class OrderController extends Controller
         }
         if ($request->payment_method === 'paypal') {
             $paypalUrl = app(PayPalController::class)->createOrder($order);
-
             if ($paypalUrl) {
                 return Inertia::render('OrderForm', [
                     'redirect_to' => $paypalUrl,
@@ -91,7 +90,7 @@ class OrderController extends Controller
             }
         }
 
-        return redirect()->route('payment.credit', ['order' => $order->id]);
+        // return redirect()->route('payment.credit', ['order' => $order->id]);
     }
 
     // Rest of your methods remain the same...

@@ -7,10 +7,10 @@ use App\Http\Controllers\CategorySubcategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RazorpayController;
-use App\Http\Controllers\PayPalController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -91,7 +91,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/paypal/success/{order}', [PayPalController::class, 'success'])->name('paypal.success');
 Route::get('/paypal/cancel/{order}', [PayPalController::class, 'cancelTransaction'])->name('paypal.cancel');
 
-
 Route::middleware(['auth'])->group(function () {
     Route::match(['get', 'post'], '/checkout/selected', [CartController::class, 'checkoutSelected'])->name('checkout.selected');
     Route::put('/users/{user}/toggle-active', [RegisteredUserController::class, 'toggleActive'])->name('users.toggleActive');
@@ -103,8 +102,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/razorpay/{order}', [RazorpayController::class, 'retryPayment'])->name('payment.razorpay');
     Route::post('/payment/razorpay/callback', [RazorpayController::class, 'callback'])->name('payment.razorpay.callback');
     Route::get('/payment/razorpay/debug', [RazorpayController::class, 'debug'])->name('payment.razorpay.debug');
-     Route::delete('/transactions/{id}', [OrderController::class, 'singledelete'])->name('transactions.singledelete');
-      Route::post('/transactions/mass-delete', [OrderController::class, 'multipleDelete'])->name('transactions.multipleDelete');
+    Route::delete('/transactions/{id}', [OrderController::class, 'singledelete'])->name('transactions.singledelete');
+    Route::post('/transactions/mass-delete', [OrderController::class, 'multipleDelete'])->name('transactions.multipleDelete');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/dashboard/orders', [OrderController::class, 'orders'])->name('dashboard.orders');
@@ -126,6 +125,9 @@ Route::get('/chat', function () {
     return Inertia::render('ChatApp');
 });
 Route::post('/api/chat', [AiChatController::class, 'chat']);
+
+// Route::match(['get', 'post'], '/payment/credit', [PayPalController::class, 'credit'])->name('payment.credit');
+// Route::post('/payment/credit', [PayPalController::class, 'credit'])->name('payment.credit');
 
 
 require __DIR__ . '/auth.php';
