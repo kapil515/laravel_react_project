@@ -30,6 +30,7 @@ function StripeFormComponent() {
             quantity: item.quantity,
         })));
     }, [cartItems]);
+
     const calculateTotalAmount = (items) => {
         return Math.round(
             items.reduce((total, item) => total + item.price * item.quantity, 0) * 100
@@ -47,18 +48,21 @@ function StripeFormComponent() {
         if (data.payment_method === 'stripe') {
             if (!isStripeReady) {
                 setCardError('Stripe is not loaded yet. Please wait and try again.');
+                console.error('Stripe not ready:', { stripe, elements });
                 return;
             }
 
             const cardElement = elements.getElement(CardElement);
             if (!cardElement) {
                 setCardError('Card element not found. Please refresh the page.');
+                console.error('CardElement not found');
                 return;
             }
 
             setIsProcessingPayment(true);
 
             try {
+                console.log('Creating Stripe payment method...');
                 const { error, paymentMethod } = await stripe.createPaymentMethod({
                     type: 'card',
                     card: cardElement,
@@ -66,49 +70,37 @@ function StripeFormComponent() {
 
                 if (error) {
                     console.error('Stripe error:', error);
-                    setCardError(error.message);
+                    setCardError(error.message || 'Failed to create payment method.');
                     setIsProcessingPayment(false);
                     return;
                 }
 
-                setData('payment_method_id', paymentMethod.id);
+                if (!paymentMethod || !paymentMethod.id) {
+                    console.error('No paymentMethod ID returned:', paymentMethod);
+                    setCardError('Failed to retrieve payment method ID.');
+                    setIsProcessingPayment(false);
+                    return;
+                }
 
-                setTimeout(() => {
-                    post(route('orders.store'), {
-                        data: {
-                            ...data,
-                            payment_method_id: paymentMethod.id,
-                            cart: cartItems.map(item => ({
-                                id: item.id,
-                                quantity: item.quantity,
-                            })),
-                        },
-                        preserveScroll: true,
-                        onSuccess: (page) => {
-                            console.log('✅ Order successful');
-                            const redirectTo = page.props?.redirect_to;
-                            if (redirectTo) {
-                                window.location.assign(redirectTo);
-                            }
-                        },
-                        onError: (err) => {
-                            console.error('❌ Submission error:', err);
-                            setCardError('Order failed. Please check payment info.');
-                        },
-                        onFinish: () => {
-                            setIsProcessingPayment(false);
-                        },
-                    });
-                }, 0);
+                console.log('PaymentMethod created:', paymentMethod.id);
 
+                // Update useForm state with payment_method_id and cart
+                setData(prevData => ({
+                    ...prevData,
+                    payment_method_id: paymentMethod.id,
+                    cart: cartItems.map(item => ({
+                        id: item.id,
+                        quantity: item.quantity,
+                    })),
+                }));
+                console.log('useForm data after setData:', data); // Debug: This may show old state
             } catch (error) {
                 console.error('❌ Stripe PaymentMethod creation error:', error);
                 setCardError('Unexpected error: ' + error.message);
                 setIsProcessingPayment(false);
             }
-
         } else {
-            const payload = {
+            const updatedData = {
                 ...data,
                 cart: cartItems.map(item => ({
                     id: item.id,
@@ -116,11 +108,12 @@ function StripeFormComponent() {
                 })),
             };
 
+            setData(updatedData);
+            console.log('Submitting non-Stripe useForm data:', updatedData);
             post(route('orders.store'), {
-                data: payload,
                 preserveScroll: true,
                 onSuccess: (page) => {
-                    console.log('✅ Non-stripe order placed');
+                    console.log('✅ Non-stripe order placed:', page);
                     const redirectTo = page.props?.redirect_to;
                     if (redirectTo) {
                         window.location.assign(redirectTo);
@@ -133,116 +126,133 @@ function StripeFormComponent() {
         }
     };
 
-
-
-
-
+    useEffect(() => {
+        if (data.payment_method_id && data.payment_method === 'stripe' && isProcessingPayment) {
+            console.log('useForm data before post:', data);
+            post(route('orders.store'), {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    console.log('✅ Order successful:', page);
+                    const redirectTo = page.props?.redirect_to;
+                    if (redirectTo) {
+                        window.location.assign(redirectTo);
+                    }
+                },
+                onError: (err) => {
+                    console.error('❌ Submission error:', err);
+                    setCardError('Order failed. Please check payment info.');
+                },
+                onFinish: () => {
+                    setIsProcessingPayment(false);
+                },
+            });
+        }
+    }, [data.payment_method_id, data.payment_method, isProcessingPayment, post]);
 
     return (
         <UserLayout>
-        <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-6">Checkout</h2>
+            <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
+                <h2 className="text-2xl font-bold mb-6">Checkout</h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Address Fields */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 1 *</label>
-                    <input
-                        type="text"
-                        value={data.address_line1}
-                        onChange={e => setData('address_line1', e.target.value)}
-                        className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                    {errors.address_line1 && <p className="text-red-500 text-sm mt-1">{errors.address_line1}</p>}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 2</label>
-                    <input
-                        type="text"
-                        value={data.address_line2}
-                        onChange={e => setData('address_line2', e.target.value)}
-                        className="w-full border border-gray-300 px-3 py-2 rounded"
-                    />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Address Fields */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 1 *</label>
                         <input
                             type="text"
-                            value={data.city}
-                            onChange={e => setData('city', e.target.value)}
-                            className="w-full border border-gray-300 px-3 py-2 rounded"
+                            value={data.address_line1}
+                            onChange={(e) => setData('address_line1', e.target.value)}
+                            className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
-                        {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+                        {errors.address_line1 && <p className="text-red-500 text-sm mt-1">{errors.address_line1}</p>}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 2</label>
                         <input
                             type="text"
-                            value={data.state}
-                            onChange={e => setData('state', e.target.value)}
+                            value={data.address_line2}
+                            onChange={(e) => setData('address_line2', e.target.value)}
                             className="w-full border border-gray-300 px-3 py-2 rounded"
-                            required
                         />
-                        {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
                     </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                            <input
+                                type="text"
+                                value={data.city}
+                                onChange={(e) => setData('city', e.target.value)}
+                                className="w-full border border-gray-300 px-3 py-2 rounded"
+                                required
+                            />
+                            {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                            <input
+                                type="text"
+                                value={data.state}
+                                onChange={(e) => setData('state', e.target.value)}
+                                className="w-full border border-gray-300 px-3 py-2 rounded"
+                                required
+                            />
+                            {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code *</label>
+                            <input
+                                type="text"
+                                value={data.postal_code}
+                                onChange={(e) => setData('postal_code', e.target.value)}
+                                className="w-full border border-gray-300 px-3 py-2 rounded"
+                                required
+                            />
+                            {errors.postal_code && <p className="text-red-500 text-sm mt-1">{errors.postal_code}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
+                            <input
+                                type="text"
+                                value={data.country}
+                                onChange={(e) => setData('country', e.target.value)}
+                                className="w-full border border-gray-300 px-3 py-2 rounded"
+                                required
+                            />
+                            {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
+                        </div>
+                    </div>
+
+                    {/* Payment Method */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code *</label>
-                        <input
-                            type="text"
-                            value={data.postal_code}
-                            onChange={e => setData('postal_code', e.target.value)}
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
+                        <select
+                            value={data.payment_method}
+                            onChange={(e) => {
+                                setData('payment_method', e.target.value);
+                                setCardError('');
+                            }}
                             className="w-full border border-gray-300 px-3 py-2 rounded"
                             required
-                        />
-                        {errors.postal_code && <p className="text-red-500 text-sm mt-1">{errors.postal_code}</p>}
+                        >
+                            <option value="">Select Payment Method</option>
+                            <option value="cod">Cash on Delivery</option>
+                            <option value="online">Razorpay</option>
+                            <option value="stripe">Stripe Payment</option>
+                            <option value="paypal">PayPal</option>
+                        </select>
+                        {errors.payment_method && <p className="text-red-500 text-sm mt-1">{errors.payment_method}</p>}
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
-                        <input
-                            type="text"
-                            value={data.country}
-                            onChange={e => setData('country', e.target.value)}
-                            className="w-full border border-gray-300 px-3 py-2 rounded"
-                            required
-                        />
-                        {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
-                    </div>
-                </div>
-
-                {/* Payment Method */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
-                    <select
-                        value={data.payment_method}
-                        onChange={e => {
-                            setData('payment_method', e.target.value);
-                            setCardError('');
-                        }}
-                        className="w-full border border-gray-300 px-3 py-2 rounded"
-                        required
-                    >
-                        <option value="">Select Payment Method</option>
-                        <option value="cod">Cash on Delivery</option>
-                        <option value="online">Razorpay</option>
-                        <option value="stripe">Stripe Payment</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
-                    {errors.payment_method && <p className="text-red-500 text-sm mt-1">{errors.payment_method}</p>}
-                </div>
-
-                {/* Stripe Card Input */}
-                {
-                    data.payment_method === 'stripe' && (
+                    {/* Stripe Card Input */}
+                    {data.payment_method === 'stripe' && (
                         <div className="bg-gray-50 p-4 rounded-lg">
                             <label className="block text-sm font-medium text-gray-700 mb-2">Card Details</label>
                             {!isStripeReady ? (
@@ -276,31 +286,29 @@ function StripeFormComponent() {
                                 <strong>Test Card:</strong> 4242 4242 4242 4242 | Any future date | Any 3 digits
                             </div>
                         </div>
-                    )
-                }
-
-                {/* Submit Button */}
-                <button
-                    type="submit"
-                    disabled={processing || isProcessingPayment || (data.payment_method === 'stripe' && !isStripeReady)}
-                    className={`w-full py-3 px-4 rounded font-medium transition-colors ${processing || isProcessingPayment || (data.payment_method === 'stripe' && !isStripeReady)
-                        ? 'bg-gray-400 cursor-not-allowed text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                        }`}
-                >
-                    {processing || isProcessingPayment ? (
-                        <div className="flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            Processing...
-                        </div>
-                    ) : (
-                        'Place Order'
                     )}
-                </button>
 
-                {/* Error List */}
-                {
-                    Object.keys(errors).length > 0 && (
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={processing || isProcessingPayment || (data.payment_method === 'stripe' && !isStripeReady)}
+                        className={`w-full py-3 px-4 rounded font-medium transition-colors ${processing || isProcessingPayment || (data.payment_method === 'stripe' && !isStripeReady)
+                            ? 'bg-gray-400 cursor-not-allowed text-white'
+                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            }`}
+                    >
+                        {processing || isProcessingPayment ? (
+                            <div className="flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Processing...
+                            </div>
+                        ) : (
+                            'Place Order'
+                        )}
+                    </button>
+
+                    {/* Error List */}
+                    {Object.keys(errors).length > 0 && (
                         <div className="bg-red-50 border border-red-200 rounded p-3">
                             <p className="text-red-700 text-sm font-medium">Please fix the following errors:</p>
                             <ul className="list-disc list-inside text-red-600 text-sm mt-1">
@@ -309,11 +317,10 @@ function StripeFormComponent() {
                                 ))}
                             </ul>
                         </div>
-                    )
-                }
-            </form>
+                    )}
+                </form>
             </div>
-            </UserLayout>
+        </UserLayout>
     );
 }
 
