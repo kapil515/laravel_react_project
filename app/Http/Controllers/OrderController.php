@@ -9,6 +9,8 @@
     use Illuminate\Support\Facades\Log;
     use Illuminate\Support\Facades\Storage;
     use Inertia\Inertia;
+    use Maatwebsite\Excel\Facades\Excel;
+    use Maatwebsite\Excel\Concerns\FromCollection;
 
     class OrderController extends Controller
     {
@@ -249,5 +251,17 @@
 
             return redirect()->back()->with('success', 'Selected transactions deleted successfully.');
         }
+
+        public function exportOrders()
+    {
+        $export = new class implements FromCollection {
+            public function collection()
+            {
+                return Order::all(); 
+            }
+        };
+
+        return Excel::download($export, 'orders.xlsx');
+    }
 
     }

@@ -37,7 +37,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::put('/products/{id}/toggle-status', [ProductController::class, 'toggleStatus']);
 
     Route::get('/dashboard/products', [DashboardController::class, 'products'])->name('dashboard.products');
-
+    Route::get('/export-orders', [OrderController::class, 'exportOrders']);
 });
 
 Route::middleware('auth')->group(function () {

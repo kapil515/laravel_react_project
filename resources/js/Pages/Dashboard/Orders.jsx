@@ -38,6 +38,10 @@ export default function Orders({ orders }) {
         }
     };
 
+    const handleExport = () => {
+        window.location.href = '/export-orders';
+    };
+
     return (
         <div className="p-6">
             {orders.data.length === 0 ? (
@@ -46,12 +50,20 @@ export default function Orders({ orders }) {
                 <>
                     <div className="flex items-center justify-between mb-10">
                         <h2 className="text-2xl capitalize text-red-600 font-bold hover:text-red-500">All Orders</h2>
-                        <button
-                            onClick={handleDeleteSelected}
-                            className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 text-sm"
-                        >
-                            Delete Selected Orders
-                        </button>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={handleExport}
+                                className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 text-sm"
+                            >
+                                Export Orders
+                            </button>
+                            <button
+                                onClick={handleDeleteSelected}
+                                className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 text-sm"
+                            >
+                                Delete Selected Orders
+                            </button>
+                        </div>
                     </div>
 
                     <div className="overflow-auto">
@@ -64,7 +76,7 @@ export default function Orders({ orders }) {
                                     <th className="px-4 py-2 border">Email</th>
                                     <th className="px-4 py-2 border">Role</th>
                                     <th className="px-4 py-2 border">Phone</th>
-                                     {/* <th className="px-4 py-2 border">Price</th>
+                                    {/* <th className="px-4 py-2 border">Price</th>
                                     <th className="px-4 py-2 border">Qty</th> */}
                                     <th className="px-4 py-2 border">Shipping</th>
                                     <th className="px-4 py-2 border">Total Price</th>
@@ -102,26 +114,26 @@ export default function Orders({ orders }) {
                                                     </td>
                                                 </>
                                             )}
-                                             {/* <td className="px-4 py-2 border">₹{item.price}</td>
+                                            {/* <td className="px-4 py-2 border">₹{item.price}</td>
                                                 <td className="px-4 py-2 border">{item.quantity}</td> */}
-                                                {index === 0 && (
-                                                    <td className="px-4 py-2 border" rowSpan={order.items.length}>
-                                                        ₹{Number(order.shipping_fee || 0).toFixed(2)}
-                                                    </td>
-                                                )}
-                                                {index === 0 && (
-                                                    <td className="px-4 py-2 border" rowSpan={order.items.length}>
-                                                        ₹{Number(order.total_amount || 0).toFixed(2)}
-                                                    </td>
-                                               )}
-                                           {index === 0 && (
+                                            {index === 0 && (
+                                                <td className="px-4 py-2 border" rowSpan={order.items.length}>
+                                                    ₹{Number(order.shipping_fee || 0).toFixed(2)}
+                                                </td>
+                                            )}
+                                            {index === 0 && (
+                                                <td className="px-4 py-2 border" rowSpan={order.items.length}>
+                                                    ₹{Number(order.total_amount || 0).toFixed(2)}
+                                                </td>
+                                            )}
+                                            {index === 0 && (
                                                 <td className="px-4 py-2 border" rowSpan={order.items.length}>
                                                     <span
                                                         className={`px-2 py-1 text-xs rounded 
                                                             ${(order.status === 'completed' || order.payment_method === 'cod') ? 'bg-green-100 text-green-700' :
-                                                            order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                            order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
-                                                            'bg-gray-100 text-gray-700'}`}
+                                                                order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                                                    order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+                                                                        'bg-gray-100 text-gray-700'}`}
                                                     >
                                                         {(order.status === 'completed' || order.payment_method === 'cod') ? 'completed' : order.status}
                                                     </span>
