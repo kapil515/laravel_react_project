@@ -38,6 +38,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::get('/dashboard/products', [DashboardController::class, 'products'])->name('dashboard.products');
     Route::get('/export-orders', [OrderController::class, 'exportOrders']);
+    Route::get('/users/export', [DashboardController::class, 'exportUsers'])->name('users.export');
+
 });
 
 Route::middleware('auth')->group(function () {

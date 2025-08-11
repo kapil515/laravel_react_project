@@ -12,6 +12,10 @@ export default function UserList({ users, filters = {} }) {
         setData('search', filters.search || '');
     }, [filters.search]);
 
+    const handleExport = () => {
+        window.location.href = "/users/export";
+    };
+
     return (
 
         <div className="overflow-x-auto bg-white rounded shadow p-6">
@@ -51,7 +55,7 @@ export default function UserList({ users, filters = {} }) {
                             router.get(route('dashboard.users'), { search: '' }, {
                                 preserveScroll: true,
                                 onSuccess: () => {
-                                    setData('search', ''); 
+                                    setData('search', '');
                                 }
                             });
                         }}
@@ -70,6 +74,20 @@ export default function UserList({ users, filters = {} }) {
                     onClick={() => router.visit(route('dashboard.users.create'))}
                 >
                     Add New User
+                </button>
+
+                <button
+                    onClick={handleExport}
+                    style={{
+                        padding: "10px 20px",
+                        background: "green",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer"
+                    }}
+                >
+                    Export Users
                 </button>
             </div>
             {!Array.isArray(userList) || userList.length === 0 ? (
