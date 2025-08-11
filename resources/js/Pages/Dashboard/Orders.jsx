@@ -124,12 +124,12 @@ export default function Orders({ orders }) {
                                                 <td className="px-4 py-2 border">{item.quantity}</td> */}
                                             {index === 0 && (
                                                 <td className="px-4 py-2 border" rowSpan={order.items.length}>
-                                                    ₹{Number(order.shipping_fee || 0).toFixed(2)}
+                                                    ${Number(order.shipping_fee || 0).toFixed(2)}
                                                 </td>
                                             )}
                                             {index === 0 && (
                                                 <td className="px-4 py-2 border" rowSpan={order.items.length}>
-                                                    ₹{Number(order.total_amount || 0).toFixed(2)}
+                                                    ${Number(order.total_amount || 0).toFixed(2)}
                                                 </td>
                                             )}
                                             {index === 0 && (

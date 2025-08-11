@@ -31,7 +31,7 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'section' => 'users',
-            'users'   => $query->paginate(10)->withQueryString(),
+            'users'   => $query->latest()->paginate(10)->withQueryString(),
             'filters' => $request->only('search'),
         ]);
 
@@ -247,7 +247,7 @@ class DashboardController extends Controller
         if (auth()->user()->role !== 'admin') {
             abort(403, 'Unauthorized');
         }
-        $categories = Category::with('subcategories')->get();
+        $categories = Category::with('subcategories')->latest()->get();
 
         return Inertia::render('Dashboard', [
             'section'    => 'Categories',

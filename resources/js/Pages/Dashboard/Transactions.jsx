@@ -88,7 +88,7 @@ export default function Transactions() {
                                         <td className="px-4 py-2 border">{order.user?.phone || 'N/A'}</td>
                                         <td className="px-4 py-2 border">{order.payment?.transaction_id || 'N/A'}</td>
                                         <td className="px-4 py-2 border">{order.payment_method || 'N/A'}</td>
-                                        <td className="px-4 py-2 border">₹{Number(order.total_amount || 0).toFixed(2)}</td>
+                                        <td className="px-4 py-2 border">${Number(order.total_amount || 0).toFixed(2)}</td>
                                         <td className="px-4 py-2 border">
                                             <span className={`px-2 py-1 text-xs rounded 
                                                 ${order.payment?.status === 'completed' ? 'bg-green-100 text-green-700' :

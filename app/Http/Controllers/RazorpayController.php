@@ -29,7 +29,7 @@ class RazorpayController extends Controller
 
             Payment::create([
                 'order_id' => $order->id,
-                'payment_method' => 'online',
+                'payment_method' => 'Razorpay',
                 'status' => 'pending',
                 'transaction_id' => $razorpayOrder->id,
                 'payment_response' => json_encode($razorpayOrder->toArray()),
@@ -69,10 +69,10 @@ class RazorpayController extends Controller
             Log::info('Razorpay retry order created', ['razorpay_order_id' => $razorpayOrder->id]);
 
             if ($order->payment_method === 'cod') {
-                $order->update(['payment_method' => 'online']);
+                $order->update(['payment_method' => 'Razorpay']);
                 Payment::create([
                     'order_id' => $order->id,
-                    'payment_method' => 'online',
+                    'payment_method' => 'Razorpay',
                     'status' => 'pending',
                     'transaction_id' => $razorpayOrder->id,
                     'payment_response' => json_encode($razorpayOrder->toArray()),

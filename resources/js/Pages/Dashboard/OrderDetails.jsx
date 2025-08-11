@@ -30,10 +30,10 @@ export default function OrderDetails({ order }) {
                                 <p><strong>Name:</strong> {item.product.name}</p>
                                 <p><strong>Category:</strong> {item.product.category?.name || 'N/A'}</p>
                                 <p><strong>Subcategory:</strong> {item.product.subcategory?.name || 'N/A'}</p>
-                                <p><strong>Price:</strong>  ₹{item.price}</p>
+                                <p><strong>Price:</strong>  ${item.price}</p>
                                 <p><strong>Description:</strong> {item.product.description || 'N/A'}</p>
                                 <p><strong>Quantity:</strong> {item.quantity}</p>
-                                <p><strong>Subtotal:</strong>  ₹{(item.price * item.quantity).toFixed(2)}</p>
+                                <p><strong>Subtotal:</strong> ${(item.price * item.quantity).toFixed(2)}</p>
                             </div>
                         </div>
                     ))}
@@ -44,8 +44,8 @@ export default function OrderDetails({ order }) {
                 <h2 className="text-xl font-bold text-gray-800 mb-2">📦 Order Info</h2>
                 <div className="space-y-1 text-gray-700">
                     <p><strong>Order ID:</strong> {order.order_number || order.id}</p>
-                      <p><strong>Shipping Fee:</strong> ₹{Number(order.shipping_fee || 0).toFixed(2)}</p>
-                    <p><strong>Total Amount:</strong>  ₹{order.total_amount}</p>
+                      <p><strong>Shipping Fee:</strong> ${Number(order.shipping_fee || 0).toFixed(2)}</p>
+                    <p><strong>Total Amount:</strong>  ${order.total_amount}</p>
                     <p><strong>Payment Method:</strong> {order.payment_method}</p>
                     <p><strong>Status:</strong> {order.status}</p>
                 </div>

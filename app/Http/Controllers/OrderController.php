@@ -74,7 +74,7 @@
                 'state'           => 'required|max:255',
                 'postal_code'     => 'required|max:20',
                 'country'         => 'required|max:100',
-                'payment_method'  => 'required|in:cod,credit_card,gpay,online,stripe,paypal,Stripe Payment',
+                'payment_method'  => 'required|in:cod,credit_card,gpay,Razorpay,stripe,paypal,Stripe Payment',
                 'cart'            => 'required|array|min:1',
                 'cart.*.id'       => 'required|exists:products,id',
                 'cart.*.quantity' => 'required|integer|min:1',
@@ -127,7 +127,7 @@
                 return redirect()->route('orders.thankyou', ['order' => $order->id]);
             }
 
-            if ($request['payment_method'] === 'online') {
+            if ($request['payment_method'] === 'Razorpay') {
                 return app(RazorpayController::class)->createOrder($order);
             }
 
