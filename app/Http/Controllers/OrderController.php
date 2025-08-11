@@ -283,8 +283,8 @@ public function exportOrders(Request $request)
                     'Email'       => $order->user->email ?? '',
                     'Role'        => $order->user->role ?? '',
                     'Phone'       => $order->phone ?? '',
-                    'Shipping'    => $order->shipping_address ?? '',
-                    'Total Price' => $order->total_price ?? '',
+                    'Shipping'    => $order->shipping_fee ?? 0,
+                    'Total Price' => $order->total_amount ?? 0,
                     'Status'      => $order->status ?? '',
                 ];
             });

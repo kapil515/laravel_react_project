@@ -37,6 +37,44 @@ class DashboardController extends Controller
 
     }
 
+    public function exportUsers()
+    {
+        $fileName = "users_export.csv";
+        $users = User::all(); // ya jo filter chahiye wo laga lo
+
+        // Response headers for CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+
+        $output = fopen("php://output", "w");
+
+        // CSV headings
+        fputcsv($output, [
+            'User ID',
+            'Name',
+            'Email',
+            'Role',
+            'Phone',
+            'Created At'
+        ]);
+
+        // Data rows
+        foreach ($users as $user) {
+            fputcsv($output, [
+                $user->id,
+                $user->name,
+                $user->email,
+                $user->role ?? 'N/A',
+                $user->phone ?? 'N/A',
+                $user->created_at->format('Y-m-d H:i:s'),
+            ]);
+        }
+
+        fclose($output);
+        exit; // Important: stop Laravel rendering any view
+    }
+
+
     public function edit($id)
     {
         return Inertia::render('Dashboard', [
