@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Stripe\PaymentIntent;
@@ -40,9 +41,18 @@ class CheckoutController extends Controller
 
             if ($paymentIntent->status === 'succeeded') {
                 $order->update(['status' => 'completed']);
+
+                Payment::create([
+                    'order_id'         => $order->id,
+                    'payment_method'   => 'stripe',
+                    'status'           => 'success',
+                    'transaction_id'   => $paymentIntent->id,
+                    'payment_response' => $paymentIntent->toArray(),
+                ]);
                 CartItem::where('user_id', $order->user_id)
                     ->whereIn('product_id', $order->items->pluck('product_id'))
                     ->delete();
+
                 return redirect()->route('orders.thankyou', ['order' => $order->id])
                     ->with('success', 'Payment successful!');
             }
