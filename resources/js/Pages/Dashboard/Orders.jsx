@@ -41,9 +41,9 @@ export default function Orders({ orders }) {
     const handleExport = () => {
     if (selectedOrderIds.length > 0) {
         const idsParam = selectedOrderIds.join(',');
-        window.location.href = `/export-orders?ids=${idsParam}`;
+        window.location.href = `/orders/download-csv?ids=${idsParam}`;
     } else {
-        window.location.href = '/export-orders';
+        window.location.href = '/orders/download-csv';
     }
 };
 

@@ -11,6 +11,7 @@
     use Inertia\Inertia;
     use Maatwebsite\Excel\Facades\Excel;
     use Maatwebsite\Excel\Concerns\FromCollection;
+    use Symfony\Component\HttpFoundation\StreamedResponse;
     use Maatwebsite\Excel\Concerns\WithHeadings;
 
     class OrderController extends Controller
@@ -47,6 +48,7 @@
                         ] : null,
                         'items'          => $order->items,
                         'status'         => $order->status,
+                        'shipping_fee'   => $order->shipping_fee,
                         'total_amount'   => $order->total_amount,
                         'payment_method' => $order->payment_method,
                         'payment'        => $order->payment,
@@ -306,5 +308,56 @@ public function exportOrders(Request $request)
     return Excel::download($export, 'orders.xlsx');
 }
 
+  public function downloadCsv(Request $request)
+    {
+        $filename = 'orders_' . date('Ymd_His') . '.csv';
+
+        $response = new StreamedResponse(function () use ($request) {
+            $handle = fopen('php://output', 'w');
+
+            // Optional: output BOM for Excel to detect UTF-8
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        
+            fputcsv($handle, [
+                'Order Number',   
+            'User',
+            'Email',
+            'Shipping Fee',
+            'Total Amount',
+            'Status',
+            'Created At'
+            ]);
+
+            
+            Order::with('user') 
+                ->orderBy('id')
+                ->chunk(500, function ($orders) use ($handle) {
+                    foreach ($orders as $order) {
+                        fputcsv($handle, [
+                        $order->order_number,
+                        optional($order->user)->name,
+                        optional($order->user)->email,
+                        number_format($order->shipping_fee ?? 0, 2, '.', ''), 
+                        number_format($order->total_amount ?? 0, 2, '.', ''),    
+                        $order->status,
+                        $order->created_at->toDateTimeString(),
+                        ]);
+                    }
+                });
+
+            fclose($handle);
+        });
+
+        $disposition = $response->headers->makeDisposition(
+            'attachment',
+            $filename
+        );
+
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
 
     }

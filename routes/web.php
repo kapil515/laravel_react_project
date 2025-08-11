@@ -121,6 +121,10 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
     Route::post('/settings/assign-role', [DashboardController::class, 'assignRole'])->name('dashboard.assignRole');
 });
 
+
+Route::get('/orders/download-csv', [OrderController::class, 'downloadCsv'])
+     ->middleware(['auth']);
+
 Route::get('/chat', function () {
     return Inertia::render('ChatApp');
 });
