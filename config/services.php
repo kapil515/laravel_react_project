@@ -51,4 +51,9 @@ return [
         'api_url'       => env('PAYPAL_API_URL', 'https://api-m.sandbox.paypal.com'),
     ],
 
+    'currency_rates' => [
+    'USD_TO_INR' => env('USD_TO_INR', 82.5),
+],
+
+
 ];

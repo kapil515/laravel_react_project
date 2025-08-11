@@ -4,6 +4,7 @@ import { usePage, router } from '@inertiajs/react';
 export default function Transactions() {
     const { transactions } = usePage().props;
     const [selectedTransactionIds, setSelectedTransactionIds] = useState([]);
+     const currentPage = usePage().props.transactions.current_page;
 
     const toggleSelectTransaction = (transactionId) => {
         setSelectedTransactionIds((prev) =>
@@ -13,24 +14,29 @@ export default function Transactions() {
         );
     };
 
-    const handleDeleteTransaction = (transactionId) => {
-        if (window.confirm('Are you sure you want to delete this transaction?')) {
-            router.delete(route('transactions.singledelete', transactionId));
-        }
-    };
 
-    const handleDeleteSelected = () => {
-        if (selectedTransactionIds.length === 0) {
-            alert('Please select at least one transaction to delete.');
-            return;
-        }
+const handleDeleteTransaction = (transactionId) => {
+  if (window.confirm('Are you sure you want to delete this transaction?')) {
+    router.delete(route('transactions.singledelete', transactionId), {
+      data: { page: currentPage }
+    });
+  }
+};
 
-        if (window.confirm('Are you sure you want to delete the selected transactions?')) {
-            router.post(route('transactions.multipleDelete'), {
-                transaction_ids: selectedTransactionIds,
-            });
-        }
-    };
+const handleDeleteSelected = () => {
+  if (selectedTransactionIds.length === 0) {
+    alert('Please select at least one transaction to delete.');
+    return;
+  }
+
+  if (window.confirm('Are you sure you want to delete the selected transactions?')) {
+    router.post(route('transactions.multipleDelete'), {
+      transaction_ids: selectedTransactionIds,
+      page: currentPage
+    });
+  }
+};
+
 
     const handleRetryPayment = (orderId) => {
         router.get(route('payment.razorpay', orderId));

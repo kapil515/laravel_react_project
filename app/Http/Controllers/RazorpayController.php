@@ -13,14 +13,26 @@ use Razorpay\Api\Api;
 
 class RazorpayController extends Controller
 {
+    private function convertToINR($amount, $currency)
+{
+    if ($currency === 'USD') {
+        $rate = config('services.currency_rates.USD_TO_INR');
+        return $amount * $rate;
+    }
+    
+    return $amount;
+}
     public function createOrder(Order $order)
     {
         Log::info('Initiating Razorpay payment for order', ['order_id' => $order->id]);
+    $currency = $order->currency ?? 'INR'; 
+
+    $amountInINR = $this->convertToINR($order->total_amount, $currency);
         $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
         try {
             $razorpayOrder = $api->order->create([
-                'amount' => $order->total_amount * 100, 
+               'amount' => intval(round($amountInINR * 100)), 
                 'currency' => 'INR',
                 'receipt' => 'order_' . $order->id,
                 'payment_capture' => 1,
@@ -39,7 +51,7 @@ class RazorpayController extends Controller
                 'order' => $order->toArray(),
                 'razorpay_order_id' => $razorpayOrder->id,
                 'razorpay_key' => config('services.razorpay.key'),
-                'amount' => $order->total_amount * 100,
+               'amount' => intval(round($amountInINR * 100)),
                 'currency' => 'INR',
                 'user' => Auth::user()->toArray(),
             ]);
@@ -57,11 +69,14 @@ class RazorpayController extends Controller
         }
 
         Log::info('Retrying Razorpay payment for order', ['order_id' => $order->id]);
+         $currency = $order->currency ?? 'INR'; 
+
+    $amountInINR = $this->convertToINR($order->total_amount, $currency);
         $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
         try {
             $razorpayOrder = $api->order->create([
-                'amount' => $order->total_amount * 100,
+                'amount' => intval(round($amountInINR * 100)), 
                 'currency' => 'INR',
                 'receipt' => 'order_' . $order->id,
                 'payment_capture' => 1,
@@ -88,7 +103,7 @@ class RazorpayController extends Controller
                 'order' => $order->toArray(),
                 'razorpay_order_id' => $razorpayOrder->id,
                 'razorpay_key' => config('services.razorpay.key'),
-                'amount' => $order->total_amount * 100,
+               'amount' => intval(round($amountInINR * 100)),
                 'currency' => 'INR',
                 'user' => Auth::user()->toArray(),
             ]);

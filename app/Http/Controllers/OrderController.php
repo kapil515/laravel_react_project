@@ -205,55 +205,98 @@
             ]);
         }
 
-        public function destroy(string $id)
-        {
-            if (auth()->user()->role !== 'admin') {
-                Log::warning('Unauthorized attempt to delete order', ['order_id' => $id, 'user_id' => auth()->id()]);
-                abort(403, 'Unauthorized');
-            }
+       public function destroy(string $id, Request $request)
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
 
-            $order = Order::findOrFail($id);
-            $order->delete();
+    Order::findOrFail($id)->delete();
 
-            return redirect()->route('dashboard.orders')->with('success', 'Order deleted successfully.');
-        }
+    $perPage = 8;
+    $totalOrders = Order::count();
+    $lastPage = max(1, ceil($totalOrders / $perPage));
 
-        public function massDestroy(Request $request)
-        {
-            if (auth()->user()->role !== 'admin') {
-                Log::warning('Unauthorized attempt to mass delete orders', ['user_id' => auth()->id()]);
-                abort(403, 'Unauthorized');
-            }
+    $currentPage = (int) $request->get('page', 1);
 
-            $request->validate([
-                'order_ids'   => 'required|array',
-                'order_ids.*' => 'exists:orders,id',
-            ]);
+    if ($currentPage > $lastPage) {
+         return redirect()->route('orders.destroy', ['page' => $currentPage])
+        ->with('success', 'Order deleted successfully.');
+    }
 
-            Order::whereIn('id', $request->order_ids)->delete();
+   
+}
 
-            return redirect()->route('dashboard.orders')->with('success', 'All selected orders deleted successfully.');
-        }
+public function massDestroy(Request $request)
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
 
-        public function singledelete($id)
-        {
-            $order = Order::findOrFail($id);
-            $order->delete();
+    $request->validate([
+        'order_ids'   => 'required|array',
+        'order_ids.*' => 'exists:orders,id',
+    ]);
 
-            return redirect()->back()->with('success', 'Transaction deleted successfully.');
-        }
+    Order::whereIn('id', $request->order_ids)->delete();
 
-        public function multipleDelete(Request $request)
-        {
-            $request->validate([
-                'transaction_ids'   => 'required|array',
-                'transaction_ids.*' => 'exists:orders,id',
-            ]);
+    $perPage = 8;
+    $totalOrders = Order::count();
+    $lastPage = max(1, ceil($totalOrders / $perPage));
+    $currentPage = (int) $request->get('page', 1);
 
-            Order::whereIn('id', $request->transaction_ids)->delete();
+    if ($currentPage > $lastPage) {
+         return redirect()->route('orders.massDestroy', ['page' => $currentPage])
+        ->with('success', 'All selected orders deleted successfully.');
+    }
 
-            return redirect()->back()->with('success', 'Selected transactions deleted successfully.');
-        }
+   
+}
+
+public function singledelete(Request $request, $id)
+{
+   if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
+
+    Order::findOrFail($id)->delete();
+
+    $perPage = 8;
+    $totalOrders = Order::count();
+    $lastPage = max(1, ceil($totalOrders / $perPage));
+    $currentPage = $request->get('page', 1);
+
+    if ($currentPage > $lastPage) {
+        return redirect()->route('transactions.singledelete', ['page' => $lastPage])
+            ->with('success', 'Transaction deleted successfully.');
+    }
+
+}
+
+public function multipleDelete(Request $request)
+{
+   if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
+    }
+
+    $request->validate([
+        'transaction_ids' => 'required|array',
+        'transaction_ids.*' => 'exists:orders,id',
+    ]);
+
+    Order::whereIn('id', $request->transaction_ids)->delete();
+
+    $perPage = 8;
+    $totalOrders = Order::count();
+    $lastPage = max(1, ceil($totalOrders / $perPage));
+    $currentPage = $request->get('page', 1);
+
+    if ($currentPage > $lastPage) {
+        return redirect()->route('transactions.multipleDelete', ['page' => $lastPage])
+            ->with('success', 'Selected transactions deleted successfully.');
+    }
+}
+
 
 
 public function exportOrders(Request $request)

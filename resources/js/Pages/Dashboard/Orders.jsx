@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { router } from '@inertiajs/react';
+import { usePage, router } from '@inertiajs/react';
 
 export default function Orders({ orders }) {
     const [selectedOrderIds, setSelectedOrderIds] = useState([]);
+     const currentPage = usePage().props.orders.current_page;
 
     const toggleSelectOrder = (orderId) => {
         setSelectedOrderIds((prev) =>
@@ -14,7 +15,9 @@ export default function Orders({ orders }) {
 
     const handleDelete = (orderId) => {
         if (window.confirm('Are you sure you want to delete this order?')) {
-            router.delete(route('orders.destroy', orderId));
+            router.delete(route('orders.destroy', orderId), {
+      data: { page: currentPage }
+    });
         }
     };
 
@@ -22,7 +25,7 @@ export default function Orders({ orders }) {
         if (orders.data.length === 1) {
             const onlyOrderId = orders.data[0].id;
             if (window.confirm('Are you sure you want to delete this order?')) {
-                router.delete(route('orders.destroy', onlyOrderId));
+                router.delete(route('orders.destroy', onlyOrderId), { data: { page: currentPage } });
             }
             return;
         }
@@ -31,6 +34,7 @@ export default function Orders({ orders }) {
             if (window.confirm('Are you sure you want to delete the selected orders?')) {
                 router.post(route('orders.massDestroy'), {
                     order_ids: selectedOrderIds,
+                      page: currentPage,
                 });
             }
         } else {
