@@ -38,14 +38,15 @@ export default function Orders({ orders }) {
         }
     };
 
-    const handleExport = () => {
+   const handleExport = () => {
     if (selectedOrderIds.length > 0) {
         const idsParam = selectedOrderIds.join(',');
-        window.location.href = `/orders/download-csv?ids=${idsParam}`;
+        window.location.href = `/orders/download-selected-csv?ids=${idsParam}`;
     } else {
         window.location.href = '/orders/download-csv';
     }
 };
+
 
 
     return (

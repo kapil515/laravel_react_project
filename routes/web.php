@@ -124,8 +124,9 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 });
 
 
-Route::get('/orders/download-csv', [OrderController::class, 'downloadCsv'])
-     ->middleware(['auth']);
+Route::get('/orders/download-csv', [OrderController::class, 'downloadCsv']);
+Route::get('/orders/download-selected-csv', [OrderController::class, 'downloadSelectedCsv'])->name('orders.downloadSelectedCsv');
+
 
 Route::get('/chat', function () {
     return Inertia::render('ChatApp');

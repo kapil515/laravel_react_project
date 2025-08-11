@@ -360,4 +360,65 @@ public function exportOrders(Request $request)
         return $response;
     }
 
+
+    public function downloadSelectedCsv(Request $request)
+{
+    $ids = $request->query('ids'); // from ?ids=1,2,3
+    $idsArray = $ids ? explode(',', $ids) : [];
+
+    if (empty($idsArray)) {
+        abort(400, 'No orders selected.');
+    }
+
+    $filename = 'selected_orders_' . date('Ymd_His') . '.csv';
+
+    $response = new StreamedResponse(function () use ($idsArray) {
+        $handle = fopen('php://output', 'w');
+
+        // Optional BOM for Excel UTF-8
+        fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        // CSV Header
+        fputcsv($handle, [
+            'Order Number',
+            'User',
+            'Email',
+            'Shipping Fee',
+            'Total Amount',
+            'Status',
+            'Created At'
+        ]);
+
+        Order::with('user')
+            ->whereIn('id', $idsArray)
+            ->orderBy('id')
+            ->chunk(500, function ($orders) use ($handle) {
+                foreach ($orders as $order) {
+                    fputcsv($handle, [
+                        $order->order_number,
+                        optional($order->user)->name,
+                        optional($order->user)->email,
+                        number_format($order->shipping_fee ?? 0, 2, '.', ''),
+                        number_format($order->total_amount ?? 0, 2, '.', ''),
+                        $order->status,
+                        $order->created_at->toDateTimeString(),
+                    ]);
+                }
+            });
+
+        fclose($handle);
+    });
+
+    $disposition = $response->headers->makeDisposition(
+        'attachment',
+        $filename
+    );
+
+    $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+    $response->headers->set('Content-Disposition', $disposition);
+
+    return $response;
+}
+
+
     }
