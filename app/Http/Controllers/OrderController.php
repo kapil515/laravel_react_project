@@ -11,6 +11,7 @@
     use Inertia\Inertia;
     use Maatwebsite\Excel\Facades\Excel;
     use Maatwebsite\Excel\Concerns\FromCollection;
+    use Maatwebsite\Excel\Concerns\WithHeadings;
 
     class OrderController extends Controller
     {
@@ -252,16 +253,58 @@
             return redirect()->back()->with('success', 'Selected transactions deleted successfully.');
         }
 
-        public function exportOrders()
-    {
-        $export = new class implements FromCollection {
-            public function collection()
-            {
-                return Order::all(); 
-            }
-        };
 
-        return Excel::download($export, 'orders.xlsx');
-    }
+public function exportOrders(Request $request)
+{
+    $ids = $request->query('ids'); 
+
+    $export = new class($ids) implements FromCollection, WithHeadings {
+        private $ids;
+
+        public function __construct($ids)
+        {
+            $this->ids = $ids ? explode(',', $ids) : [];
+        }
+
+        public function collection()
+        {
+            $query = Order::query()->with('user');
+
+            if (!empty($this->ids)) {
+                $query->whereIn('id', $this->ids);
+            }
+
+            return $query->get()->map(function ($order) {
+                return [
+                    'Order ID'    => $order->id,
+                    'User Name'   => $order->user->name ?? '',
+                    'Email'       => $order->user->email ?? '',
+                    'Role'        => $order->user->role ?? '',
+                    'Phone'       => $order->phone ?? '',
+                    'Shipping'    => $order->shipping_address ?? '',
+                    'Total Price' => $order->total_price ?? '',
+                    'Status'      => $order->status ?? '',
+                ];
+            });
+        }
+
+        public function headings(): array
+        {
+            return [
+                'Order ID',
+                'User Name',
+                'Email',
+                'Role',
+                'Phone',
+                'Shipping',
+                'Total Price',
+                'Status'
+            ];
+        }
+    };
+
+    return Excel::download($export, 'orders.xlsx');
+}
+
 
     }

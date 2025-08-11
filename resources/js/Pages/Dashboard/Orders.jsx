@@ -39,8 +39,14 @@ export default function Orders({ orders }) {
     };
 
     const handleExport = () => {
+    if (selectedOrderIds.length > 0) {
+        const idsParam = selectedOrderIds.join(',');
+        window.location.href = `/export-orders?ids=${idsParam}`;
+    } else {
         window.location.href = '/export-orders';
-    };
+    }
+};
+
 
     return (
         <div className="p-6">
