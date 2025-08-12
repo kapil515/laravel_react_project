@@ -103,6 +103,7 @@
                 'status'         => 'pending',
                 'total_amount'   => $totalAmount,
                 'shipping_fee'   => $shippingFee,
+                'currency' =>   'USD',
             ]);
 
             // Create Order Items
