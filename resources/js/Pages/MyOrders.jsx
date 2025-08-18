@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import OrderTrackingTimeline from '@/Components/OrderTrackingTimeline';
+import UserLayout from '@/Layouts/UserLayout';
 
-export default function Transactions() {
+export default function MyOrders() {
     const { transactions: initialTransactions } = usePage().props;
     const [transactions, setTransactions] = useState(initialTransactions);
     const [selectedTransactionIds, setSelectedTransactionIds] = useState([]);
@@ -10,7 +12,7 @@ export default function Transactions() {
     const [trackingOrder, setTrackingOrder] = useState(null);
     const [showTrackingModal, setShowTrackingModal] = useState(false);
 
-    const STATUS_ORDER = ['pending', 'packed', 'shipped', 'out_for_delivery', 'delivered'];
+     const STATUS_ORDER = ['pending', 'packed', 'shipped', 'out_for_delivery', 'delivered'];
 
     const getValidStatuses = (currentStatus, paymentMethod) => {
         const currentIndex = STATUS_ORDER.indexOf(currentStatus || 'pending');
@@ -46,44 +48,18 @@ export default function Transactions() {
         }
     };
 
-    const handleDeleteSelected = () => {
-        if (selectedTransactionIds.length === 0) {
-            alert('Please select at least one transaction to delete.');
-            return;
-        }
-        if (window.confirm('Are you sure you want to delete the selected transactions?')) {
-            router.post(route('transactions.multipleDelete'), {
-                transaction_ids: selectedTransactionIds,
-                page: currentPage
-            }, {
-                preserveScroll: true,
-                onSuccess: () => {
-                    setTransactions((prev) => ({
-                        ...prev,
-                        data: prev.data.filter((t) => !selectedTransactionIds.includes(t.id))
-                    }));
-                    setSelectedTransactionIds([]);
-                }
-            });
-        }
-    };
-
-    const handleRetryPayment = (orderId) => {
-        router.get(route('payment.razorpay', orderId));
-    };
-
     const updateOrderStatus = (orderId, newStatus) => {
         router.patch(route('orders.updateStatus', orderId), {
             status: newStatus,
             page: currentPage,
         }, {
-            preserveScroll: true, 
+            preserveScroll: true,
             onSuccess: (page) => {
                 setTransactions(page.props.transactions);
                 if (trackingOrder && trackingOrder.id === orderId) {
                     setTrackingOrder((prev) => ({
                         ...prev,
-                        latest_tracking: { ...prev.latest_tracking, status: newStatus },
+                        status: newStatus,
                         tracking_events: [
                             ...(prev.tracking_events || []),
                             {
@@ -100,20 +76,13 @@ export default function Transactions() {
                 setTransactions((prev) => ({
                     ...prev,
                     data: prev.data.map((order) =>
-                        order.id === orderId
-                            ? {
-                                  ...order,
-                                  latest_tracking: { ...order.latest_tracking, status: order.latest_tracking?.status || 'pending' },
-                                  tracking_events: order.tracking_events || [],
-                              }
-                            : order
+                        order.id === orderId ? { ...order, status: order.status || 'pending' } : order
                     ),
                 }));
                 if (trackingOrder && trackingOrder.id === orderId) {
                     setTrackingOrder((prev) => ({
                         ...prev,
-                        latest_tracking: { ...prev.latest_tracking, status: prev.latest_tracking?.status || 'pending' },
-                        tracking_events: prev.tracking_events || [],
+                        status: prev.status || 'pending',
                     }));
                 }
             },
@@ -131,7 +100,7 @@ export default function Transactions() {
                     if (trackingOrder && trackingOrder.id === orderId) {
                         setTrackingOrder((prev) => ({
                             ...prev,
-                            latest_tracking: { ...prev.latest_tracking, status: 'canceled' },
+                            status: 'canceled',
                             tracking_events: [
                                 ...(prev.tracking_events || []),
                                 {
@@ -151,22 +120,21 @@ export default function Transactions() {
         }
     };
 
+    const handleViewOrder = (orderId) => {
+        router.visit(route('orders.usershow', orderId));
+    };
+
     return (
-        <div className="p-6">
+        <UserLayout>
+        <div className="p-6 m-12">
             {transactions.data.length === 0 ? (
                 <p className="text-center text-red-600 mt-5 text-2xl">
                     No transactions have been recorded yet.
                 </p>
             ) : (
                 <>
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-red-600">Transaction List</h2>
-                        <button
-                            onClick={handleDeleteSelected}
-                            className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 text-sm"
-                        >
-                            Delete Selected Transactions
-                        </button>
+                    <div className="flex items-center justify-between m-auto mb-4">
+                        <h2 className="text-2xl font-bold text-red-600">My Orders</h2>
                     </div>
                     <div className="overflow-auto">
                         <table className="min-w-full bg-white border text-sm">
@@ -174,14 +142,13 @@ export default function Transactions() {
                                 <tr>
                                     <th className="px-4 py-2 border"></th>
                                     <th className="px-4 py-2 border">Order ID</th>
-                                    <th className="px-4 py-2 border">Username</th>
-                                    <th className="px-4 py-2 border">Email</th>
-                                    <th className="px-4 py-2 border">Role</th>
-                                    <th className="px-4 py-2 border">Phone</th>
-                                    <th className="px-4 py-2 border">Transaction ID</th>
-                                    <th className="px-4 py-2 border">Mode</th>
+                                     <th className="px-4 py-2 border">Name</th>
+                                        <th className="px-4 py-2 border">Email</th>
+                                        <th className="px-4 py-2 border">Phone</th>
+                                        <th className="px-4 py-2 border">Transaction ID</th>
                                     <th className="px-4 py-2 border">Total Price</th>
-                                    <th className="px-2 py-2 border">Status</th>
+                                    <th className="px-4 py-2 border">Payment Method</th>
+                                    <th className="px-4 py-2 border">Status</th>
                                     <th className="px-4 py-2 border">Action</th>
                                 </tr>
                             </thead>
@@ -197,41 +164,40 @@ export default function Transactions() {
                                         </td>
                                         <td className="px-4 py-2 border">{order.order_number || order.id}</td>
                                         <td className="px-4 py-2 border">{order.user?.name || 'N/A'}</td>
-                                        <td className="px-4 py-2 border">{order.user?.email || 'N/A'}</td>
-                                        <td className="px-4 py-2 border">{order.user?.role || 'N/A'}</td>
-                                        <td className="px-4 py-2 border">{order.user?.phone || 'N/A'}</td>
-                                        <td className="px-4 py-2 border">{order.payment?.transaction_id || 'N/A'}</td>
-                                        <td className="px-4 py-2 border">{order.payment_method || 'N/A'}</td>
+                                            <td className="px-4 py-2 border">{order.user?.email || 'N/A'}</td>
+                                            <td className="px-4 py-2 border">{order.user?.phone || 'N/A'}</td>
+                                            <td className="px-4 py-2 border">{order.payment?.transaction_id || 'N/A'}</td>
                                         <td className="px-4 py-2 border">${Number(order.total_amount || 0).toFixed(2)}</td>
-                                        <td className="py-2 px-2 border text-center">
-                                            {(order.latest_tracking?.status === 'delivered' || order.latest_tracking?.status === 'canceled') ? (
+                                        <td className="px-4 py-2 border">{order.payment_method || 'N/A'}</td>
+                                        <td className="px-4 py-2 border text-center">
+                                            {(order.status === 'delivered' || order.status === 'canceled') ? (
                                                 <span
                                                     style={{
-                                                        backgroundColor: order.latest_tracking?.status === 'delivered' ? '#0c6456ff' : '#ef4444',
+                                                        backgroundColor: order.status === 'delivered' ? '#0c6456ff' : '#ef4444',
                                                         color: 'white',
                                                         padding: '0.5rem 0.5rem',
                                                         borderRadius: '0.25rem',
                                                         display: 'inline-block',
-                                                        minWidth: '150px'
+                                                        minWidth: '200px'
                                                     }}
                                                 >
-                                                    {order.latest_tracking?.status.replace(/_/g, ' ')}
+                                                    {order.status.replace(/_/g, ' ')}
                                                 </span>
                                             ) : (
                                                 <select
-                                                    value={order.latest_tracking?.status || 'pending'}
+                                                    value={order.status || 'pending'}
                                                     onChange={(e) => updateOrderStatus(order.id, e.target.value)}
                                                     className="rounded text-sm text-center"
                                                     style={{
                                                         backgroundColor: '#d4cdcdff',
                                                         color: 'black',
-                                                        minWidth: '150px',
+                                                        minWidth: '200px',
                                                     }}
                                                 >
-                                                    <option value={order.latest_tracking?.status || 'pending'} disabled>
-                                                        {order.latest_tracking?.status?.replace(/_/g, ' ') || 'pending'}
+                                                    <option value={order.status || 'pending'} disabled>
+                                                        {order.status?.replace(/_/g, ' ') || 'pending'}
                                                     </option>
-                                                    {getValidStatuses(order.latest_tracking?.status, order.payment?.payment_method).map((status) => (
+                                                    {getValidStatuses(order.status).map((status) => (
                                                         <option key={status} value={status}>
                                                             {status.replace(/_/g, ' ')}
                                                         </option>
@@ -240,7 +206,7 @@ export default function Transactions() {
                                             )}
                                         </td>
                                         <td className="px-4 py-2 border space-x-2">
-                                            {order.latest_tracking?.status !== 'canceled' && (
+                                            {order.status !== 'canceled' && (
                                                 <button
                                                     onClick={() => {
                                                         setTrackingOrder(order);
@@ -251,7 +217,7 @@ export default function Transactions() {
                                                     Track
                                                 </button>
                                             )}
-                                             {(order.latest_tracking?.status === 'packed' || order.latest_tracking?.status === 'shipped') && (
+                                            {(order.status === 'packed' || order.status === 'shipped') && (
                                                 <button
                                                     onClick={() => handleCancelOrder(order.id)}
                                                     className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
@@ -259,6 +225,12 @@ export default function Transactions() {
                                                     Cancel
                                                 </button>
                                             )}
+                                             <button
+                                                    onClick={() => handleViewOrder(order.id)}
+                                                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm"
+                                                >
+                                                    View
+                                                </button>
                                             <button
                                                 onClick={() => handleDeleteTransaction(order.id)}
                                                 className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
@@ -310,5 +282,6 @@ export default function Transactions() {
                 </div>
             )}
         </div>
+        </UserLayout>
     );
 }

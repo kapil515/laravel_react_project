@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OrderStatusUpdated;
 
 
 class Order extends Model
@@ -40,8 +42,19 @@ class Order extends Model
     public function payment()
 {
     return $this->hasOne(Payment::class);
+
 }
 
+public function trackingEvents()
+{
+    return $this->hasMany(OrderTracking::class)->orderBy('reported_at');
+}
+
+
+public function latestTracking()
+{
+    return $this->hasOne(OrderTracking::class)->latestOfMany();
+}
 
     protected static function booted()
 {
@@ -50,6 +63,7 @@ class Order extends Model
         $order->save();
     });
 }
+
 }
 
 

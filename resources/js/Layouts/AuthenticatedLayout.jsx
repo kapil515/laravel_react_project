@@ -1,5 +1,6 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
+import FakePurchaseAlert from '@/Components/FakePurchaseAlert';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
@@ -189,6 +190,13 @@ export default function AuthenticatedLayout({ header, children }) {
             )}
 
             <main>{children}</main>
+               <FakePurchaseAlert
+        minIntervalMs={2000}
+        maxIntervalMs={4500}
+        showDurationMs={6000}
+        bottomOffset="1rem"
+        leftOffset="1rem"
+      />
         </div>
     );
 }

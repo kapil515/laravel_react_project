@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number')->unique()->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('address_line1');            
             $table->string('address_line2')->nullable(); 
@@ -22,7 +23,9 @@ return new class extends Migration
             $table->string('country');
             $table->string('payment_method');
             $table->decimal('total_amount', 10, 2);
-            $table->enum('status', ['pending', 'processing', 'completed', 'failed', 'shipped', 'delivered'])->default('pending');
+             $table->decimal('shipping_fee', 8, 2)->nullable();
+             $table->string('currency')->default('USD');
+           $table->enum('status', ['pending', 'paid', 'packed', 'shipped','out_for_delivery', 'delivered', 'failed', 'completed','canceled'])->default('pending');
             $table->timestamps();
         });
     }

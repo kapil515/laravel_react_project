@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseAlertController;
 use App\Http\Controllers\RazorpayController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -127,14 +128,21 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 Route::get('/orders/download-csv', [OrderController::class, 'downloadCsv']);
 Route::get('/orders/download-selected-csv', [OrderController::class, 'downloadSelectedCsv'])->name('orders.downloadSelectedCsv');
 
+Route::middleware(['auth'])->group(function () {
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateTrackingStatus'])->name('orders.updateStatus');
+Route::post('/orders/{order}/cancel', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
+ Route::get('/orders/{order}', [OrderController::class, 'userShow'])->name('orders.usershow');
+ Route::get('/transactions', [DashboardController::class, 'transactions'])->name('transactions');
+ Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
+
+});
+
+Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('my.orders')->middleware('auth');
 
 Route::get('/chat', function () {
     return Inertia::render('ChatApp');
 });
 Route::post('/api/chat', [AiChatController::class, 'chat']);
-
-// Route::match(['get', 'post'], '/payment/credit', [PayPalController::class, 'credit'])->name('payment.credit');
-// Route::post('/payment/credit', [PayPalController::class, 'credit'])->name('payment.credit');
 
 
 require __DIR__ . '/auth.php';

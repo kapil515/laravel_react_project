@@ -188,7 +188,7 @@ class RazorpayController extends Controller
 
             $order->update(['status' => 'completed']);
             $order->payment()->update([
-                'status' => 'completed',
+                'status' => 'paid',
                 'payment_response' => json_encode($attributes),
             ]);
                 CartItem::where('user_id', $order->user_id)

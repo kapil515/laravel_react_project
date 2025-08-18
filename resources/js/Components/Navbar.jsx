@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage} from '@inertiajs/react';
 import Dropdown from '@/Components/Dropdown';
+
+
 
 
 export default function Navbar({ auth }) {
@@ -57,7 +59,7 @@ export default function Navbar({ auth }) {
                             <Link href="/productpage" className="text-base font-medium text-gray-900 hover:text-opacity-50">Products</Link>
                         </div>
 
-                        <div className="hidden lg:ml-auto lg:flex lg:items-center lg:space-x-10">
+                        <div className="hidden lg:ml-auto lg:flex lg:items-center lg:space-x-12">
                             {auth && auth.user ? (
                                 auth.user.role === 'admin' ? (
                                     <Link
@@ -73,6 +75,12 @@ export default function Navbar({ auth }) {
                                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                         >
                                             Profile
+                                        </Link>
+                                         <Link
+                                            href={route('my.orders')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                        Orders
                                         </Link>
                                         <Dropdown.Link
                                             href={route('logout')}
@@ -150,6 +158,12 @@ export default function Navbar({ auth }) {
                                             >
                                                 Profile
                                             </Link>
+                                             <Link
+                                            href={route('my.orders')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                        Orders
+                                        </Link>
                                             <Dropdown.Link
                                                 href={route('logout')}
                                                 method="post"

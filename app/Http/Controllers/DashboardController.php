@@ -160,20 +160,34 @@ class DashboardController extends Controller
     }
 
     public function transactions()
-    {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Unauthorized');
-        }
-
-        $transactions = Order::with(['user', 'payment'])
-            ->latest()
-            ->paginate(8);
-
-        return Inertia::render('Dashboard', [
-            'section'      => 'transactions',
-            'transactions' => $transactions,
-        ]);
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized');
     }
+
+    $transactions = Order::with([
+        'user',
+        'payment',
+        'trackingEvents' => fn($q) => $q->orderBy('reported_at')
+    ])
+    ->latest()
+    ->paginate(8);
+
+    return Inertia::render('Dashboard', [
+        'section'      => 'transactions',
+        'transactions' => $transactions->through(fn($order) => [
+            'id'              => $order->id,
+            'order_number'    => $order->order_number,
+            'total_amount' =>$order->total_amount,
+           'payment_method' => $order->payment_method ,
+            'user'            => $order->user,
+            'payment'         => $order->payment,
+            'latest_tracking' => $order->trackingEvents->last(),
+            'tracking_events' => $order->trackingEvents,
+        ]),
+    ]);
+}
+
 
     public function sales()
     {
