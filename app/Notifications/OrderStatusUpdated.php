@@ -3,66 +3,56 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Notifications\Notification;
+use App\Models\Order;
 
-class OrderStatusUpdated extends Notification
+class OrderStatusUpdated extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $order;
-    protected $newStatus;
-    protected $trackingEvent;
+    protected $status;
 
-    public function __construct($order, $newStatus, $trackingEvent = null)
+    public function __construct(Order $order, string $status)
     {
         $this->order = $order;
-        $this->newStatus = $newStatus;
-        $this->trackingEvent = $trackingEvent;
+        $this->status = $status;
     }
 
     public function via($notifiable)
     {
-        return ['mail'];
-    }
+        return ['mail', 'database', 'broadcast'];
+}
+
 
     public function toMail($notifiable)
     {
-        $mail = (new MailMessage)
-            ->subject('Order Status Update for Order #' . ($this->order->order_number ?? $this->order->id))
-            ->greeting('Hello ' . ($this->order->user->name ?? 'Customer') . ',')
-            ->line('Your order has been updated to the following status: **' . str_replace('_', ' ', $this->newStatus) . '**')
-            ->line($this->getStatusMessage($this->newStatus))
-            ->lineIf($this->newStatus === 'out_for_delivery' || $this->newStatus === 'delivered', $this->getDeliveryDetails())
-            ->action('Track Your Order', url('/orders/' . $this->order->id . '/track' ))
-            ->line('Thank you for shopping with us!');
-
-        if ($this->trackingEvent && $this->trackingEvent->location_text) {
-            $mail->line('Location: ' . $this->trackingEvent->location_text);
-        }
-
-        return $mail;
-    }
-
-    protected function getStatusMessage($status)
-    {
-        $messages = [
-            'packed' => 'Your order has been packed and will be shipped soon.',
-            'shipped' => 'Your order has been shipped.',
-            'out_for_delivery' => 'Your order is out for delivery and will reach you soon.',
-            'delivered' => 'Your order has been delivered. Enjoy!',
-            'canceled' => 'Your order has been canceled.',
+        $statusMessages = [
+            'pending' => 'Your order has been successfully placed!',
+            'processing' => 'Your order is now being processed.',
+            'shipped' => 'Good news! Your order has been shipped.',
+            'out_for_delivery' => 'Your order is out for delivery and will be delivered by 9 PM today.',
+            'delivered' => 'Your order has been successfully delivered!',
         ];
-        return $messages[$status] ?? 'Status updated.';
+
+        return (new MailMessage)
+            ->subject('Order Status Update - #' . $this->order->order_number)
+            ->greeting('Hello ' . $notifiable->name . ',')
+            ->line($statusMessages[$this->status] ?? 'Your order status has been updated.')
+            ->line('Order Number: #' . $this->order->order_number)
+            ->action('View Order', route('orders.show', $this->order->id))
+            ->line('Thank you for shopping with us!');
     }
 
-    protected function getDeliveryDetails()
+    public function toArray($notifiable)
     {
-        if ($this->trackingEvent && ($this->trackingEvent->deliveryman_name || $this->trackingEvent->deliveryman_phone)) {
-            return 'Delivery Partner: ' . ($this->trackingEvent->deliveryman_name ?? 'N/A') . 
-                   ($this->trackingEvent->deliveryman_phone ? ' | Phone: ' . $this->trackingEvent->deliveryman_phone : '');
-        }
-        return '';
+        return [
+            'order_id' => $this->order->id,
+            'order_number' => $this->order->order_number,
+            'status' => $this->status,
+            'message' => 'Your order #' . $this->order->order_number . ' status has been updated to ' . $this->status,
+        ];
     }
 }
